@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ICaseParams, ICaseResponse, ICreateCaseBody } from '@frontend/cases/shared/models';
+import { ICaseParams, ICaseResponse, ICreateCaseBody } from 'cases-shared-models';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -33,6 +33,7 @@ export class XdCasesRequestService {
 	public createCase(body: ICreateCaseBody) {
 		return this._httpClient.post<ICaseResponse>('/api/case', body);
 	}
+<<<<<<< HEAD
 
     public updateCase(params: ICaseParams, body: ICreateCaseBody) {
         return this._httpClient.put<ICaseResponse>(`/api/case/${params.id}`, body);
@@ -45,4 +46,6 @@ export class XdCasesRequestService {
     public deleteCase(params: ICaseParams) {
         return this._httpClient.delete<ICaseResponse>(`/api/case/${params.id}`);
     }
+=======
+>>>>>>> 3254e7e (fix: cases service)
 }

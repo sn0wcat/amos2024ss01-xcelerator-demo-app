@@ -163,7 +163,11 @@ export class XdFacilitiesService {
 			this.prismaService.asset.findMany({
 				include: {
 					location: true,
+<<<<<<< HEAD
                     metrics: true,
+=======
+					cases: true,
+>>>>>>> 3254e7e (fix: cases service)
 				},
 			}),
 		).pipe(
@@ -177,9 +181,13 @@ export class XdFacilitiesService {
 						createdAt,
 						updatedAt,
 						variables,
+<<<<<<< HEAD
 						status,
                         indicatorMsg,
                         metrics
+=======
+						cases,
+>>>>>>> 3254e7e (fix: cases service)
 					} = asset;
 
 					const location: IFacilityLocation | undefined = asset.location
@@ -206,6 +214,7 @@ export class XdFacilitiesService {
 						description: description || '',
 						createdAt: createdAt,
 						updatedAt: updatedAt,
+						cases: cases.map((c) => ({ caseId: c.id })),
 					};
 				});
 			}),
@@ -223,7 +232,11 @@ export class XdFacilitiesService {
 				},
 				include: {
 					location: true,
+<<<<<<< HEAD
                     metrics: true,
+=======
+					cases: true,
+>>>>>>> 3254e7e (fix: cases service)
 				},
 			}),
 		).pipe(
@@ -240,9 +253,13 @@ export class XdFacilitiesService {
 					variables,
 					createdAt,
 					updatedAt,
+<<<<<<< HEAD
 					status,
                     indicatorMsg,
                     metrics
+=======
+					cases,
+>>>>>>> 3254e7e (fix: cases service)
 				} = asset;
 
 				const location: IFacilityLocation | undefined = asset.location
@@ -269,6 +286,7 @@ export class XdFacilitiesService {
 					location: location,
 					createdAt: createdAt,
 					updatedAt: updatedAt,
+					cases: cases.map((c) => ({ caseId: c.id })),
 				};
 			}),
 		);
