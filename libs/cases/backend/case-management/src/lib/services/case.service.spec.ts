@@ -11,6 +11,7 @@ import {
 import { Test, TestingModule } from '@nestjs/testing';
 import { ECasePriority, ECaseStatus, ECaseType, ICreateCaseBody } from 'cases-shared-models';
 import { PrismaService } from 'common-backend-prisma';
+import { omit } from 'lodash';
 import { firstValueFrom } from 'rxjs';
 
 import { XdCaseController } from '../controller/case.controller';
@@ -36,6 +37,10 @@ describe('CaseController', () => {
 	beforeEach(async () => {
 		const prismaServiceMock = {
 			onModuleInit: jest.fn(),
+
+			asset: {
+				findUnique: jest.fn(),
+			},
 
 			case: {
 				create: jest.fn(),
@@ -69,26 +74,46 @@ describe('CaseController', () => {
 		const createResult = {
 			...createCaseModel,
 			id: faker.number.int(),
+			assetAssetId: faker.string.uuid(),
 			modifiedBy: '',
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		};
 
 		const spy = jest.spyOn(prisma.case, 'create').mockResolvedValue(createResult);
+		const findUniqeSpy = jest.spyOn(prisma.asset, 'findUnique').mockResolvedValue({
+			assetId: createResult.assetId,
+			description: faker.lorem.sentence(),
+			name: faker.lorem.sentence(),
+			typeId: faker.string.uuid(),
+			createdAt: new Date(),
+			updatedAt: new Date(),
+			variables: {},
+		});
 
 		// act
 		const result = await firstValueFrom(service.createCase(createCaseModel));
 
 		// assert
 		expect(spy).toHaveBeenCalledTimes(1);
-		expect(spy).toHaveBeenCalledWith({ data: createCaseModel });
-		expect(result).toEqual({ ...createResult, overdue: false });
+		expect(spy).toHaveBeenCalledWith({
+			data: { assetId: createCaseModel.assetId, ...omit(createCaseModel, 'assetId') },
+		});
+
+		const expectedResult = {
+			...omit(createResult, 'assetAssetId'),
+			assetId: createResult.assetAssetId,
+			overdue: false,
+		};
+
+		expect(result).toEqual({ ...expectedResult, overdue: false });
 	});
 
 	it('createCase => should create a new case by given data with overdue false', async () => {
 		const createResult = {
 			id: faker.number.int(),
 			...createCaseModel,
+			assetAssetId: faker.string.uuid(),
 			modifiedBy: '',
 			createdAt: new Date(),
 			updatedAt: new Date(),
@@ -96,11 +121,21 @@ describe('CaseController', () => {
 
 		jest.spyOn(prisma.case, 'create').mockResolvedValue(createResult);
 
+		jest.spyOn(prisma.asset, 'findUnique').mockResolvedValue({
+			assetId: createResult.assetId,
+			description: faker.lorem.sentence(),
+			name: faker.lorem.sentence(),
+			typeId: faker.string.uuid(),
+			createdAt: new Date(),
+			updatedAt: new Date(),
+			variables: {},
+		});
+
 		// act
 		const result = await firstValueFrom(service.createCase(createCaseModel));
 
 		// assert
-		expect(result).toEqual({ ...createResult, overdue: false });
+		expect(result).toEqual(expect.objectContaining({ overdue: false }));
 	});
 
 	it('getAllCases => should return an array of cases', async () => {
@@ -108,6 +143,7 @@ describe('CaseController', () => {
 			id: faker.number.int(),
 			...createCaseModel,
 			modifiedBy: '',
+			assetAssetId: faker.string.uuid(),
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		};
@@ -126,7 +162,11 @@ describe('CaseController', () => {
 		// assert
 		expect(spy).toHaveBeenCalledTimes(1);
 		expect(result).toEqual(
-			getResultMany.map((item, index) => ({ ...item, overdue: index !== 2 })),
+			getResultMany.map((item) => ({
+				...omit(item, 'assetAssetId'),
+				assetId: item.assetAssetId,
+				overdue: item.dueDate < new Date(),
+			})),
 		);
 	});
 
@@ -135,6 +175,7 @@ describe('CaseController', () => {
 			id: faker.number.int(),
 			...createCaseModel,
 			modifiedBy: '',
+			assetAssetId: faker.string.uuid(),
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		};
@@ -144,9 +185,15 @@ describe('CaseController', () => {
 		// act
 		const result = await firstValueFrom(service.getCaseById(getResult.id));
 
+		const expectedResult = {
+			...omit(getResult, 'assetAssetId'),
+			assetId: getResult.assetAssetId,
+			overdue: false,
+		};
+
 		// assert
 		expect(spy).toHaveBeenCalledTimes(1);
-		expect(result).toEqual({ ...getResult, overdue: false });
+		expect(result).toEqual(expectedResult);
 	});
 
 	it('updateCaseById => should find a case by ID and update it', async () => {
@@ -154,6 +201,7 @@ describe('CaseController', () => {
 			id: faker.number.int(),
 			...createCaseModel,
 			modifiedBy: '',
+			assetAssetId: faker.string.uuid(),
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		};
@@ -163,15 +211,23 @@ describe('CaseController', () => {
 		// act
 		const result = await firstValueFrom(service.updateCaseById(updateResult.id, updateResult));
 
+		console.log('result', result);
+
+		const expectedResult = {
+			...omit(updateResult, 'assetAssetId'),
+			assetId: updateResult.assetAssetId,
+			overdue: false,
+		};
 		// assert
 		expect(spy).toHaveBeenCalledTimes(1);
-		expect(result).toEqual({ ...updateResult, overdue: false });
+		expect(result).toEqual(expectedResult);
 	});
 
 	it('deleteCaseById => should find a case by ID and delete it', async () => {
 		const deleteResult = {
 			id: faker.number.int(),
 			...createCaseModel,
+			assetAssetId: faker.string.uuid(),
 			modifiedBy: '',
 			createdAt: new Date(),
 			updatedAt: new Date(),
@@ -182,8 +238,13 @@ describe('CaseController', () => {
 		// act
 		const result = await firstValueFrom(service.deleteCaseById(deleteResult.id));
 
+		const expectedResult = {
+			...omit(deleteResult, 'assetAssetId'),
+			assetId: deleteResult.assetAssetId,
+			overdue: false,
+		};
 		// assert
 		expect(spy).toHaveBeenCalledTimes(1);
-		expect(result).toEqual({ ...deleteResult, overdue: false });
+		expect(result).toEqual(expectedResult);
 	});
 });
