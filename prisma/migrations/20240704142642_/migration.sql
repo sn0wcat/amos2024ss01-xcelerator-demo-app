@@ -79,6 +79,7 @@ CREATE TABLE "Case" (
     "modifiedBy" TEXT NOT NULL DEFAULT '',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "assetAssetId" TEXT NOT NULL,
 
     CONSTRAINT "Case_pkey" PRIMARY KEY ("id")
 );
@@ -86,29 +87,18 @@ CREATE TABLE "Case" (
 -- CreateTable
 CREATE TABLE "Metrics" (
     "id" SERIAL NOT NULL,
-    "motorCurrentId" INTEGER NOT NULL,
-    "pressureOutId" INTEGER NOT NULL,
-    "stuffingBoxTemperatureId" INTEGER NOT NULL,
-    "pressureInId" INTEGER NOT NULL,
-    "flowId" INTEGER NOT NULL,
-    "Assetid" TEXT NOT NULL,
+    "min" DOUBLE PRECISION,
+    "max" DOUBLE PRECISION,
+    "mean" DOUBLE PRECISION,
+    "variance" DOUBLE PRECISION,
+    "standardDeviation" DOUBLE PRECISION,
+    "coefficientOfVariation" DOUBLE PRECISION,
+    "name" TEXT NOT NULL,
+    "assetId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Metrics_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "MetricStats" (
-    "id" SERIAL NOT NULL,
-    "min" DOUBLE PRECISION NOT NULL,
-    "max" DOUBLE PRECISION NOT NULL,
-    "mean" DOUBLE PRECISION NOT NULL,
-    "variance" DOUBLE PRECISION NOT NULL,
-    "standardDeviation" DOUBLE PRECISION NOT NULL,
-    "coefficientOfVariation" DOUBLE PRECISION NOT NULL,
-
-    CONSTRAINT "MetricStats_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -116,24 +106,6 @@ CREATE UNIQUE INDEX "TimeSeriesItem_assetId_propertySetName_key" ON "TimeSeriesI
 
 -- CreateIndex
 CREATE UNIQUE INDEX "AssetLocation_Assetid_key" ON "AssetLocation"("Assetid");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Metrics_motorCurrentId_key" ON "Metrics"("motorCurrentId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Metrics_pressureOutId_key" ON "Metrics"("pressureOutId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Metrics_stuffingBoxTemperatureId_key" ON "Metrics"("stuffingBoxTemperatureId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Metrics_pressureInId_key" ON "Metrics"("pressureInId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Metrics_flowId_key" ON "Metrics"("flowId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Metrics_Assetid_key" ON "Metrics"("Assetid");
 
 -- AddForeignKey
 ALTER TABLE "TimeSeriesItem" ADD CONSTRAINT "TimeSeriesItem_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "Asset"("assetId") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -145,19 +117,7 @@ ALTER TABLE "TimeSeriesDataItem" ADD CONSTRAINT "TimeSeriesDataItem_timeSeriesIt
 ALTER TABLE "AssetLocation" ADD CONSTRAINT "AssetLocation_Assetid_fkey" FOREIGN KEY ("Assetid") REFERENCES "Asset"("assetId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Metrics" ADD CONSTRAINT "MotorCurrent_fkey" FOREIGN KEY ("motorCurrentId") REFERENCES "MetricStats"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Case" ADD CONSTRAINT "Case_assetAssetId_fkey" FOREIGN KEY ("assetAssetId") REFERENCES "Asset"("assetId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Metrics" ADD CONSTRAINT "PressureOut_fkey" FOREIGN KEY ("pressureOutId") REFERENCES "MetricStats"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Metrics" ADD CONSTRAINT "StuffingBoxTemperature_fkey" FOREIGN KEY ("stuffingBoxTemperatureId") REFERENCES "MetricStats"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Metrics" ADD CONSTRAINT "PressureIn_fkey" FOREIGN KEY ("pressureInId") REFERENCES "MetricStats"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Metrics" ADD CONSTRAINT "Flow_fkey" FOREIGN KEY ("flowId") REFERENCES "MetricStats"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Metrics" ADD CONSTRAINT "Metrics_Assetid_fkey" FOREIGN KEY ("Assetid") REFERENCES "Asset"("assetId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Metrics" ADD CONSTRAINT "Metrics_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "Asset"("assetId") ON DELETE RESTRICT ON UPDATE CASCADE;
