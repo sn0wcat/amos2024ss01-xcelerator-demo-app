@@ -144,13 +144,6 @@ async function seedSingleFacility({
 	await prisma.timeSeriesDataItem.createMany({
 		data: [newPumpData, newEnvData].flat(),
 	});
-}
-
-async function main() {
-	// Seed database with facility data
-	for (let i = 0; i < facilityNames.length; i++) {
-		await seedSingleFacility({ ...facilityNames[i], index: i });
-	}
 
 	// create new case data from JSON file
 	const newCaseData = caseData.map((data: any) => {
@@ -166,6 +159,7 @@ async function main() {
 			priority: data.priority,
 			createdBy: data.createdBy,
 			eTag: data.eTag,
+			assetAssetId: asset.assetId,
 		};
 	});
 
@@ -173,6 +167,13 @@ async function main() {
 	await prisma.case.createMany({
 		data: newCaseData,
 	});
+}
+
+async function main() {
+	// Seed database with facility data
+	for (let i = 0; i < facilityNames.length; i++) {
+		await seedSingleFacility({ ...facilityNames[i], index: i });
+	}
 }
 
 main().catch((e) => {
