@@ -4,7 +4,6 @@ import {
     Component,
     computed,
     inject,
-    signal,
     ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -12,6 +11,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { XdBrowseFacade } from '@frontend/facilities/frontend/domain';
 import { StatusToColorRecord } from '@frontend/facilities/frontend/models';
 import { IxModule } from '@siemens/ix-angular';
+import { LocalStorageService } from 'common-frontend-models';
 import { EPumpStatus } from 'facilities-shared-models';
 
 @Component({
@@ -25,9 +25,12 @@ import { EPumpStatus } from 'facilities-shared-models';
 })
 export class XdBrowsePage {
 
-	protected showCardList = true;
+    private showCardListKey = 'showCardList';
+	protected showCardList;
+    private filterIssuesKey = 'filterIssues';
+    protected filterIssues;
+
     protected readonly StatusToColorRecord = StatusToColorRecord;
-    protected readonly filter = signal(true);
 	private readonly _browseFacade = inject(XdBrowseFacade);
 	private readonly allFacilities = toSignal(this._browseFacade.getAllFacilities());
     protected readonly facilities = computed(() => {
@@ -35,21 +38,26 @@ export class XdBrowsePage {
         if(!facilities)
             return undefined;
 
-       if(this.filter()) {
+       if(this.filterIssues()) {
            return facilities.filter(facility => facility.status != EPumpStatus.REGULAR);
        } else {
            return facilities;
        }
     });
 
-    constructor(protected readonly router: Router, protected readonly route: ActivatedRoute) {
+    constructor(protected readonly router: Router, protected readonly route: ActivatedRoute, private readonly browseStorageService: LocalStorageService) {
+        browseStorageService.register('showCardList', false);
+        this.showCardList = browseStorageService.get(this.showCardListKey);
+
+        browseStorageService.register(this.filterIssuesKey, true);
+        this.filterIssues= browseStorageService.get(this.filterIssuesKey);
     }
 
     toggleView() {
-		this.showCardList = !this.showCardList;
+		this.browseStorageService.set(this.showCardListKey, !this.showCardList());
 	}
 
     toggleFilter() {
-        this.filter.set(!this.filter());
+        this.browseStorageService.set(this.filterIssuesKey, !this.filterIssues());
     }
 }

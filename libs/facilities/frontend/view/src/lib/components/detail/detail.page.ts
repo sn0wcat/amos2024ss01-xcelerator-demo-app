@@ -33,7 +33,7 @@ import LockModalComponent from './lock-modal/lockModal.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class XdDetailPage implements OnInit {
-	protected theme = convertThemeName(themeSwitcher.getCurrentTheme());
+	protected theme = signal(convertThemeName(themeSwitcher.getCurrentTheme()));
 	protected readonly locked = signal(true);
 	protected readonly StatusToColorRecord = StatusToColorRecord;
 	private readonly _assetId = this.route.snapshot.params['id'];
@@ -186,10 +186,9 @@ export class XdDetailPage implements OnInit {
 
 	ngOnInit() {
 		registerTheme(echarts);
-
-		themeSwitcher.themeChanged.on((theme: string) => {
-			this.theme = convertThemeName(theme);
-		});
+        themeSwitcher.themeChanged.on((theme: string) => {
+            this.theme.set(convertThemeName(theme));
+        });
 	}
 
 	async changeLocked() {
