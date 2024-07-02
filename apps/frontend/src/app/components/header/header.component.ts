@@ -33,22 +33,6 @@ export class HeaderComponent {
     private themeStorageService = inject(ThemeStorageService);
     protected lightMode = this.themeStorageService.getLightMode();
 
-    protected image = computed(() => {
-        if(this.lightMode()){
-            return "https://cdn.c2comms.cloud/images/logo-collection/2.1/sie-logo-black-rgb.svg";
-        } else {
-            return "https://cdn.c2comms.cloud/images/logo-collection/2.1/sie-logo-white-rgb.svg";
-        }}
-    );
-
-    protected icon = computed(() => {
-        if(this.lightMode()){
-            return "sun-filled";
-        } else {
-            return "sun";
-        }}
-    );
-
     readonly routerEvents = toSignal(
         this._router.events.pipe(filter((e) => e instanceof NavigationEnd)),
         { initialValue: null },

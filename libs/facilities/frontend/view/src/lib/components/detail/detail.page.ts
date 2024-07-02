@@ -186,9 +186,10 @@ export class XdDetailPage implements OnInit {
 
 	ngOnInit() {
 		registerTheme(echarts);
-        themeSwitcher.themeChanged.on((theme: string) => {
+
+		themeSwitcher.themeChanged.on((theme: string) => {
             this.theme.set(convertThemeName(theme));
-        });
+		});
 	}
 
 	async changeLocked() {
