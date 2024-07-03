@@ -12,10 +12,10 @@
     <div class="details-grid gap-x-6 gap-y-4 pb-32">
 
         @if(this.pumpChart(); as pumpChart){
-            <div echarts [options]="pumpChart" [theme]="theme"></div>
+            <div echarts [options]="pumpChart" [theme]="theme()"></div>
         }
         @if(this.envChart(); as envChart){
-            <div echarts [options]="envChart" [theme]="theme"></div>
+            <div echarts [options]="envChart" [theme]="theme()"></div>
         }
 
 		<ix-card variant="insight" class="h-full w-full p-4">

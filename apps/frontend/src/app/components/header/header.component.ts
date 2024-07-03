@@ -8,10 +8,10 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { themeSwitcher } from '@siemens/ix';
 import { IxModule } from '@siemens/ix-angular';
 import { filter } from 'rxjs';
 
+import { ThemeStorageService } from '../../../models/services/theme-storage.service';
 import { LegalInformationComponent } from './legal-information/legal-information.component';
 
 /**
@@ -27,9 +27,11 @@ import { LegalInformationComponent } from './legal-information/legal-information
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
+
     private readonly _activatedRoute: ActivatedRoute = inject(ActivatedRoute);
     private readonly _router: Router = inject(Router);
-    private _lightMode = false;
+    private themeStorageService = inject(ThemeStorageService);
+    protected lightMode = this.themeStorageService.getLightMode();
 
     readonly routerEvents = toSignal(
         this._router.events.pipe(filter((e) => e instanceof NavigationEnd)),
@@ -69,21 +71,7 @@ export class HeaderComponent {
     }
 
     toggleMode() {
-        themeSwitcher.toggleMode();
-        this._lightMode = !this._lightMode;
+        this.themeStorageService.toggleTheme();
     }
 
-    getCorrectImage() {
-        if (this._lightMode) {
-            return "https://cdn.c2comms.cloud/images/logo-collection/2.1/sie-logo-black-rgb.svg";
-        }
-        return "https://cdn.c2comms.cloud/images/logo-collection/2.1/sie-logo-white-rgb.svg";
-    }
-
-    getCorrectIcon() {
-        if (this._lightMode) {
-            return "sun-filled";
-        }
-        return "sun";
-    }
 }
