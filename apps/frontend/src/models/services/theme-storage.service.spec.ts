@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { ThemeStorageService } from './theme-storage.service';
 
@@ -20,16 +20,17 @@ describe('ThemeStorageService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should set lightmode to false initially and change it when toggled', async () => {
+    it('should set lightmode to false initially and change it when toggled', fakeAsync(() => {
         // we need to wait for the effect to be done
-        await new Promise(resolve => setTimeout(resolve, 100));
+        tick();
         expect(service.getLightMode()()).toBeFalsy();
         expect(localStorage.setItem).toHaveBeenCalledWith('lightMode', 'false');
 
         service.toggleTheme();
-        await new Promise(resolve => setTimeout(resolve, 100));
+
+        tick();
         expect(service.getLightMode()()).toBeTruthy();
         expect(localStorage.setItem).toHaveBeenCalledWith('lightMode', 'true');
-    });
+    }));
 
 });

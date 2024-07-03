@@ -21,7 +21,7 @@ export class ThemeStorageService {
     }
 
     /**
-     * flips the lighMode signal and thus results in
+     * flips the lightMode signal and thus results in
      * the "lightMode" in the localStorage to be changed
      * and also calls the Siemens themeSwitcher
      */
