@@ -56,6 +56,11 @@ export class HeaderComponent {
         return breadcrumbs;
     });
 
+    readonly isHomePage = computed(() => {
+        this.routerEvents();
+        return this._activatedRoute.snapshot.firstChild?.routeConfig?.path === '';
+    });
+
     /**
      * from the right cut the current url until a '/' is reached n times
      * So for /cases/10/abc, goBack(1) yields /cases/10
@@ -85,5 +90,9 @@ export class HeaderComponent {
             return "sun-filled";
         }
         return "sun";
+    }
+
+    refresh() {
+        window.location.reload();
     }
 }
