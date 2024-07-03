@@ -1,9 +1,9 @@
 <div class="absolute top-20 right-4 !z-[50] flex flex-row-reverse gap-x-4">
     <ix-button (click)="toggleView()">
-        Switch to {{ showCardList ? 'Event List' : 'Card List' }}
+        Switch to {{ showCardList() ? 'Event List' : 'Card List' }}
     </ix-button>
     <ix-button (click)="toggleFilter()">
-        {{ filter() ? 'Remove Filter for Issues' : 'Filter Facilities with Issues' }}
+        {{ filterIssues() ? 'Remove Filter for Issues' : 'Filter Facilities with Issues' }}
     </ix-button>
 </div>
 
@@ -16,7 +16,7 @@
 ></ix-content-header>
 
 <ix-content>
-	@if (showCardList) {
+	@if (showCardList()) {
         @if (facilities(); as facilities) {
             <ix-card-list label="Facilities Overview" [showAllCount]="facilities.length" list-style="stack" class="pb-32">
                 @for (facility of facilities; track facility.id) {
