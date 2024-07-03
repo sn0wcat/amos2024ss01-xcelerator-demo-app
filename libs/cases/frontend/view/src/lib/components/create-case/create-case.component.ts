@@ -13,6 +13,7 @@ import { faker } from '@faker-js/faker';
 import { XdCasesFacade } from '@frontend/cases/frontend/domain';
 import { ECasePriority, ECaseStatus, ECaseType } from '@frontend/cases/shared/models';
 import { XdBrowseFacade } from '@frontend/facilities/frontend/domain';
+import { StatusToColorRecord } from '@frontend/facilities/frontend/models';
 import { IxModule, IxSelectCustomEvent, ToastService } from '@siemens/ix-angular';
 
 import { CaseFormData } from '../interfaces/case-form-data.interface';
@@ -35,6 +36,7 @@ import { DateDropdownWrapperComponent } from './date-dropdown-accessor';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateCaseComponent implements OnInit {
+    protected readonly StatusToColorRecord = StatusToColorRecord;
     private readonly _browseFacade = inject(XdBrowseFacade);
     protected readonly _casesFacade = inject(XdCasesFacade);
     protected readonly facilities = toSignal(this._browseFacade.getAllFacilities());
@@ -192,5 +194,4 @@ export class CreateCaseComponent implements OnInit {
             eTag: faker.string.alphanumeric(10),
         };
     }
-
 }
