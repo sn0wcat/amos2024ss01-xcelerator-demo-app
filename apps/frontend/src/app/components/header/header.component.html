@@ -9,7 +9,7 @@
                 alt="Siemens logo"
             />
         </button>
-        <ix-button class="mt-1" variant="secondary" ghost>
+        <ix-button class="mt-1" variant="secondary">
             Powered by Siemens Xcelerator
         </ix-button>
         <ix-avatar username="John Doe" extra="Administrator"> </ix-avatar>
@@ -23,6 +23,12 @@
             ></ix-breadcrumb-item>
         }
     </ix-breadcrumb>
+
+    @if (!isHomePage()){
+        <div class="absolute top-10 right-4 !z-[50] flex flex-row-reverse gap-x-4">
+            <ix-button icon="refresh" (click)="refresh()">Refresh</ix-button>
+        </div>
+    }
 
     <ix-menu>
         <ix-menu-item icon="home" [routerLink]="['/']">Home</ix-menu-item>
