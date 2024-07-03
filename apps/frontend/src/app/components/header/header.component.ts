@@ -79,13 +79,6 @@ export class HeaderComponent {
         this.themeStorageService.toggleTheme();
     }
 
-    getCorrectIcon() {
-        if (this._lightMode) {
-            return "sun-filled";
-        }
-        return "sun";
-    }
-
     refresh() {
         window.location.reload();
     }
