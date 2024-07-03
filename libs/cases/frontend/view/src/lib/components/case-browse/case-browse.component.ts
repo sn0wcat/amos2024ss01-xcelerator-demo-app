@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import {
-	ChangeDetectionStrategy,
-	Component,
-	computed,
-	inject,
-	signal,
-	ViewEncapsulation,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    signal,
+    ViewEncapsulation, WritableSignal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { XdCasesFacade } from '@frontend/cases/frontend/domain';
 import { ICaseResponse } from '@frontend/cases/shared/models';
-import { IxModule } from '@siemens/ix-angular';
+import { FilterState, IxCategoryFilterCustomEvent, IxModule } from '@siemens/ix-angular';
 
 @Component({
 	selector: 'lib-brows-cases',
@@ -23,94 +23,27 @@ import { IxModule } from '@siemens/ix-angular';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseBrowseComponent {
-	protected readonly showPriorityEmergency = signal(true);
-	protected readonly showPriorityHigh = signal(true);
-	protected readonly showPriorityMedium = signal(true);
-	protected readonly showPriorityLow = signal(true);
-
-	protected readonly showTypePlanned = signal(true);
-	protected readonly showTypeIncident = signal(true);
-	protected readonly showTypeAnnotation = signal(true);
-
-	protected readonly showStatusOpen = signal(true);
-	protected readonly showStatusInProgress = signal(false);
-	protected readonly showStatusOverdue = signal(false);
-	protected readonly showStatusOnHold = signal(false);
-	protected readonly showStatusDone = signal(false);
-	protected readonly showStatusCancelled = signal(false);
-	protected readonly showStatusArchived = signal(false);
-
+    private filter: WritableSignal<{id: string, value: string, operator: string}[]> = signal([ {id: '', operator:'', value: ''} ]);
 	protected readonly _casesFacade = inject(XdCasesFacade);
 	protected readonly _cases = toSignal(this._casesFacade.getAllCases());
 	protected readonly _sortedCases = computed(() => {
-		let cases = this._cases();
+        let cases = this._cases();
 		if (cases === undefined) {
 			return;
 		}
 
-		if (!this.showPriorityEmergency()) {
-			cases = cases.filter((_case) => _case.priority != 'EMERGENCY');
-		}
-		if (!this.showPriorityHigh()) {
-			cases = cases.filter((_case) => _case.priority != 'HIGH');
-		}
-		if (!this.showPriorityMedium()) {
-			cases = cases.filter((_case) => _case.priority != 'MEDIUM');
-		}
-		if (!this.showPriorityLow()) {
-			cases = cases.filter((_case) => _case.priority != 'LOW');
-		}
-
-		if (!this.showTypePlanned()) {
-			cases = cases.filter((_case) => _case.type != 'PLANNED');
-		}
-		if (!this.showTypeIncident()) {
-			cases = cases.filter((_case) => _case.type != 'INCIDENT');
-		}
-		if (!this.showTypeAnnotation()) {
-			cases = cases.filter((_case) => _case.type != 'ANNOTATION');
-		}
-
-		if (!this.showStatusOpen()) {
-			cases = cases.filter((_case) => _case.status != 'OPEN');
-		}
-		if (!this.showStatusInProgress()) {
-			cases = cases.filter((_case) => _case.status != 'INPROGRESS');
-		}
-		if (!this.showStatusOnHold()) {
-			cases = cases.filter((_case) => _case.status != 'ONHOLD');
-		}
-		if (!this.showStatusDone()) {
-			cases = cases.filter((_case) => _case.status != 'DONE');
-		}
-		if (!this.showStatusOverdue()) {
-			cases = cases.filter((_case) => _case.status != 'OVERDUE');
-		}
-		if (!this.showStatusCancelled()) {
-			cases = cases.filter((_case) => _case.status != 'CANCELLED');
-		}
-		if (!this.showStatusArchived()) {
-			cases = cases.filter((_case) => _case.status != 'ARCHIVED');
-		}
-
-		const statusOrder = [
-			'OPEN',
-			'INPROGRESS',
-			'OVERDUE',
-			'ONHOLD',
-			'DONE',
-			'CANCELLED',
-			'ARCHIVED',
-		];
-		const priorityOrder = [ 'EMERGENCY', 'HIGH', 'MEDIUM', 'LOW' ];
+        //Hier filtern
+        if (this.filter()) {
+            cases = this.filterCases(cases);
+        }
 
 		cases.sort((a, b) => {
-			const statusAIndex = statusOrder.indexOf(a.status);
-			const statusBIndex = statusOrder.indexOf(b.status);
+			const statusAIndex = this.statusOrder.indexOf(a.status);
+			const statusBIndex = this.statusOrder.indexOf(b.status);
 
 			if (statusAIndex === statusBIndex) {
-				const priorityAIndex = priorityOrder.indexOf(a.priority.toUpperCase());
-				const priorityBIndex = priorityOrder.indexOf(b.priority.toUpperCase());
+				const priorityAIndex = this.priorityOrder.indexOf(a.priority.toUpperCase());
+				const priorityBIndex = this.priorityOrder.indexOf(b.priority.toUpperCase());
 
 				if (priorityAIndex === priorityBIndex) {
 					return a.id - b.id;
@@ -131,6 +64,17 @@ export class CaseBrowseComponent {
 		return cases;
 	});
 
+    statusOrder: string[] = [
+        'OPEN',
+        'INPROGRESS',
+        'OVERDUE',
+        'ONHOLD',
+        'DONE',
+        'CANCELLED',
+        'ARCHIVED',
+    ];
+    priorityOrder: string[] = [ 'EMERGENCY', 'HIGH', 'MEDIUM', 'LOW' ];
+
     constructor(
         protected router: Router,
         protected route: ActivatedRoute
@@ -149,48 +93,63 @@ export class CaseBrowseComponent {
 		};
 	}
 
-    flipShowPriorityEmergency() {
-        this.showPriorityEmergency.update(value => !value);
-    }
-    flipShowPriorityHigh() {
-        this.showPriorityHigh.update(value => !value);
-    }
-    flipShowPriorityMedium() {
-        this.showPriorityMedium.update(value => !value);
-    }
-    flipShowPriorityLow() {
-        this.showPriorityLow.update(value => !value);
+    filterCases(cases: ICaseResponse[]): ICaseResponse[] {
+        if (this.filter().length > 0) {
+            this.filter().forEach((filter: {id: string, value: string, operator: string}) => {
+                cases = cases.filter(c => {
+                    if (filter.operator === 'Equal') {
+                        if (filter.id === 'Status') {
+                            return c.status === filter.value;
+                        } else if (filter.id === 'Priority') {
+                            return c.priority === filter.value;
+                        } else if (filter.id === 'Type') {
+                            return c.type === filter.value;
+                        }
+                    } else if (filter.operator === 'Not equal') {
+                        if (filter.id === 'Status') {
+                            return c.status !== filter.value;
+                        } else if (filter.id === 'Priority') {
+                            return c.priority !== filter.value;
+                        } else if (filter.id === 'Type') {
+                            return c.type !== filter.value;
+                        }
+                    }
+                    return c;
+                })
+            })
+        }
+        return cases;
     }
 
-    flipShowTypePlanned() {
-        this.showTypePlanned.update(value => !value);
-    }
-    flipShowTypeIncident() {
-        this.showTypeIncident.update(value => !value);
-    }
-    flipShowTypeAnnotation() {
-        this.showTypeAnnotation.update(value => !value);
-    }
+    repeatCategories = true;
+    filterState = {
+        tokens: [  ],
+        categories: [
+            {
+                id: 'Status',
+                value: 'OPEN',
+                operator: 'Equal',
+            },
+        ],
+    };
+    categories = {
+        Status: {
+            label: 'status',
+            options: [ 'OPEN', 'INPROGRESS', 'ONHOLD', 'DONE', 'OVERDUE', 'CANCELLED', 'ARCHIVED' ]
+        },
+        Priority: {
+            label: 'priority',
+            options: [ 'EMERGENCY', 'HIGH', 'MEDIUM', 'LOW' ]
+        },
+        Type: {
+            label: 'type',
+            options: [ 'PLANNED', 'INCIDENT', 'ANNOTATION' ]
+        }
 
-    flipShowStatusOpen() {
-        this.showStatusOpen.update(value => !value);
-    }
-    flipShowStatusInProgress() {
-        this.showStatusInProgress.update(value => !value);
-    }
-    flipShowStatusOnHold() {
-        this.showStatusOnHold.update(value => !value);
-    }
-    flipShowStatusDone() {
-        this.showStatusDone.update(value => !value);
-    }
-    flipShowStatusOverdue() {
-        this.showStatusOverdue.update(value => !value);
-    }
-    flipShowStatusCancelled() {
-        this.showStatusCancelled.update(value => !value);
-    }
-    flipShowStatusArchived() {
-        this.showStatusArchived.update(value => !value);
+    };
+
+
+    filterList(event: IxCategoryFilterCustomEvent<FilterState>) {
+        this.filter.set(event.detail.categories);
     }
 }

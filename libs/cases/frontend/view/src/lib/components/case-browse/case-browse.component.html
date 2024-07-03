@@ -10,87 +10,14 @@
     (backButtonClick)="router.navigate(['../'], { relativeTo: route })"
 ></ix-content-header>
 
-<ix-content class="pb-16">
-	<div class="flex flex-col gap-y-2 pb-2">
-		<div class="flex gap-x-2">
-            <ix-toggle-button  ghost class="toggle-pill" (pressedChange)="flipShowStatusOpen()"
-                               [pressed]="showStatusOpen()" [variant]="showStatusOpen() ? 'Primary' : 'Secondary'"
-            >
-                open
-            </ix-toggle-button>
-            <ix-toggle-button  ghost class="toggle-pill" (pressedChange)="flipShowStatusInProgress()"
-                               [pressed]="showStatusInProgress()" [variant]="showStatusInProgress() ? 'Primary' : 'Secondary'"
-            >
-				in progress
-            </ix-toggle-button>
-            <ix-toggle-button  ghost class="toggle-pill" (pressedChange)="flipShowStatusOnHold()"
-                               [pressed]="showStatusOnHold()" [variant]="showStatusOnHold() ? 'Primary' : 'Secondary'"
-            >
-				on hold
-			</ix-toggle-button>
-            <ix-toggle-button  ghost class="toggle-pill" (pressedChange)="flipShowStatusDone()"
-                               [pressed]="showStatusDone()" [variant]="showStatusDone() ? 'Primary' : 'Secondary'"
-            >
-				done
-            </ix-toggle-button>
-            <ix-toggle-button ghost class="toggle-pill" (pressedChange)="flipShowStatusOverdue()"
-                              [pressed]="showStatusOverdue()" [variant]="showStatusOverdue() ? 'Primary' : 'Secondary'"
-            >
-                overdue
-            </ix-toggle-button>
-            <ix-toggle-button ghost class="toggle-pill" (pressedChange)="flipShowStatusCancelled()"
-                              [pressed]="showStatusCancelled()" [variant]="showStatusCancelled() ? 'Primary' : 'Secondary'"
-            >
-                cancelled
-            </ix-toggle-button>
-            <ix-toggle-button ghost class="toggle-pill" (pressedChange)="flipShowStatusArchived()"
-                              [pressed]="showStatusArchived()" [variant]="showStatusArchived() ? 'Primary' : 'Secondary'"
-            >
-                archived
-            </ix-toggle-button>
-		</div>
-
-        <div class="flex gap-x-2">
-            <ix-toggle-button ghost class="toggle-pill" (pressedChange)="flipShowPriorityEmergency()"
-                              [pressed]="showPriorityEmergency()" [variant]="showPriorityEmergency() ? 'Primary' : 'Secondary'"
-            >
-                emergencies
-            </ix-toggle-button>
-            <ix-toggle-button ghost class="toggle-pill" (pressedChange)="flipShowPriorityHigh()"
-                              [pressed]="showPriorityHigh()" [variant]="showPriorityHigh() ? 'Primary' : 'Secondary'"
-            >
-                high
-            </ix-toggle-button>
-            <ix-toggle-button ghost class="toggle-pill" (pressedChange)="flipShowPriorityMedium()"
-                              [pressed]="showPriorityMedium()" [variant]="showPriorityMedium() ? 'Primary' : 'Secondary'"
-            >
-                medium
-            </ix-toggle-button>
-            <ix-toggle-button ghost class="toggle-pill" (pressedChange)="flipShowPriorityLow()"
-                              [pressed]="showPriorityLow()" [variant]="showPriorityLow() ? 'Primary' : 'Secondary'"
-            >
-                low
-            </ix-toggle-button>
-        </div>
-
-        <div class="flex gap-x-2">
-            <ix-toggle-button ghost class="toggle-pill" (pressedChange)="flipShowTypePlanned()"
-                              [pressed]="showTypePlanned()" [variant]="showTypePlanned() ? 'Primary' : 'Secondary'"
-            >
-                planned
-            </ix-toggle-button>
-            <ix-toggle-button ghost class="toggle-pill" (pressedChange)="flipShowTypeIncident()"
-                              [pressed]="showTypeIncident()" [variant]="showTypeIncident() ? 'Primary' : 'Secondary'"
-            >
-                incident
-            </ix-toggle-button>
-            <ix-toggle-button ghost class="toggle-pill" (pressedChange)="flipShowTypeAnnotation()"
-                              [pressed]="showTypeAnnotation()" [variant]="showTypeAnnotation() ? 'Primary' : 'Secondary'"
-            >
-                annotation
-            </ix-toggle-button>
-        </div>
-	</div>
+<ix-content>
+    <ix-category-filter
+        placeholder="Filter by"
+        [repeatCategories]="repeatCategories"
+        [categories]="categories"
+        [filterState]="filterState"
+        (filterChanged)="filterList($event)"
+    ></ix-category-filter>
 
 	<table class="table">
 		<thead>
