@@ -18,7 +18,7 @@ describe('LocalStorageService', () => {
     });
 
     it('register should set it to the default value if it is not set', () => {
-        service.register('test', false);
+        service.register('test', 'false');
 
         expect(localStorage.setItem).toHaveBeenCalledWith('test', 'false');
     });
@@ -27,12 +27,12 @@ describe('LocalStorageService', () => {
 
         Storage.prototype.getItem = jest.fn().mockReturnValue("true");
 
-        service.register('test', false);
+        service.register('test', 'false');
         expect(localStorage.setItem).toHaveBeenCalledTimes(0);
     });
 
     it('set should correctly set the localStorage and signal', () => {
-        service.set('test', true);
+        service.set('test', 'true');
 
         expect(localStorage.setItem).toHaveBeenCalledWith('test', 'true');
         expect(service.get('test')()).toBe(true);
@@ -40,13 +40,13 @@ describe('LocalStorageService', () => {
 
     it('set should correctly update signal', () => {
 
-        service.set('test', true);
+        service.set('test', 'true');
 
         const signal = service.get('test')
-        expect(signal()).toBe(true);
+        expect(signal()).toBe('true');
 
-        service.set('test', false);
-        expect(signal()).toBe(false);
+        service.set('test', 'false');
+        expect(signal()).toBe('false');
     });
 
 
