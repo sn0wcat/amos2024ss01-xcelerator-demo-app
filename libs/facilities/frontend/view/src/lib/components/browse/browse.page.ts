@@ -53,7 +53,7 @@ export class XdBrowsePage {
     });
 
     constructor(protected readonly router: Router, protected readonly route: ActivatedRoute, private readonly localStorageService: LocalStorageService) {
-        localStorageService.register('showCardList', 'false');
+        localStorageService.register(this.showCardListKey, 'true');
         localStorageService.register(this.filterIssuesKey, 'true');
     }
 
