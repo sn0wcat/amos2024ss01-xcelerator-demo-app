@@ -35,7 +35,7 @@ describe('LocalStorageService', () => {
         service.set('test', 'true');
 
         expect(localStorage.setItem).toHaveBeenCalledWith('test', 'true');
-        expect(service.get('test')()).toBe(true);
+        expect(service.get('test')()).toBe('true');
     });
 
     it('set should correctly update signal', () => {
@@ -48,6 +48,5 @@ describe('LocalStorageService', () => {
         service.set('test', 'false');
         expect(signal()).toBe('false');
     });
-
 
 });

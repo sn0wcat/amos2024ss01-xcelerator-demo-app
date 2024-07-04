@@ -29,7 +29,7 @@ export class LocalStorageService {
      * @param value The string value to set.
      */
     set(key: string, value: string){
-        localStorage.setItem(key, String(value));
+        localStorage.setItem(key, value);
         this.getOrCreateSignal(key).set(value);
     }
 
