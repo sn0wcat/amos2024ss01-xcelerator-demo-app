@@ -3,15 +3,15 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    inject,
-    signal,
-    ViewEncapsulation, WritableSignal,
+    inject, Signal,
+    ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { XdCasesFacade } from '@frontend/cases/frontend/domain';
 import { ICaseResponse } from '@frontend/cases/shared/models';
 import { FilterState, IxCategoryFilterCustomEvent, IxModule } from '@siemens/ix-angular';
+import { LocalStorageService } from 'common-frontend-models';
 
 @Component({
 	selector: 'lib-brows-cases',
@@ -23,7 +23,14 @@ import { FilterState, IxCategoryFilterCustomEvent, IxModule } from '@siemens/ix-
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseBrowseComponent {
-    private filter: WritableSignal<{id: string, value: string, operator: string}[]> = signal([ {id: '', operator:'', value: ''} ]);
+    filter: Signal<{id: string, value: string, operator: string}[]> = computed(() => {
+        const filterString = this.localStorage.get('caseFilter')()
+        if (filterString !== null) {
+            return this.stringToFilter(filterString as string)
+        } else {
+            return [ {id: '', value: '', operator: ''} ];
+        }
+    });
 	protected readonly _casesFacade = inject(XdCasesFacade);
 	protected readonly _cases = toSignal(this._casesFacade.getAllCases());
 	protected readonly _sortedCases = computed(() => {
@@ -77,8 +84,11 @@ export class CaseBrowseComponent {
 
     constructor(
         protected router: Router,
-        protected route: ActivatedRoute
-    ) {}
+        protected route: ActivatedRoute,
+        protected localStorage: LocalStorageService,
+    ) {
+        this.localStorage.register('caseFilter', this.filterToString([ {id: 'Status', operator:'Equal', value: 'OPEN'} ]));
+    }
 
 	getStatusClasses(_case: ICaseResponse) {
 		return {
@@ -121,16 +131,22 @@ export class CaseBrowseComponent {
         return cases;
     }
 
+    filterToString(filter: {id: string, value: string, operator: string}[]): string {
+        return filter.map((f) => f.id + ',' + f.operator + ',' + f.value).join('|');
+    }
+
+    stringToFilter(filterString: string) {
+        const filter = filterString.split('|');
+        return filter.map((f) => {
+            const filterParts = f.split(',');
+            return { id: filterParts[0], operator: filterParts[1], value: filterParts[2] };
+        })
+    }
+
     repeatCategories = true;
     filterState = {
         tokens: [  ],
-        categories: [
-            {
-                id: 'Status',
-                value: 'OPEN',
-                operator: 'Equal',
-            },
-        ],
+        categories: this.filter(),
     };
     categories = {
         Status: {
@@ -148,8 +164,12 @@ export class CaseBrowseComponent {
 
     };
 
-
     filterList(event: IxCategoryFilterCustomEvent<FilterState>) {
-        this.filter.set(event.detail.categories);
+        //this.filter.set(event.detail.categories);
+        if (this.localStorage.get('caseFilter')() === null) {
+            this.localStorage.register('caseFilter', this.filterToString([ {id: 'Status', operator:'Equal', value: 'OPEN'} ]));
+        }else {
+            this.localStorage.set('caseFilter', this.filterToString(event.detail.categories));
+        }
     }
 }
