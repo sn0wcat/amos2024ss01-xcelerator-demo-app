@@ -1,13 +1,5 @@
 import { faker } from '@faker-js/faker';
-<<<<<<< HEAD
-import {
-	ECasePriority,
-	ECaseStatus,
-	ECaseType,
-	ICreateCaseBody,
-} from '@frontend/cases/shared/models';
-=======
->>>>>>> 3254e7e (fix: cases service)
+import { EPumpStatus } from '@frontend/facilities/shared/models';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ECasePriority, ECaseStatus, ECaseType, ICreateCaseBody } from 'cases-shared-models';
 import { PrismaService } from 'common-backend-prisma';
@@ -52,7 +44,7 @@ describe('CaseController', () => {
 		};
 
 		const module: TestingModule = await Test.createTestingModule({
-			controllers: [XdCaseController],
+			controllers: [ XdCaseController ],
 			providers: [
 				XdCaseService,
 				{
@@ -89,6 +81,8 @@ describe('CaseController', () => {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 			variables: {},
+			status: faker.helpers.enumValue(EPumpStatus),
+			indicatorMsg: faker.string.sample(),
 		});
 
 		// act
@@ -129,6 +123,8 @@ describe('CaseController', () => {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 			variables: {},
+			status: faker.helpers.enumValue(EPumpStatus),
+			indicatorMsg: faker.string.sample(),
 		});
 
 		// act

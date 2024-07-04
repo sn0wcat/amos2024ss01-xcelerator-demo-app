@@ -1,4 +1,9 @@
-import { EPumpStatus, IFacilitiesResponse, IFacilityLocation, IPumpMetrics } from '@frontend/facilities/shared/models';
+import {
+	EPumpStatus,
+	IFacilitiesResponse,
+	IFacilityLocation,
+	IPumpMetrics,
+} from '@frontend/facilities/shared/models';
 import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Aspect, Asset, XdAssetsService } from 'common-backend-insight-hub';
 import { PrismaService } from 'common-backend-prisma';
@@ -163,11 +168,8 @@ export class XdFacilitiesService {
 			this.prismaService.asset.findMany({
 				include: {
 					location: true,
-<<<<<<< HEAD
-                    metrics: true,
-=======
+					metrics: true,
 					cases: true,
->>>>>>> 3254e7e (fix: cases service)
 				},
 			}),
 		).pipe(
@@ -181,13 +183,10 @@ export class XdFacilitiesService {
 						createdAt,
 						updatedAt,
 						variables,
-<<<<<<< HEAD
 						status,
-                        indicatorMsg,
-                        metrics
-=======
+						indicatorMsg,
+						metrics,
 						cases,
->>>>>>> 3254e7e (fix: cases service)
 					} = asset;
 
 					const location: IFacilityLocation | undefined = asset.location
@@ -208,8 +207,8 @@ export class XdFacilitiesService {
 						typeId,
 						status: status as EPumpStatus,
 						location,
-                        indicatorMsg,
-                        metrics: metrics as IPumpMetrics[],
+						indicatorMsg,
+						metrics: metrics as IPumpMetrics[],
 						variables: variables || undefined,
 						description: description || '',
 						createdAt: createdAt,
@@ -232,11 +231,8 @@ export class XdFacilitiesService {
 				},
 				include: {
 					location: true,
-<<<<<<< HEAD
-                    metrics: true,
-=======
+					metrics: true,
 					cases: true,
->>>>>>> 3254e7e (fix: cases service)
 				},
 			}),
 		).pipe(
@@ -253,13 +249,10 @@ export class XdFacilitiesService {
 					variables,
 					createdAt,
 					updatedAt,
-<<<<<<< HEAD
 					status,
-                    indicatorMsg,
-                    metrics
-=======
+					indicatorMsg,
+					metrics,
 					cases,
->>>>>>> 3254e7e (fix: cases service)
 				} = asset;
 
 				const location: IFacilityLocation | undefined = asset.location

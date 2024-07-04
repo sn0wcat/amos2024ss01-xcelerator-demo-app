@@ -4,41 +4,25 @@ import {
 	Component,
 	computed,
 	inject,
-<<<<<<< HEAD
 	signal,
 	ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { XdCasesFacade } from '@frontend/cases/frontend/domain';
-import { ICaseResponse } from '@frontend/cases/shared/models';
-=======
-	ViewEncapsulation,
-} from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
-import { XdBrowseFacadesService } from '@frontend/cases/frontend/domain';
->>>>>>> 38fb606 (fix: case Service test)
 import { IxModule } from '@siemens/ix-angular';
 import { ICaseResponse } from 'cases-shared-models';
 
 @Component({
 	selector: 'lib-brows-cases',
 	standalone: true,
-<<<<<<< HEAD
 	imports: [ CommonModule, IxModule, RouterLink ],
 	templateUrl: './case-browse.component.html',
 	styleUrls: [ './case-browse.component.scss' ],
-=======
-	imports: [CommonModule, IxModule, RouterLink],
-	templateUrl: './case-browse.component.html',
-	styleUrls: ['./case-browse.component.scss'],
->>>>>>> 38fb606 (fix: case Service test)
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseBrowseComponent {
-<<<<<<< HEAD
 	protected readonly showPriorityEmergency = signal(true);
 	protected readonly showPriorityHigh = signal(true);
 	protected readonly showPriorityMedium = signal(true);
@@ -147,58 +131,11 @@ export class CaseBrowseComponent {
 		return cases;
 	});
 
-    constructor(
-        protected router: Router,
-        protected route: ActivatedRoute
-    ) {}
+	constructor(
+		protected router: Router,
+		protected route: ActivatedRoute,
+	) {}
 
-=======
-	protected readonly _browseFacade = inject(XdBrowseFacadesService);
-	protected readonly _cases = toSignal(this._browseFacade.getAllCases());
-	protected readonly _sortedCases = computed(() => {
-		const cases = this._cases();
-		if (cases === undefined) {
-			return;
-		}
-		const statusOrder = [
-			'OPEN',
-			'INPROGRESS',
-			'OVERDUE',
-			'ONHOLD',
-			'DONE',
-			'CANCELLED',
-			'ARCHIVED',
-		];
-		const priorityOrder = ['EMERGENCY', 'HIGH', 'MEDIUM', 'LOW'];
-
-		[...cases].sort((a, b) => {
-			const statusAIndex = statusOrder.indexOf(a.status);
-			const statusBIndex = statusOrder.indexOf(b.status);
-
-			if (statusAIndex === statusBIndex) {
-				const priorityAIndex = priorityOrder.indexOf(a.priority.toUpperCase());
-				const priorityBIndex = priorityOrder.indexOf(b.priority.toUpperCase());
-
-				if (priorityAIndex === priorityBIndex) {
-					return a.id - b.id;
-				} else if (priorityAIndex === -1) {
-					return 1;
-				} else if (priorityBIndex === -1) {
-					return -1;
-				}
-				return priorityAIndex - priorityBIndex;
-			} else if (statusAIndex === -1) {
-				return 1;
-			} else if (statusBIndex === -1) {
-				return -1;
-			}
-			return statusAIndex - statusBIndex;
-		});
-
-		return cases;
-	});
-
->>>>>>> 38fb606 (fix: case Service test)
 	getStatusClasses(_case: ICaseResponse) {
 		return {
 			emergency: _case.priority === 'EMERGENCY',
@@ -211,52 +148,49 @@ export class CaseBrowseComponent {
 			'status-archived': _case.status === 'ARCHIVED',
 		};
 	}
-<<<<<<< HEAD
 
-    flipShowPriorityEmergency() {
-        this.showPriorityEmergency.update(value => !value);
-    }
-    flipShowPriorityHigh() {
-        this.showPriorityHigh.update(value => !value);
-    }
-    flipShowPriorityMedium() {
-        this.showPriorityMedium.update(value => !value);
-    }
-    flipShowPriorityLow() {
-        this.showPriorityLow.update(value => !value);
-    }
+	flipShowPriorityEmergency() {
+		this.showPriorityEmergency.update((value) => !value);
+	}
+	flipShowPriorityHigh() {
+		this.showPriorityHigh.update((value) => !value);
+	}
+	flipShowPriorityMedium() {
+		this.showPriorityMedium.update((value) => !value);
+	}
+	flipShowPriorityLow() {
+		this.showPriorityLow.update((value) => !value);
+	}
 
-    flipShowTypePlanned() {
-        this.showTypePlanned.update(value => !value);
-    }
-    flipShowTypeIncident() {
-        this.showTypeIncident.update(value => !value);
-    }
-    flipShowTypeAnnotation() {
-        this.showTypeAnnotation.update(value => !value);
-    }
+	flipShowTypePlanned() {
+		this.showTypePlanned.update((value) => !value);
+	}
+	flipShowTypeIncident() {
+		this.showTypeIncident.update((value) => !value);
+	}
+	flipShowTypeAnnotation() {
+		this.showTypeAnnotation.update((value) => !value);
+	}
 
-    flipShowStatusOpen() {
-        this.showStatusOpen.update(value => !value);
-    }
-    flipShowStatusInProgress() {
-        this.showStatusInProgress.update(value => !value);
-    }
-    flipShowStatusOnHold() {
-        this.showStatusOnHold.update(value => !value);
-    }
-    flipShowStatusDone() {
-        this.showStatusDone.update(value => !value);
-    }
-    flipShowStatusOverdue() {
-        this.showStatusOverdue.update(value => !value);
-    }
-    flipShowStatusCancelled() {
-        this.showStatusCancelled.update(value => !value);
-    }
-    flipShowStatusArchived() {
-        this.showStatusArchived.update(value => !value);
-    }
-=======
->>>>>>> 38fb606 (fix: case Service test)
+	flipShowStatusOpen() {
+		this.showStatusOpen.update((value) => !value);
+	}
+	flipShowStatusInProgress() {
+		this.showStatusInProgress.update((value) => !value);
+	}
+	flipShowStatusOnHold() {
+		this.showStatusOnHold.update((value) => !value);
+	}
+	flipShowStatusDone() {
+		this.showStatusDone.update((value) => !value);
+	}
+	flipShowStatusOverdue() {
+		this.showStatusOverdue.update((value) => !value);
+	}
+	flipShowStatusCancelled() {
+		this.showStatusCancelled.update((value) => !value);
+	}
+	flipShowStatusArchived() {
+		this.showStatusArchived.update((value) => !value);
+	}
 }
