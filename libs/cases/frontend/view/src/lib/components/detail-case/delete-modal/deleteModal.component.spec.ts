@@ -10,11 +10,11 @@ describe('DeleteModalComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [DeleteModalComponent],
-            providers: [{ provide: IxActiveModal, useValue: { data: {} } }, {
+            imports: [ DeleteModalComponent ],
+            providers: [ { provide: IxActiveModal, useValue: { data: {} } }, {
                 provide: ActivatedRoute,
                 useValue: {},
-            }],
+            } ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DeleteModalComponent);

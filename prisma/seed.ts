@@ -47,8 +47,13 @@ async function seedSingleFacility({
             indicatorMsg,
 			location: {
 				create: {
-					latitude: 0,
-					longitude: 0,
+					latitude: 37.7749,
+					longitude: 122.4194,
+					country: 'United States',
+					region: 'California',
+					streetAddress: '123 Main St',
+					postalCode: '94105',
+					locality: 'San Francisco',
 				},
 			},
 			variables: {},
@@ -144,13 +149,6 @@ async function seedSingleFacility({
 	await prisma.timeSeriesDataItem.createMany({
 		data: [newPumpData, newEnvData].flat(),
 	});
-}
-
-async function main() {
-	// Seed database with facility data
-	for (let i = 0; i < facilityNames.length; i++) {
-		await seedSingleFacility({ ...facilityNames[i], index: i });
-	}
 
 	// create new case data from JSON file
 	const newCaseData = caseData.map((data: any) => {
@@ -166,6 +164,7 @@ async function main() {
 			priority: data.priority,
 			createdBy: data.createdBy,
 			eTag: data.eTag,
+			assetAssetId: asset.assetId,
 		};
 	});
 
@@ -173,6 +172,13 @@ async function main() {
 	await prisma.case.createMany({
 		data: newCaseData,
 	});
+}
+
+async function main() {
+	// Seed database with facility data
+	for (let i = 0; i < facilityNames.length; i++) {
+		await seedSingleFacility({ ...facilityNames[i], index: i });
+	}
 }
 
 main().catch((e) => {

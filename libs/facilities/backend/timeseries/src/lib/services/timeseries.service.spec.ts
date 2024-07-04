@@ -195,6 +195,12 @@ describe('TimeseriesService', () => {
 				.spyOn(prisma.timeSeriesDataItem, 'findMany')
 				.mockResolvedValue([]);
 
+			jest.spyOn(prisma.timeSeriesItem, 'findUnique').mockResolvedValue({
+				assetId: faker.string.uuid(),
+				propertySetName: faker.string.sample(),
+				variables: {},
+			});
+
 			const params: IGetTimeSeriesParams = {
 				assetId: faker.string.uuid(),
 				propertySetName: faker.string.sample(),

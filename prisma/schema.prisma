@@ -46,6 +46,7 @@ model Asset {
     status      FacilityStatus @default(REGULAR)
     indicatorMsg String @default("The pump is working as expected.")
 
+    cases           Case[]
     timeSeriesItems TimeSeriesItem[]
     metrics     Metrics[]
 
@@ -89,8 +90,10 @@ model Case {
     eTag        String
     modifiedBy  String       @default("")
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+    Asset        Asset    @relation(fields: [assetAssetId], references: [assetId])
+    assetAssetId String
 }
 
 model Metrics {

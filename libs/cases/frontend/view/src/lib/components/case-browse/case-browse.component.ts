@@ -10,8 +10,8 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { XdCasesFacade } from '@frontend/cases/frontend/domain';
-import { ICaseResponse } from '@frontend/cases/shared/models';
 import { IxModule } from '@siemens/ix-angular';
+import { ICaseResponse } from 'cases-shared-models';
 
 @Component({
 	selector: 'lib-brows-cases',
@@ -131,10 +131,10 @@ export class CaseBrowseComponent {
 		return cases;
 	});
 
-    constructor(
-        protected router: Router,
-        protected route: ActivatedRoute
-    ) {}
+	constructor(
+		protected router: Router,
+		protected route: ActivatedRoute,
+	) {}
 
 	getStatusClasses(_case: ICaseResponse) {
 		return {
@@ -149,48 +149,48 @@ export class CaseBrowseComponent {
 		};
 	}
 
-    flipShowPriorityEmergency() {
-        this.showPriorityEmergency.update(value => !value);
-    }
-    flipShowPriorityHigh() {
-        this.showPriorityHigh.update(value => !value);
-    }
-    flipShowPriorityMedium() {
-        this.showPriorityMedium.update(value => !value);
-    }
-    flipShowPriorityLow() {
-        this.showPriorityLow.update(value => !value);
-    }
+	flipShowPriorityEmergency() {
+		this.showPriorityEmergency.update((value) => !value);
+	}
+	flipShowPriorityHigh() {
+		this.showPriorityHigh.update((value) => !value);
+	}
+	flipShowPriorityMedium() {
+		this.showPriorityMedium.update((value) => !value);
+	}
+	flipShowPriorityLow() {
+		this.showPriorityLow.update((value) => !value);
+	}
 
-    flipShowTypePlanned() {
-        this.showTypePlanned.update(value => !value);
-    }
-    flipShowTypeIncident() {
-        this.showTypeIncident.update(value => !value);
-    }
-    flipShowTypeAnnotation() {
-        this.showTypeAnnotation.update(value => !value);
-    }
+	flipShowTypePlanned() {
+		this.showTypePlanned.update((value) => !value);
+	}
+	flipShowTypeIncident() {
+		this.showTypeIncident.update((value) => !value);
+	}
+	flipShowTypeAnnotation() {
+		this.showTypeAnnotation.update((value) => !value);
+	}
 
-    flipShowStatusOpen() {
-        this.showStatusOpen.update(value => !value);
-    }
-    flipShowStatusInProgress() {
-        this.showStatusInProgress.update(value => !value);
-    }
-    flipShowStatusOnHold() {
-        this.showStatusOnHold.update(value => !value);
-    }
-    flipShowStatusDone() {
-        this.showStatusDone.update(value => !value);
-    }
-    flipShowStatusOverdue() {
-        this.showStatusOverdue.update(value => !value);
-    }
-    flipShowStatusCancelled() {
-        this.showStatusCancelled.update(value => !value);
-    }
-    flipShowStatusArchived() {
-        this.showStatusArchived.update(value => !value);
-    }
+	flipShowStatusOpen() {
+		this.showStatusOpen.update((value) => !value);
+	}
+	flipShowStatusInProgress() {
+		this.showStatusInProgress.update((value) => !value);
+	}
+	flipShowStatusOnHold() {
+		this.showStatusOnHold.update((value) => !value);
+	}
+	flipShowStatusDone() {
+		this.showStatusDone.update((value) => !value);
+	}
+	flipShowStatusOverdue() {
+		this.showStatusOverdue.update((value) => !value);
+	}
+	flipShowStatusCancelled() {
+		this.showStatusCancelled.update((value) => !value);
+	}
+	flipShowStatusArchived() {
+		this.showStatusArchived.update((value) => !value);
+	}
 }

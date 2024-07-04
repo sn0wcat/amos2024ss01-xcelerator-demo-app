@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ICaseParams, ICaseResponse, ICreateCaseBody } from '@frontend/cases/shared/models';
+import { ICaseParams, ICaseResponse, ICreateCaseBody } from 'cases-shared-models';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -34,15 +34,15 @@ export class XdCasesRequestService {
 		return this._httpClient.post<ICaseResponse>('/api/case', body);
 	}
 
-    public updateCase(params: ICaseParams, body: ICreateCaseBody) {
-        return this._httpClient.put<ICaseResponse>(`/api/case/${params.id}`, body);
-    }
+	public updateCase(params: ICaseParams, body: ICreateCaseBody) {
+		return this._httpClient.put<ICaseResponse>(`/api/case/${params.id}`, body);
+	}
 
-    /**
-     * Delete case by Id
-     * @param params
-     */
-    public deleteCase(params: ICaseParams) {
-        return this._httpClient.delete<ICaseResponse>(`/api/case/${params.id}`);
-    }
+	/**
+	 * Delete case by Id
+	 * @param params
+	 */
+	public deleteCase(params: ICaseParams) {
+		return this._httpClient.delete<ICaseResponse>(`/api/case/${params.id}`);
+	}
 }

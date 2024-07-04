@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { faker } from '@faker-js/faker';
-import { ICaseParams, ICaseResponse } from '@frontend/cases/shared/models';
+import { ICaseParams, ICaseResponse } from 'cases-shared-models';
 import { firstValueFrom, of } from 'rxjs';
 
 import { XdCasesRequestService } from './cases-request.service';
