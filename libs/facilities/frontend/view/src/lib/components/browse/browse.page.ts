@@ -25,17 +25,13 @@ import { EPumpStatus } from 'facilities-shared-models';
 })
 export class XdBrowsePage {
 
-    private showCardListKey = 'showCardList';
-	protected showCardList = computed(() => {
-        const val = this.localStorageService.get(this.showCardListKey)();
-        return val === 'true';
-    });
+	protected showCardList = computed(() =>
+       this.localStorageService.getOrCreate('showCardList', 'true')() === 'true'
+    );
 
-    private filterIssuesKey = 'filterIssues';
-    protected filterIssues = computed(() => {
-        const val = this.localStorageService.get(this.filterIssuesKey)();
-        return val === 'true';
-    });
+    protected filterIssues = computed(() =>
+        this.localStorageService.getOrCreate('filterIssues', 'true')() === 'true'
+    );
 
     protected readonly StatusToColorRecord = StatusToColorRecord;
 	private readonly _browseFacade = inject(XdBrowseFacade);
@@ -53,15 +49,13 @@ export class XdBrowsePage {
     });
 
     constructor(protected readonly router: Router, protected readonly route: ActivatedRoute, private readonly localStorageService: LocalStorageService) {
-        localStorageService.register(this.showCardListKey, 'true');
-        localStorageService.register(this.filterIssuesKey, 'true');
     }
 
     toggleView() {
-		this.localStorageService.set(this.showCardListKey, (!this.showCardList()).toString());
+		this.localStorageService.set('showCardList', (!this.showCardList()).toString());
 	}
 
     toggleFilter() {
-        this.localStorageService.set(this.filterIssuesKey, (!this.filterIssues()).toString());
+        this.localStorageService.set('filterIssues', (!this.filterIssues()).toString());
     }
 }

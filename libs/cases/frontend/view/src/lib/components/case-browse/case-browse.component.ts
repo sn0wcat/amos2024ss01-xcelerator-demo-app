@@ -23,14 +23,16 @@ import { LocalStorageService } from 'common-frontend-models';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseBrowseComponent {
-    filter: Signal<{id: string, value: string, operator: string}[]> = computed(() => {
-        const filterString = this.localStorage.get('caseFilter')()
-        if (filterString !== null) {
-            return this.stringToFilter(filterString as string)
-        } else {
-            return [ {id: '', value: '', operator: ''} ];
-        }
-    });
+    private readonly defaultValue = this.filterToString([ {id: 'Status', operator:'Equal', value: 'OPEN'} ]);
+    filter: Signal<{id: string, value: string, operator: string}[]> = computed(() =>
+        this.stringToFilter(this.localStorage.getOrCreate('caseFilter', this.defaultValue )())
+    );
+    /** the category filter emits an event when it is changed, but it is also called when reloading the page
+     * we need this variable to decide if we are in that initial call and don't want to change anything
+     * or if we need to update our localStorage (I don't think there is another way)
+     * **/
+    private firstCall = true;
+
 	protected readonly _casesFacade = inject(XdCasesFacade);
 	protected readonly _cases = toSignal(this._casesFacade.getAllCases());
 	protected readonly _sortedCases = computed(() => {
@@ -87,7 +89,6 @@ export class CaseBrowseComponent {
         protected route: ActivatedRoute,
         protected localStorage: LocalStorageService,
     ) {
-        this.localStorage.register('caseFilter', this.filterToString([ {id: 'Status', operator:'Equal', value: 'OPEN'} ]));
     }
 
 	getStatusClasses(_case: ICaseResponse) {
@@ -165,11 +166,6 @@ export class CaseBrowseComponent {
     };
 
     filterList(event: IxCategoryFilterCustomEvent<FilterState>) {
-        //this.filter.set(event.detail.categories);
-        if (this.localStorage.get('caseFilter')() === null) {
-            this.localStorage.register('caseFilter', this.filterToString([ {id: 'Status', operator:'Equal', value: 'OPEN'} ]));
-        }else {
-            this.localStorage.set('caseFilter', this.filterToString(event.detail.categories));
-        }
+        this.localStorage.set('caseFilter', this.filterToString(event.detail.categories));
     }
 }
