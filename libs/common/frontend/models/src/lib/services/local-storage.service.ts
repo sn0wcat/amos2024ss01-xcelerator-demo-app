@@ -27,7 +27,7 @@ export class LocalStorageService {
     }
 
     /**
-     * Returns the signal for a key, returning signal(undefined) if it was not registered before
+     * Returns the signal for a key, returning signal(defaultValue) if it was not registered before
      * @param key The localStorage key
      * @param defaultValue the value it should have if it is not in the localStorage yet
      * @returns The signal for the key.
