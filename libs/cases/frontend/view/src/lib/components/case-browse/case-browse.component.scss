@@ -1,10 +1,7 @@
 .table {
     cursor: pointer;
-    & .emergency {
+    & .priority-emergency {
         background-color: #ff26401a;
-    }
-
-    & .status-open {
     }
 
     & .status-inprogress {

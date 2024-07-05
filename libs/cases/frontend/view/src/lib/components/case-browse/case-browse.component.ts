@@ -3,7 +3,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    inject, Signal,
+    Signal,
     ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -23,78 +23,79 @@ import { LocalStorageService } from 'common-frontend-models';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseBrowseComponent {
-    private readonly defaultValue = this.filterToString([ {id: 'Status', operator:'Equal', value: 'OPEN'} ]);
-    filter: Signal<{id: string, value: string, operator: string}[]> = computed(() =>
-        this.stringToFilter(this.localStorage.getOrCreate('caseFilter', this.defaultValue )())
+    private readonly _filter: Signal<{id: string, value: string, operator: string}[]> = computed(() =>
+        this.stringToFilter(
+            this.localStorage.getOrCreate('caseFilter', 'Status,Equal,OPEN')()
+        )
     );
-    /** the category filter emits an event when it is changed, but it is also called when reloading the page
-     * we need this variable to decide if we are in that initial call and don't want to change anything
-     * or if we need to update our localStorage (I don't think there is another way)
-     * **/
-    private firstCall = true;
 
-	protected readonly _casesFacade = inject(XdCasesFacade);
-	protected readonly _cases = toSignal(this._casesFacade.getAllCases());
-	protected readonly _sortedCases = computed(() => {
-        let cases = this._cases();
-		if (cases === undefined) {
-			return;
-		}
-
-        //Hier filtern
-        if (this.filter()) {
-            cases = this.filterCases(cases);
+	private readonly _cases = toSignal(this._casesFacade.getAllCases());
+	protected readonly processedCases = computed(() => {
+        const initialCases = this._cases();
+        if (initialCases === undefined) {
+            return;
         }
 
-		cases.sort((a, b) => {
-			const statusAIndex = this.statusOrder.indexOf(a.status);
-			const statusBIndex = this.statusOrder.indexOf(b.status);
+        const filteredCases = this._filter().reduce((cases, filter) => {
+            return cases.filter(c => {
+                const filterId = filter.id.toLowerCase()
+                if(filterId !== 'status' && filterId !== 'type' && filterId !== 'priority')
+                    return true;
 
-			if (statusAIndex === statusBIndex) {
-				const priorityAIndex = this.priorityOrder.indexOf(a.priority.toUpperCase());
-				const priorityBIndex = this.priorityOrder.indexOf(b.priority.toUpperCase());
+                const caseValue = c[filterId];
+                if (filter.operator === 'Equal') {
+                    return caseValue === filter.value;
+                } else {
+                    return caseValue !== filter.value;
+                }
+            });
+        }, initialCases);
 
-				if (priorityAIndex === priorityBIndex) {
-					return a.id - b.id;
-				} else if (priorityAIndex === -1) {
-					return 1;
-				} else if (priorityBIndex === -1) {
-					return -1;
-				}
-				return priorityAIndex - priorityBIndex;
-			} else if (statusAIndex === -1) {
-				return 1;
-			} else if (statusBIndex === -1) {
-				return -1;
-			}
-			return statusAIndex - statusBIndex;
-		});
+        filteredCases.sort((a, b) => {
+            const statusAIndex = this.statusOptions.indexOf(a.status);
+            const statusBIndex = this.statusOptions.indexOf(b.status);
+            return statusAIndex - statusBIndex;
+        });
 
-		return cases;
+		return filteredCases;
 	});
 
-    statusOrder: string[] = [
-        'OPEN',
-        'INPROGRESS',
-        'OVERDUE',
-        'ONHOLD',
-        'DONE',
-        'CANCELLED',
-        'ARCHIVED',
-    ];
-    priorityOrder: string[] = [ 'EMERGENCY', 'HIGH', 'MEDIUM', 'LOW' ];
+    private readonly statusOptions= [ 'OPEN', 'INPROGRESS', 'OVERDUE', 'ONHOLD', 'DONE', 'CANCELLED', 'ARCHIVED' ];
+    private readonly priorityOptions= [ 'EMERGENCY', 'HIGH', 'MEDIUM', 'LOW' ];
+    private readonly typeOptions =  [ 'PLANNED', 'INCIDENT', 'ANNOTATION' ]
+
+    protected readonly repeatCategories = true;
+    protected filterState = {
+        tokens: [],
+        categories: this._filter(),
+    };
+
+    protected readonly categories = {
+        Status: {
+            label: 'status',
+            options: this.statusOptions
+        },
+        Priority: {
+            label: 'priority',
+            options: this.priorityOptions
+        },
+        Type: {
+            label: 'type',
+            options: this.typeOptions
+        }
+
+    };
 
     constructor(
         protected router: Router,
         protected route: ActivatedRoute,
         protected localStorage: LocalStorageService,
-    ) {
-    }
+        private _casesFacade: XdCasesFacade,
+    ) {}
 
 	getStatusClasses(_case: ICaseResponse) {
 		return {
-			emergency: _case.priority === 'EMERGENCY',
-			'status-open': _case.status === 'OPEN',
+			'priority-emergency': _case.priority === 'EMERGENCY',
 			'status-inprogress': _case.status === 'INPROGRESS',
 			'status-overdue': _case.status === 'OVERDUE',
 			'status-onhold': _case.status === 'ONHOLD',
@@ -104,39 +105,23 @@ export class CaseBrowseComponent {
 		};
 	}
 
-    filterCases(cases: ICaseResponse[]): ICaseResponse[] {
-        if (this.filter().length > 0) {
-            this.filter().forEach((filter: {id: string, value: string, operator: string}) => {
-                cases = cases.filter(c => {
-                    if (filter.operator === 'Equal') {
-                        if (filter.id === 'Status') {
-                            return c.status === filter.value;
-                        } else if (filter.id === 'Priority') {
-                            return c.priority === filter.value;
-                        } else if (filter.id === 'Type') {
-                            return c.type === filter.value;
-                        }
-                    } else if (filter.operator === 'Not equal') {
-                        if (filter.id === 'Status') {
-                            return c.status !== filter.value;
-                        } else if (filter.id === 'Priority') {
-                            return c.priority !== filter.value;
-                        } else if (filter.id === 'Type') {
-                            return c.type !== filter.value;
-                        }
-                    }
-                    return c;
-                })
-            })
-        }
-        return cases;
+    filterList(event: IxCategoryFilterCustomEvent<FilterState>) {
+        this.localStorage.set('caseFilter', this.filterToString(event.detail.categories));
     }
 
-    filterToString(filter: {id: string, value: string, operator: string}[]): string {
+    shortenDescription(description: string){
+        if(description.length < 50) {
+            return description;
+        } else {
+            return description.substring(0, 50) + '...';
+        }
+    }
+
+    private filterToString(filter: {id: string, value: string, operator: string}[]): string {
         return filter.map((f) => f.id + ',' + f.operator + ',' + f.value).join('|');
     }
 
-    stringToFilter(filterString: string) {
+    private stringToFilter(filterString: string) {
         const filter = filterString.split('|');
         return filter.map((f) => {
             const filterParts = f.split(',');
@@ -144,28 +129,4 @@ export class CaseBrowseComponent {
         })
     }
 
-    repeatCategories = true;
-    filterState = {
-        tokens: [  ],
-        categories: this.filter(),
-    };
-    categories = {
-        Status: {
-            label: 'status',
-            options: [ 'OPEN', 'INPROGRESS', 'ONHOLD', 'DONE', 'OVERDUE', 'CANCELLED', 'ARCHIVED' ]
-        },
-        Priority: {
-            label: 'priority',
-            options: [ 'EMERGENCY', 'HIGH', 'MEDIUM', 'LOW' ]
-        },
-        Type: {
-            label: 'type',
-            options: [ 'PLANNED', 'INCIDENT', 'ANNOTATION' ]
-        }
-
-    };
-
-    filterList(event: IxCategoryFilterCustomEvent<FilterState>) {
-        this.localStorage.set('caseFilter', this.filterToString(event.detail.categories));
-    }
 }

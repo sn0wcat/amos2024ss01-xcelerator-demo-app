@@ -32,19 +32,19 @@
 			</tr>
 		</thead>
 		<tbody>
-			@for (_case of _sortedCases(); track _case.id) {
+			@for (caseItem of processedCases(); track caseItem.id) {
 				<tr
-					[routerLink]="['/cases', _case.id]"
+					[routerLink]="['/cases', caseItem.id]"
 					class="clickable-row"
-					[ngClass]="getStatusClasses(_case)"
+					[ngClass]="getStatusClasses(caseItem)"
 				>
-					<th scope="row">{{ _case.handle }}</th>
-					<td>{{ _case.title }}</td>
-                    <td>{{ _case.status }}</td>
-					<td>{{ _case.priority }}</td>
-                    <td>{{ _case.type }}</td>
-					<td>{{ _case.dueDate }}</td>
-					<td>{{ _case.description }}</td>
+					<th scope="row">{{ caseItem.handle }}</th>
+					<td>{{ caseItem.title }}</td>
+                    <td>{{ caseItem.status }}</td>
+					<td>{{ caseItem.priority }}</td>
+                    <td>{{ caseItem.type }}</td>
+					<td>{{ caseItem.dueDate.toString().substring(0, 10) }}</td>
+                    <td>{{ shortenDescription(caseItem.description) }}</td>
 				</tr>
 			}
 		</tbody>
