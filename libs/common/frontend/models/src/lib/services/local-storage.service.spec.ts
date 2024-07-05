@@ -17,32 +17,33 @@ describe('LocalStorageService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('register should set it to the default value if it is not set', () => {
-        service.register('test', 'false');
+    it('set should not do anything if getOrCreate was not called before', () => {
+        service.set('test', 'true');
 
-        expect(localStorage.setItem).toHaveBeenCalledWith('test', 'false');
+        expect(localStorage.setItem).toHaveBeenCalledTimes(0);
+        expect(service.getOrCreate('test', 'default')()).toBe('default');
     });
 
-    it('register should not overwrite values if they are already set', () => {
+    it('getOrCreate should create it with default value if not set', () => {
+        const signal = service.getOrCreate('test', 'default');
 
+        expect(localStorage.setItem).toHaveBeenCalledWith('test', 'default');
+        expect(signal()).toBe('default');
+    });
+
+    it('getOrCreate should not overwrite the value if it is already set', () => {
         Storage.prototype.getItem = jest.fn().mockReturnValue("true");
 
-        service.register('test', 'false');
+        const signal = service.getOrCreate('test', 'default');
+
         expect(localStorage.setItem).toHaveBeenCalledTimes(0);
+        expect(signal()).toBe('true');
     });
 
-    it('set should correctly set the localStorage and signal', () => {
-        service.set('test', 'true');
-
-        expect(localStorage.setItem).toHaveBeenCalledWith('test', 'true');
-        expect(service.get('test')()).toBe('true');
-    });
 
     it('set should correctly update signal', () => {
+        const signal = service.getOrCreate('test', 'true');
 
-        service.set('test', 'true');
-
-        const signal = service.get('test')
         expect(signal()).toBe('true');
 
         service.set('test', 'false');
