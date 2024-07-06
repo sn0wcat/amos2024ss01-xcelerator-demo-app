@@ -11,9 +11,9 @@ describe('FacilitiesController ', () => {
 	let service: XdFacilitiesService;
 
 	const facilitiesResponse: IFacilitiesResponse = {
-        indicatorMsg: faker.string.sample(),
-        metrics: [ { standardDeviation: faker.number.int() } as IPumpMetrics ],
-        assetId: faker.string.uuid(),
+		indicatorMsg: faker.string.sample(),
+		metrics: [ { standardDeviation: faker.number.int() } as IPumpMetrics ],
+		assetId: faker.string.uuid(),
 		createdAt: faker.date.recent(),
 		description: faker.string.sample(),
 		name: faker.string.sample(),
@@ -29,8 +29,9 @@ describe('FacilitiesController ', () => {
 			postalCode: faker.location.zipCode(),
 			region: faker.location.state(),
 			streetAddress: faker.location.streetAddress(),
-		}
-    };
+		},
+		cases: [],
+	};
 
 	beforeAll(async () => {
 		const serviceMock = {

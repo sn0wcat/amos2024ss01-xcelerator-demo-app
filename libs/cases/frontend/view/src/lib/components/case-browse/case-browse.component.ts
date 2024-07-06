@@ -128,5 +128,4 @@ export class CaseBrowseComponent {
             return { id: filterParts[0], operator: filterParts[1], value: filterParts[2] };
         })
     }
-
 }
