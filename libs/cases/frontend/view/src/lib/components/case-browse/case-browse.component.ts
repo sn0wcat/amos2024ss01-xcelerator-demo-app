@@ -9,8 +9,8 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { XdCasesFacade } from '@frontend/cases/frontend/domain';
-import { ICaseResponse } from '@frontend/cases/shared/models';
 import { FilterState, IxCategoryFilterCustomEvent, IxModule } from '@siemens/ix-angular';
+import { ICaseResponse } from 'cases-shared-models';
 import { LocalStorageService } from 'common-frontend-models';
 
 @Component({
