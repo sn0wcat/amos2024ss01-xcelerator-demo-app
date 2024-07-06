@@ -1,20 +1,21 @@
 import { CommonModule } from '@angular/common';
 import {
-    ChangeDetectionStrategy,
-    Component,
-    inject, OnInit,
-    signal,
-    ViewEncapsulation,
+	ChangeDetectionStrategy,
+	Component,
+	inject,
+	OnInit,
+	signal,
+	ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import {  FormsModule, NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { faker } from '@faker-js/faker';
 import { XdCasesFacade } from '@frontend/cases/frontend/domain';
-import { ECasePriority, ECaseStatus, ECaseType } from '@frontend/cases/shared/models';
 import { XdBrowseFacade } from '@frontend/facilities/frontend/domain';
 import { StatusToColorRecord } from '@frontend/facilities/frontend/models';
 import { IxModule, IxSelectCustomEvent, ToastService } from '@siemens/ix-angular';
+import { ECasePriority, ECaseStatus, ECaseType } from 'cases-shared-models';
 
 import { CaseFormData } from '../interfaces/case-form-data.interface';
 import { DateDropdownWrapperComponent } from './date-dropdown-accessor';
@@ -22,20 +23,21 @@ import { DateDropdownWrapperComponent } from './date-dropdown-accessor';
 @Component({
 	selector: 'lib-create-case',
 	standalone: true,
-    imports: [ CommonModule, IxModule, FormsModule, RouterLink, DateDropdownWrapperComponent ],
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useClass: DateDropdownWrapperComponent,
-            multi: true
-        },
-    ],
+	imports: [ CommonModule, IxModule, FormsModule, RouterLink, DateDropdownWrapperComponent ],
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useClass: DateDropdownWrapperComponent,
+			multi: true,
+		},
+	],
 	templateUrl: './create-case.component.html',
 	styleUrl: './create-case.component.scss',
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateCaseComponent implements OnInit {
+
     protected readonly StatusToColorRecord = StatusToColorRecord;
     private readonly _browseFacade = inject(XdBrowseFacade);
     protected readonly _casesFacade = inject(XdCasesFacade);

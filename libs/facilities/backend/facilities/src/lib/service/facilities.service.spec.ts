@@ -98,6 +98,7 @@ describe('FacilitiesService ', () => {
 			latitude: 1,
 			longitude: 1,
 		},
+		cases: [],
 	};
 
 	it('should return all facilities', async () => {

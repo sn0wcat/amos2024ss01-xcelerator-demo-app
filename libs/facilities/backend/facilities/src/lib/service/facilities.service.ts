@@ -1,4 +1,9 @@
-import { EPumpStatus, IFacilitiesResponse, IFacilityLocation, IPumpMetrics } from '@frontend/facilities/shared/models';
+import {
+	EPumpStatus,
+	IFacilitiesResponse,
+	IFacilityLocation,
+	IPumpMetrics,
+} from '@frontend/facilities/shared/models';
 import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Aspect, Asset, XdAssetsService } from 'common-backend-insight-hub';
 import { PrismaService } from 'common-backend-prisma';
@@ -163,7 +168,8 @@ export class XdFacilitiesService {
 			this.prismaService.asset.findMany({
 				include: {
 					location: true,
-                    metrics: true,
+					metrics: true,
+					cases: true,
 				},
 			}),
 		).pipe(
@@ -178,8 +184,9 @@ export class XdFacilitiesService {
 						updatedAt,
 						variables,
 						status,
-                        indicatorMsg,
-                        metrics
+						indicatorMsg,
+						metrics,
+						cases,
 					} = asset;
 
 					const location: IFacilityLocation | undefined = asset.location
@@ -200,12 +207,13 @@ export class XdFacilitiesService {
 						typeId,
 						status: status as EPumpStatus,
 						location,
-                        indicatorMsg,
-                        metrics: metrics as IPumpMetrics[],
+						indicatorMsg,
+						metrics: metrics as IPumpMetrics[],
 						variables: variables || undefined,
 						description: description || '',
 						createdAt: createdAt,
 						updatedAt: updatedAt,
+						cases: cases.map((c) => ({ id: c.id })),
 					};
 				});
 			}),
@@ -223,7 +231,8 @@ export class XdFacilitiesService {
 				},
 				include: {
 					location: true,
-                    metrics: true,
+					metrics: true,
+					cases: true,
 				},
 			}),
 		).pipe(
@@ -241,8 +250,9 @@ export class XdFacilitiesService {
 					createdAt,
 					updatedAt,
 					status,
-                    indicatorMsg,
-                    metrics
+					indicatorMsg,
+					metrics,
+					cases,
 				} = asset;
 
 				const location: IFacilityLocation | undefined = asset.location
@@ -269,6 +279,7 @@ export class XdFacilitiesService {
 					location: location,
 					createdAt: createdAt,
 					updatedAt: updatedAt,
+					cases: cases.map((c) => ({ id: c.id })),
 				};
 			}),
 		);

@@ -1,5 +1,4 @@
 .table {
-    cursor: pointer;
     & .emergency {
         background-color: #ff26401a;
     }
@@ -24,6 +23,3 @@
     }
 }
 
-.toggle-pill {
-	@apply text-sm h-6 w-min rounded-2xl overflow-hidden;
-}
