@@ -1,35 +1,51 @@
-<ix-card class="login-card">
-	<ix-card-title>
-		<div class="login-title">
-			<ix-icon name="user" size="large"></ix-icon>
-			Xcelerator Demo Login
-		</div>
-	</ix-card-title>
-	<ix-card-content>
-		<form class="needs-validation m-2" (ngSubmit)="onSubmit()" #loginForm="ngForm">
-			<ix-input-group style="margin-bottom: 0.5rem">
-				<span slot="input-start"></span>
-				<input
-					[(ngModel)]="username"
-					placeholder="Enter Username"
-					type="text"
-					name="username"
-					required
-				/>
-			</ix-input-group>
-			<ix-input-group style="margin-bottom: 0.5rem">
-				<span slot="input-start"></span>
-				<input
-					[(ngModel)]="password"
-					placeholder="Enter password"
-					type="password"
-					name="password"
-					required
-				/>
-			</ix-input-group>
-			<ix-button type="submit" variant="primary" [disabled]="!loginForm.valid">
-				Login
-			</ix-button>
-		</form>
-	</ix-card-content>
-</ix-card>
+<div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
+
+    <form
+        class="needs-validation w-96 bg-[#283236] px-6 py-9"
+        [ngClass]="{ 'was-validated': wasValidated }"
+        #loginForm="ngForm"
+        (submit)="onSubmit(loginForm)"
+    >
+        <ix-typography format="h2" class="pb-10">
+            Xcelerator Demo App
+        </ix-typography>
+
+        <div>
+            <label>Email</label>
+            <input
+                class="pl-2"
+                name="username"
+                placeholder="Enter email address"
+                type="email"
+                [(ngModel)]="email"
+                required
+            />
+            <div class="invalid-feedback">Please enter a valid email address</div>
+        </div>
+
+        <div>
+            <label class="pt-3">Password</label>
+            <input
+                class="pl-2"
+                name="password"
+                placeholder="Enter password"
+                type="password"
+                [(ngModel)]="password"
+                required
+            />
+            <div class="invalid-feedback">Please enter a password</div>
+            <div class=""></div>
+        </div>
+
+        <div class="pt-10">
+            @if(wasValidated){
+                @if(loginSuccess){
+                    <div class="text-[#3dbe0c] pb-2">Login success!</div>
+                } @else {
+                    <div class="text-[#f9526c] pb-2">Invalid email address or password!</div>
+                }
+            }
+            <button class="btn btn-primary w-full" type="submit">Login</button>
+        </div>
+    </form>
+</div>
