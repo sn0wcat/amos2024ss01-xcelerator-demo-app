@@ -35,7 +35,7 @@
 			@for (caseItem of processedCases(); track caseItem.id) {
 				<tr
 					[routerLink]="['/cases', caseItem.id]"
-					class="clickable-row"
+					class="cursor-pointer"
 					[ngClass]="getStatusClasses(caseItem)"
 				>
 					<th scope="row">{{ caseItem.handle }}</th>
