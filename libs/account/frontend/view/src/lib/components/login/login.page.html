@@ -9,8 +9,8 @@
             Xcelerator Demo App
         </ix-typography>
 
-        <div>
-            <label>Email</label>
+        <label>Email</label>
+        <ix-input-group>
             <input
                 class="pl-2"
                 name="username"
@@ -20,25 +20,28 @@
                 required
             />
             <div class="invalid-feedback">Please enter a valid email address</div>
-        </div>
+        </ix-input-group>
 
-        <div>
-            <label class="pt-3">Password</label>
+        <label class="pt-3">Password</label>
+        <ix-input-group>
             <input
+                id="passwordElement"
                 class="pl-2"
                 name="password"
                 placeholder="Enter password"
                 type="password"
                 [(ngModel)]="password"
                 required
-            />
+            >
+            <span slot="input-end" (click)="togglePassword()">
+                <ix-icon [name]="showPassword ? 'eye-cancelled-filled' : 'eye-filled'" size="16"></ix-icon>
+            </span>
             <div class="invalid-feedback">Please enter a password</div>
-            <div class=""></div>
-        </div>
+        </ix-input-group>
 
         <div class="pt-10">
-            @if(formValid()){
-                @if(loginSuccess()){
+            @if (formValid()) {
+                @if (loginSuccess()) {
                     <div class="text-[#3dbe0c] pb-2">Login success!</div>
                 } @else {
                     <div class="text-[#f9526c] pb-2">Invalid email address or password!</div>

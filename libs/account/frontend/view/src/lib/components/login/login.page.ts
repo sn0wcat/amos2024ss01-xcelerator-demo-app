@@ -17,9 +17,12 @@ import { AuthenticationService } from 'common-frontend-models';
 export class LoginPage {
     protected email = '';
     protected password = '';
-    protected wasValidated = false;
+
     protected formValid = signal(false);
     protected loginSuccess = signal(false);
+    protected wasValidated = false;
+    protected showPassword = false;
+
     private readonly emailRegExp = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
     constructor(
@@ -43,6 +46,17 @@ export class LoginPage {
             this.router.navigate([ '/' ]);
         }
 
+    }
+
+    togglePassword() {
+        const passwordElement = document.getElementById('passwordElement');
+        if(!passwordElement) {
+            return;
+        }
+
+        this.showPassword = !this.showPassword;
+        const typeVal =  this.showPassword ? 'text' : 'password';
+        passwordElement.setAttribute('type',  typeVal);
     }
 
 }
