@@ -30,14 +30,4 @@ export class LoginPage {
 		}
 	}
 
-	onForgotPassword() {
-		// TODO: Handle forgot password action
-		alert('Forgot password functionality is not implemented yet.');
-	}
-
-	onGitHubLogin() {
-		// Redirect to GitHub OAuth login page
-		window.location.href =
-			'https://github.com/login/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI';
-	}
 }
