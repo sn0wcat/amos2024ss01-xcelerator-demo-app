@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { AuthenticationGuard } from 'common-frontend-models';
 
 /**
  * The routes for the facilities domain.
@@ -18,11 +19,13 @@ export const FACILITIES_SHELL_ROUTES: Route[] = [
 			{
 				// Route to list page
 				path: '',
+                canActivate: [ AuthenticationGuard ],
 				loadComponent: () => import('facilities-frontend-view').then((m) => m.XdBrowsePage),
 			},
 			{
 				// Route to detail page
 				path: ':id',
+                canActivate: [ AuthenticationGuard ],
 				data: {
 					breadcrumb: 'Details',
 				},
