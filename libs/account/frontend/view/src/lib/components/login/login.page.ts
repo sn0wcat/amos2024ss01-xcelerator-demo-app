@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IxModule } from '@siemens/ix-angular';
+import { AuthenticationService } from 'common-frontend-models';
 
 @Component({
     selector: 'lib-login',
@@ -20,7 +21,8 @@ export class LoginPage {
     protected loginSuccess = false;
 
     constructor(
-        private router: Router
+        private router: Router,
+        private authenticationService: AuthenticationService
     ) {}
 
 
@@ -31,7 +33,7 @@ export class LoginPage {
             return;
         }
 
-        this.loginSuccess = this.password === 'siemens';
+        this.loginSuccess = this.authenticationService.login(this.email, this.password);
         if(this.loginSuccess){
             this.router.navigate([ '/' ]);
         }

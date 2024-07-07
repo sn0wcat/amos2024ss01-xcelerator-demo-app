@@ -3,13 +3,12 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    inject,
     ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { IxModule, themeSwitcher } from '@siemens/ix-angular';
-import { LocalStorageService } from 'common-frontend-models';
+import { AuthenticationService,LocalStorageService } from 'common-frontend-models';
 import { filter } from 'rxjs';
 
 import { LegalInformationComponent } from './legal-information/legal-information.component';
@@ -28,14 +27,12 @@ import { LegalInformationComponent } from './legal-information/legal-information
 })
 export class HeaderComponent {
 
-    private readonly _activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-    private readonly _router: Router = inject(Router);
-    private localStorageService = inject(LocalStorageService);
     protected lightMode = computed(() => {
-        const theme = this.localStorageService.getOrCreate('theme', 'theme-classic-dark')();
+        const theme = this._localStorageService.getOrCreate('theme', 'theme-classic-dark')();
         themeSwitcher.setTheme(theme);
         return theme === 'theme-classic-light';
     });
+    protected userMail = this.authenticationService.getUserMail();
 
     readonly routerEvents = toSignal(
         this._router.events.pipe(filter((e) => e instanceof NavigationEnd)),
@@ -67,6 +64,13 @@ export class HeaderComponent {
         return this._activatedRoute.snapshot.firstChild?.routeConfig?.path === '';
     });
 
+    constructor(
+        protected authenticationService: AuthenticationService,
+        private _localStorageService: LocalStorageService,
+        private _router: Router,
+        private _activatedRoute: ActivatedRoute,
+    ) {}
+
     /**
      * from the right cut the current url until a '/' is reached n times
      * So for /cases/10/abc, goBack(1) yields /cases/10
@@ -80,7 +84,7 @@ export class HeaderComponent {
     }
 
     toggleMode() {
-        this.localStorageService.set('theme', this.lightMode() ? 'theme-classic-dark' : 'theme-classic-light');
+        this._localStorageService.set('theme', this.lightMode() ? 'theme-classic-dark' : 'theme-classic-light');
     }
 
     refresh() {
