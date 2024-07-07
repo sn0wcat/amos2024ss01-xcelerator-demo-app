@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, signal, ViewEncapsulation } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IxModule } from '@siemens/ix-angular';
 import { AuthenticationService } from 'common-frontend-models';
@@ -18,7 +18,9 @@ export class LoginPage {
     protected email = '';
     protected password = '';
     protected wasValidated = false;
-    protected loginSuccess = false;
+    protected formValid = signal(false);
+    protected loginSuccess = signal(false);
+    private readonly emailRegExp = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
     constructor(
         private router: Router,
@@ -26,15 +28,18 @@ export class LoginPage {
     ) {}
 
 
-    onSubmit(form: NgForm) {
+    onSubmit() {
         this.wasValidated = true;
 
-        if (!form.valid) {
+        const formValid = this.emailRegExp.test(this.email) && this.password !== '';
+        this.formValid.set(formValid);
+        if(!formValid){
             return;
         }
 
-        this.loginSuccess = this.authenticationService.login(this.email, this.password);
-        if(this.loginSuccess){
+        const loginSuccess = this.authenticationService.login(this.email, this.password);
+        this.loginSuccess.set(loginSuccess);
+        if(loginSuccess){
             this.router.navigate([ '/' ]);
         }
 

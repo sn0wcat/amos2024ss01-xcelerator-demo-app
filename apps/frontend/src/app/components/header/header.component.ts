@@ -90,4 +90,9 @@ export class HeaderComponent {
     refresh() {
         window.location.reload();
     }
+
+    logout(){
+        this.authenticationService.logout();
+        this._router.navigate([ '/account/login' ]);
+    }
 }

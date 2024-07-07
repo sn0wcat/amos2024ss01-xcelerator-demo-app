@@ -3,8 +3,7 @@
     <form
         class="needs-validation w-96 bg-[#283236] px-6 py-9"
         [ngClass]="{ 'was-validated': wasValidated }"
-        #loginForm="ngForm"
-        (submit)="onSubmit(loginForm)"
+        (submit)="onSubmit()"
     >
         <ix-typography format="h2" class="pb-10">
             Xcelerator Demo App
@@ -38,8 +37,8 @@
         </div>
 
         <div class="pt-10">
-            @if(wasValidated){
-                @if(loginSuccess){
+            @if(formValid()){
+                @if(loginSuccess()){
                     <div class="text-[#3dbe0c] pb-2">Login success!</div>
                 } @else {
                     <div class="text-[#f9526c] pb-2">Invalid email address or password!</div>
