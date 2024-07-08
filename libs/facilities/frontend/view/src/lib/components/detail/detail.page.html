@@ -48,7 +48,11 @@
                     There are 3 open cases regarding this facility
                 </ix-typography>
                 <div class="mt-auto p-2">
-                    <ix-button routerLink="/cases/create"> New Case </ix-button>
+                    <ix-button 
+                        [routerLink]="['/cases/create',{ facilityId: facility.id }]"
+                    > 
+                        New Case 
+                    </ix-button>
                 </div>
             </ix-card-content>
         </ix-card>

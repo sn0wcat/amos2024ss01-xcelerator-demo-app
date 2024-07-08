@@ -1,11 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
-	ChangeDetectionStrategy,
-	Component,
-	inject,
-	OnInit,
-	signal,
-	ViewEncapsulation,
+	ChangeDetectionStrategy, Component, inject, OnInit, signal, ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
@@ -53,6 +48,7 @@ export class CreateCaseComponent implements OnInit {
 	casePriority = ECasePriority;
 	caseType = ECaseType;
 	wasValidated = false;
+	selectedFacilityId: string;
 
 	createCaseForm = {
 		selectFacility: '',
@@ -68,6 +64,11 @@ export class CreateCaseComponent implements OnInit {
 		this.resizeObserver('input-facilitySelection', 'facilitySelection');
 		this.resizeObserver('input-typeSelection', 'typeSelection');
 		this.resizeObserver('input-prioritySelection', 'prioritySelection');
+
+		this.selectedFacilityId = this.route.snapshot.params['facilityId'];
+		if(this.selectedFacilityId) {
+			this.createCaseForm.selectFacility = this.selectedFacilityId;
+		}
 	}
 
 	/**
