@@ -28,8 +28,29 @@
                     [variant]="StatusToColorRecord[facility.status]"
                     [routerLink]="['/facilities', facility.id]"
                 >
-                    <p>Number of water pumps: {{ facility.pumps }}</p>
-                    <p>Location: {{ facility.location }}</p>
+                    @if(facility.location?.locality !== undefined && facility.location?.country !== undefined){
+                        <p>Location: {{ facility.location?.postalCode}} {{ facility.location?.locality }}, {{ facility.location?.country }}</p>
+                    } @else if (facility.location?.country !== undefined) {
+                        Location:{{ facility.location?.country }}
+                    } @else if (facility.location?.locality !== undefined) {
+                        <p>Location: {{ facility.location?.locality }}</p>
+                    } @else {
+                        <p>Location: Not specified</p>
+                    }
+
+                    @if(facility.location?.streetAddress !== undefined){
+                        <p>Address: {{ facility.location?.streetAddress }}</p>
+                    }
+                    @if (facility.location?.region !== undefined) {
+                        <p>Region: {{ facility.location?.region }}</p>
+                    }
+
+                    <div class="flex">
+                        <ix-typography color="std">status:&nbsp;</ix-typography>
+                        <ix-typography [ngClass]="StatusToColorRecord[facility.status]"
+                        >{{ facility.status }}
+                        </ix-typography>
+                    </div>
                 </ix-push-card>
                 }
             </ix-card-list>
@@ -42,8 +63,22 @@
                     <div>
                         <strong>{{ facility.heading }}</strong>
                         <p>{{ facility.subheading }}</p>
-                        <p>Number of water pumps: {{ facility.pumps }}</p>
-                        <p>Location: {{ facility.location }}</p>
+                        @if(facility.location?.locality !== undefined && facility.location?.country !== undefined){
+                            <p>Location: {{ facility.location?.locality }}, {{ facility.location?.country }}</p>
+                        } @else if (facility.location?.country !== undefined) {
+                            Location:{{ facility.location?.country }}
+                        } @else if (facility.location?.locality !== undefined) {
+                            <p>Location: {{ facility.location?.locality }}</p>
+                        } @else {
+                            <p>Location: Not specified</p>
+                        }
+
+                        <div class="flex">
+                            <ix-typography color="std">status:&nbsp;</ix-typography>
+                            <ix-typography [ngClass]="StatusToColorRecord[facility.status]"
+                            >{{ facility.status }}
+                            </ix-typography>
+                        </div>
                     </div>
                 </ix-event-list-item>
             }

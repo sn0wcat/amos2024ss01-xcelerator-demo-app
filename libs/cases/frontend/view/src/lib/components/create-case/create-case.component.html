@@ -127,8 +127,28 @@
                 <div class="mt-7 text-l">{{ facility.subheading }}</div>
             </ix-tile>
 
-            <ix-tile class="mt-2" size="small">Location: {{ facility.location }}</ix-tile>
-            <ix-tile class="mt-2" size="small">Number of pumps: {{ facility.pumps }}</ix-tile>
+            @if (facility.location?.locality !== undefined && facility.location?.country !== undefined) {
+                <ix-tile class="mt-2" size="small">
+                    <p>{{ facility.location?.locality }}, {{ facility.location?.country }}</p>
+                </ix-tile>
+            } @else if (facility.location?.country !== undefined) {
+                <ix-tile class="mt-2" size="small">
+                    <p>{{ facility.location?.country }}</p>
+                </ix-tile>
+            } @else if (facility.location?.locality !== undefined) {
+                <ix-tile class="mt-2" size="small">
+                    <p>{{ facility.location?.locality }}</p>
+                </ix-tile>
+            }
+
+            <ix-tile class="mt-2" size="small">
+                <div class="flex">
+                    <ix-typography color="std">status:&nbsp;</ix-typography>
+                    <ix-typography  [ngClass]="StatusToColorRecord[facility.status]"
+                    >{{ facility.status }}
+                    </ix-typography>
+                </div>
+            </ix-tile>
 
             <ix-button
                 class="mt-4"
