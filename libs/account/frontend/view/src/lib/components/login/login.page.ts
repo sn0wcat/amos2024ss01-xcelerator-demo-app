@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IxModule } from '@siemens/ix-angular';
+import { IxModule, themeSwitcher } from '@siemens/ix-angular';
 import { AuthenticationService } from 'common-frontend-models';
 
 @Component({
@@ -26,9 +26,12 @@ export class LoginPage {
     private readonly emailRegExp = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
     constructor(
-        private router: Router,
-        private authenticationService: AuthenticationService
-    ) {}
+        private _router: Router,
+        private _authenticationService: AuthenticationService,
+    ) {
+        // this site is always in dark mode
+        themeSwitcher.setTheme('theme-classic-dark');
+    }
 
 
     onSubmit() {
@@ -40,10 +43,10 @@ export class LoginPage {
             return;
         }
 
-        const loginSuccess = this.authenticationService.login(this.email, this.password);
+        const loginSuccess = this._authenticationService.login(this.email, this.password);
         this.loginSuccess.set(loginSuccess);
         if(loginSuccess){
-            this.router.navigate([ '/' ]);
+            this._router.navigate([ '/' ]);
         }
 
     }
