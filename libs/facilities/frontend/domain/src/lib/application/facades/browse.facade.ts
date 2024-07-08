@@ -32,7 +32,6 @@ export class XdBrowseFacade {
 						heading: timeSeriesItem.name,
 						subheading: timeSeriesItem.description,
 						status: timeSeriesItem.status,
-						pumps: faker.number.int({ min: 0, max: 99 }),
 						location: timeSeriesItem.location,
 					};
 				});
