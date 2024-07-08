@@ -1,9 +1,7 @@
 .table {
-    & .emergency {
-        background-color: #ff26401a;
-    }
 
-    & .status-open {
+    & .priority-emergency {
+        background-color: #ff26401a;
     }
 
     & .status-inprogress {

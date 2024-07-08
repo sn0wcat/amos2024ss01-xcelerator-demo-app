@@ -8,10 +8,10 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { IxModule } from '@siemens/ix-angular';
+import { IxModule, themeSwitcher } from '@siemens/ix-angular';
+import { LocalStorageService } from 'common-frontend-models';
 import { filter } from 'rxjs';
 
-import { ThemeStorageService } from '../../../models/services/theme-storage.service';
 import { LegalInformationComponent } from './legal-information/legal-information.component';
 
 /**
@@ -30,8 +30,12 @@ export class HeaderComponent {
 
     private readonly _activatedRoute: ActivatedRoute = inject(ActivatedRoute);
     private readonly _router: Router = inject(Router);
-    private themeStorageService = inject(ThemeStorageService);
-    protected lightMode = this.themeStorageService.getLightMode();
+    private localStorageService = inject(LocalStorageService);
+    protected lightMode = computed(() => {
+        const theme = this.localStorageService.getOrCreate('theme', 'theme-classic-dark')();
+        themeSwitcher.setTheme(theme);
+        return theme === 'theme-classic-light';
+    });
 
     readonly routerEvents = toSignal(
         this._router.events.pipe(filter((e) => e instanceof NavigationEnd)),
@@ -76,7 +80,7 @@ export class HeaderComponent {
     }
 
     toggleMode() {
-        this.themeStorageService.toggleTheme();
+        this.localStorageService.set('theme', this.lightMode() ? 'theme-classic-dark' : 'theme-classic-light');
     }
 
     refresh() {
