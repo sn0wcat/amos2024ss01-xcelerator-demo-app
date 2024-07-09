@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import {
-	ChangeDetectionStrategy,
-	Component,
-	computed,
-	inject,
-	OnInit,
-	Signal,
-	signal,
-	ViewEncapsulation,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    OnInit,
+    Signal,
+    signal,
+    ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -18,10 +18,15 @@ import { IxModule, ModalService } from '@siemens/ix-angular';
 import { convertThemeName, registerTheme } from '@siemens/ix-echarts';
 import * as echarts from 'echarts';
 import { EChartsOption } from 'echarts';
+import { map } from 'lodash';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { $enum } from 'ts-enum-util';
 
-import { Colors } from './colors';
 import LockModalComponent from './lock-modal/lockModal.component';
+import { Colors } from './models/colors';
+import { EMetricsCategory } from './models/metrics-category.enum';
+import { METRIC_CATEGORY_COLOR_INFORMATION } from './models/metrics-category-information.map';
+import { PUMP_METRICS_FULL_NAME_MAP } from './models/pump-metrics-full-name.map';
 
 @Component({
 	selector: 'lib-detail',
@@ -162,21 +167,73 @@ export class XdDetailPage implements OnInit {
 			},
 		],
 	};
-	protected readonly envChart: Signal<EChartsOption | undefined> = computed(() => {
-		const envData = this.envData();
-		if (!envData) return undefined;
 
-		const envChart = {
-			...this.envOptions,
-		};
+    protected readonly envChart: Signal<EChartsOption | undefined> = computed(() => {
+        const envData = this.envData();
+        if (!envData) return undefined;
 
-		if (!envChart.series || !(envChart.series instanceof Array)) return undefined;
+        const envChart = {
+            ...this.envOptions,
+        };
 
-		envChart.series[0].data = envData.map((item) => [ item.time, item['Temperature'] ]);
-		envChart.series[1].data = envData.map((item) => [ item.time, item['Humidity'] ]);
-		envChart.series[2].data = envData.map((item) => [ item.time, item['Pressure'] ]);
-		return envChart;
-	});
+        if (!envChart.series || !(envChart.series instanceof Array)) return undefined;
+
+        envChart.series[0].data = envData.map((item) => [ item.time, item['Temperature'] ]);
+        envChart.series[1].data = envData.map((item) => [ item.time, item['Humidity'] ]);
+        envChart.series[2].data = envData.map((item) => [ item.time, item['Pressure'] ]);
+        return envChart;
+    });
+
+    protected readonly metricsChart: Signal<EChartsOption | undefined> = computed(() => {
+        const facility = this.facility();
+        if (!facility) return undefined;
+
+        const metrics = facility.metrics;
+
+        const xAxisData = map(metrics, item => PUMP_METRICS_FULL_NAME_MAP[item.name].replace(/ /g, '\n').trim());
+        const seriesKeys = $enum(EMetricsCategory).getValues();
+
+        // @ts-ignore
+        const capValue = (value) => value !== null ? Math.min(value, 1000) : value;
+
+        const seriesData = map(seriesKeys, (key) => ({
+            type: 'bar',
+            name: METRIC_CATEGORY_COLOR_INFORMATION[key].abbreviation,
+            // @ts-ignore
+            data: map(metrics, item => capValue(item[key])),
+            emphasis: { focus: 'series' },
+            itemStyle: { color: METRIC_CATEGORY_COLOR_INFORMATION[key].color },
+        }));
+
+        return {
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                top: 30,
+                left: 80,
+            },
+            grid: {
+                top: 80,
+            },
+            title: {
+                text: 'Pump Metrics',
+                left: 'center',
+            },
+            xAxis: {
+                type: 'category',
+                data: xAxisData,
+                nameLocation: 'middle',
+            },
+            yAxis: {
+                type: 'value',
+                nameLocation: 'middle',
+            },
+            series: seriesData,
+            emphasis: { focus: 'series', scaleSize: 80, scale: true },
+        };
+    });
+
 
 	constructor(
         protected router: Router,
