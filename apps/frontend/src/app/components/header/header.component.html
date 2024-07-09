@@ -12,7 +12,9 @@
         <ix-button class="mt-1" variant="secondary">
             Powered by Siemens Xcelerator
         </ix-button>
-        <ix-avatar username="John Doe" extra="Administrator"> </ix-avatar>
+        <ix-avatar [username]="userMail" extra="Administrator">
+            <ix-dropdown-item label="Logout" (click)="logout()"></ix-dropdown-item>
+        </ix-avatar>
     </ix-application-header>
 
     <ix-breadcrumb visibleItemCount="3" class="ml-8">

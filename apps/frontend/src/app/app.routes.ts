@@ -1,6 +1,8 @@
 import { Route } from '@angular/router';
+import { AuthenticationGuard } from 'common-frontend-models';
 
 import { HeaderComponent } from './components/header/header.component';
+
 
 export const APP_ROUTES: Route[] = [
 	{
@@ -14,15 +16,18 @@ export const APP_ROUTES: Route[] = [
 		children: [
 			{
 				path: '',
+                canActivate: [ AuthenticationGuard ],
 				loadComponent: () =>
 					import('./pages/home/home.component').then((m) => m.HomeComponent),
 			},
             {
                 path: 'home',
+                canActivate: [ AuthenticationGuard ],
                 redirectTo: '',
             },
 			{
 				path: 'facilities',
+                canActivate: [ AuthenticationGuard ],
 				data: {
 					breadcrumb: 'Facilities',
 					title: 'Facilities Dashboard',
@@ -33,6 +38,7 @@ export const APP_ROUTES: Route[] = [
 			},
 			{
 				path: 'cases',
+                canActivate: [ AuthenticationGuard ],
 				data: {
 					breadcrumb: 'Cases',
 					title: 'Cases',
@@ -45,6 +51,7 @@ export const APP_ROUTES: Route[] = [
 	},
 	{
 		path: 'not-found',
+        canActivate: [ AuthenticationGuard ],
 		loadComponent: () =>
 			import('./pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
 	},
