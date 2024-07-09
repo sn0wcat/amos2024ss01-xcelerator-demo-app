@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { faker } from '@faker-js/faker';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 
 import { FacilitiesRequestService } from '../../infrastructure/facilities-request.service';
 import { TimeSeriesRequestService } from '../../infrastructure/timeseries-request.service';
@@ -33,6 +33,7 @@ export class XdDetailsFacade {
 					heading: timeSeriesItem.name,
 					subheading: timeSeriesItem.description,
 					status: timeSeriesItem.status,
+                    metrics: timeSeriesItem.metrics,
                     indicatorMsg: timeSeriesItem.indicatorMsg,
 					pumps: faker.number.int({ min: 0, max: 99 }),
 					location: timeSeriesItem.location,
