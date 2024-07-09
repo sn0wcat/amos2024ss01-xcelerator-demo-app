@@ -184,7 +184,7 @@ export class CreateCaseComponent implements OnInit {
      */
     private mapFormData(formData: CaseFormData) {
         return {
-            assetId: this.createCaseForm.selectFacility,
+            assetId: formData.selectFacility,
             handle: 'AA-' + faker.number.int({ min: 1000, max: 9999 }),
             dueDate: formData.dueDate,
             title: formData.title,
