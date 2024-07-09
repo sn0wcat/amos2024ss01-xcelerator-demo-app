@@ -193,14 +193,10 @@ export class XdDetailPage implements OnInit {
         const xAxisData = map(metrics, item => PUMP_METRICS_FULL_NAME_MAP[item.name].replace(/ /g, '\n').trim());
         const seriesKeys = $enum(EMetricsCategory).getValues();
 
-        // @ts-ignore
-        const capValue = (value) => value !== null ? Math.min(value, 1000) : value;
-
         const seriesData = map(seriesKeys, (key) => ({
             type: 'bar',
             name: METRIC_CATEGORY_COLOR_INFORMATION[key].abbreviation,
-            // @ts-ignore
-            data: map(metrics, item => capValue(item[key])),
+            data: map(metrics, item => item[key]),
             emphasis: { focus: 'series' },
             itemStyle: { color: METRIC_CATEGORY_COLOR_INFORMATION[key].color },
         }));
