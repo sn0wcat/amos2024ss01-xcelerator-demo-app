@@ -5,6 +5,13 @@ import { ReplaySubject } from 'rxjs';
 import { HeaderComponent } from './header.component';
 
 const HEADER_ROUTES = {
+    snapshot: {
+        firstChild: {
+            routeConfig: {
+                path: ''
+            }
+        },
+    },
 	root: {
 		snapshot: {
 			data: {
