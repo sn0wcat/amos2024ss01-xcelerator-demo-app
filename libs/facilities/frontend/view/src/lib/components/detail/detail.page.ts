@@ -18,6 +18,7 @@ import { IxModule, ModalService } from '@siemens/ix-angular';
 import { convertThemeName, registerTheme } from '@siemens/ix-echarts';
 import * as echarts from 'echarts';
 import { EChartsOption } from 'echarts';
+import { IPumpMetrics } from 'facilities-shared-models';
 import { defaults, map } from 'lodash';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { $enum } from 'ts-enum-util';
@@ -27,7 +28,6 @@ import { Colors } from './models/colors';
 import { EMetricsCategory } from './models/metrics-category.enum';
 import { METRIC_CATEGORY_COLOR_INFORMATION } from './models/metrics-category-information.map';
 import { PUMP_METRICS_FULL_NAME_MAP } from './models/pump-metrics-full-name.map';
-import { IPumpMetrics } from 'facilities-shared-models';
 
 @Component({
 	selector: 'lib-detail',
