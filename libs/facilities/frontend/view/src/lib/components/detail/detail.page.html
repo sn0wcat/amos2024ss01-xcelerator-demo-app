@@ -66,13 +66,15 @@
                     @if (facility.cases.length > 0) {
                         <div>
                             <div class="flex flex-col pt-2">
-                                @for (caseItem of facility.cases.slice(0, 3); track caseItem.id; let i=$index){
+                                <!-- add exception for 4 cases so it shows the 4th case and not 'Go to all cases' -->
+                                @for (caseItem of facility.cases.slice(0, facility.cases.length === 4 ? 4 : 3);
+                                    track caseItem.id; let i=$index){
                                     <ix-link-button [routerLink]="['/cases', caseItem.id]">
                                         {{ mapNth(i+1)}} Case
                                     </ix-link-button>
                                 }
                             </div>
-                            @if (facility.cases.length > 3) {
+                            @if (facility.cases.length > 4 ) {
                                 <ix-link-button [routerLink]="['/cases']">
                                     Go to all cases
                                 </ix-link-button>
