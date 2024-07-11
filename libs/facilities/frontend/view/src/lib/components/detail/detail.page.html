@@ -66,7 +66,7 @@
                     @if (facility.cases.length > 0) {
                         <div>
                             <div class="flex flex-col pt-2">
-                                <!-- add exception for 4 cases so it shows the 4th case and not 'Go to all cases' -->
+                                <!-- add exception for 4 cases so it shows the 4th case and not 'Go to all Cases' -->
                                 @for (caseItem of facility.cases.slice(0, facility.cases.length === 4 ? 4 : 3);
                                     track caseItem.id; let i=$index){
                                     <ix-link-button [routerLink]="['/cases', caseItem.id]">
@@ -76,7 +76,7 @@
                             </div>
                             @if (facility.cases.length > 4 ) {
                                 <ix-link-button [routerLink]="['/cases']">
-                                    Go to all cases
+                                    Go to all Cases
                                 </ix-link-button>
                             }
                         </div>
