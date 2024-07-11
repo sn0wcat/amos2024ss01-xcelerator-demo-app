@@ -1,16 +1,17 @@
 import { Component, forwardRef, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IxDateDropdown } from '@siemens/ix-angular'; // Pfad zur externen Bibliothek
-import { IxModule } from '@siemens/ix-angular'; // Pfad zur externen Bibliothek
+import { IxDateDropdown } from '@siemens/ix-angular';
+import { IxModule } from '@siemens/ix-angular';
+
 /**
- * This Value Acessor is needed to acess the value of the date dropdown in the form
+ * This Value Accessor is needed to access the value of the date dropdown in the form
  */
 @Component({
     selector: 'lib-date-dropdown-wrapper',
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => DateDropdownWrapperComponent),
+            useExisting: forwardRef(() => DateDropdownAccessor),
             multi: true,
         },
     ],
@@ -27,7 +28,7 @@ import { IxModule } from '@siemens/ix-angular'; // Pfad zur externen Bibliothek
         FormsModule,
     ],
 })
-export class DateDropdownWrapperComponent implements ControlValueAccessor {
+export class DateDropdownAccessor implements ControlValueAccessor {
   @ViewChild(IxDateDropdown) private ixDateDropdown: IxDateDropdown;
 
   value: string;

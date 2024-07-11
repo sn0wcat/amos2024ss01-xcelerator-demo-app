@@ -34,6 +34,11 @@ export class XdCasesRequestService {
 		return this._httpClient.post<ICaseResponse>('/api/case', body);
 	}
 
+    /**
+     *
+     * @param params
+     * @param body
+     */
 	public updateCase(params: ICaseParams, body: ICreateCaseBody) {
 		return this._httpClient.put<ICaseResponse>(`/api/case/${params.id}`, body);
 	}

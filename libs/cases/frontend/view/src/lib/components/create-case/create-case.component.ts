@@ -13,16 +13,16 @@ import { IxModule, IxSelectCustomEvent, ToastService } from '@siemens/ix-angular
 import { ECasePriority, ECaseStatus, ECaseType } from 'cases-shared-models';
 
 import { CaseFormData } from '../interfaces/case-form-data.interface';
-import { DateDropdownWrapperComponent } from './date-dropdown-accessor';
+import { DateDropdownAccessor } from './accessor/date-dropdown-accessor';
 
 @Component({
 	selector: 'lib-create-case',
 	standalone: true,
-	imports: [ CommonModule, IxModule, FormsModule, RouterLink, DateDropdownWrapperComponent ],
+	imports: [ CommonModule, IxModule, FormsModule, RouterLink, DateDropdownAccessor ],
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,
-			useClass: DateDropdownWrapperComponent,
+			useClass: DateDropdownAccessor,
 			multi: true,
 		},
 	],
