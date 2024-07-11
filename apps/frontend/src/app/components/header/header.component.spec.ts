@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
-import { ReplaySubject } from 'rxjs';
-import { HeaderComponent } from './header.component';
-import { CommonModule } from '@angular/common';
-import { IxModule, themeSwitcher } from '@siemens/ix-angular';
 import { AuthenticationService, LocalStorageService } from 'common-frontend-models';
+import { ReplaySubject } from 'rxjs';
+
+import { HeaderComponent } from './header.component';
 
 const HEADER_ROUTES = {
     snapshot: {
@@ -56,7 +55,7 @@ describe('HeaderComponent', () => {
         } as unknown as AuthenticationService;
 
         await TestBed.configureTestingModule({
-            imports: [HeaderComponent],
+            imports: [ HeaderComponent ],
             providers: [
                 { provide: ActivatedRoute, useValue: HEADER_ROUTES },
                 { provide: Router, useValue: routerMock },
@@ -85,7 +84,7 @@ describe('HeaderComponent', () => {
         eventsSubject.next(new NavigationEnd(1, '', ''));
 
         const breadcrumbs = component.breadcrumbs();
-        expect(breadcrumbs).toEqual(['Layer 1', 'Layer 2']);
+        expect(breadcrumbs).toEqual([ 'Layer 1', 'Layer 2' ]);
     });
 
     it('should determine if it is home page correctly', () => {
@@ -103,7 +102,7 @@ describe('HeaderComponent', () => {
     it('should logout and navigate to login', () => {
         component.logout();
         expect(authenticationServiceMock.logout).toHaveBeenCalled();
-        expect(routerMock.navigate).toHaveBeenCalledWith(['/account/login']);
+        expect(routerMock.navigate).toHaveBeenCalledWith([ '/account/login' ]);
     });
 
     it('should cut URL correctly', () => {
