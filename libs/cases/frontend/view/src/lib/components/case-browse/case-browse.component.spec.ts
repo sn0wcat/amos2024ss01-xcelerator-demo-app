@@ -20,7 +20,7 @@ describe('CaseBrowsComponent', () => {
 		} as unknown as XdCasesFacade;
 
 		await TestBed.configureTestingModule({
-			imports: [CaseBrowseComponent, HttpClientTestingModule],
+			imports: [ CaseBrowseComponent, HttpClientTestingModule ],
 			providers: [
 				{
 					provide: ActivatedRoute,

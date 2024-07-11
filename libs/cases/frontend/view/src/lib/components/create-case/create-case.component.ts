@@ -18,7 +18,7 @@ import { DateDropdownAccessor } from './accessor/date-dropdown-accessor';
 @Component({
 	selector: 'lib-create-case',
 	standalone: true,
-	imports: [CommonModule, IxModule, FormsModule, RouterLink, DateDropdownAccessor],
+	imports: [ CommonModule, IxModule, FormsModule, RouterLink, DateDropdownAccessor ],
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,

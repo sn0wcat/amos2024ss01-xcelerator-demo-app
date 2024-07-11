@@ -16,9 +16,9 @@ describe('BackButtonDirective', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			declarations: [TestComponent],
-			imports: [BackButtonDirective],
-			providers: [Location],
+			declarations: [ TestComponent ],
+			imports: [ BackButtonDirective ],
+			providers: [ Location ],
 		});
 
 		fixture = TestBed.createComponent(TestComponent);

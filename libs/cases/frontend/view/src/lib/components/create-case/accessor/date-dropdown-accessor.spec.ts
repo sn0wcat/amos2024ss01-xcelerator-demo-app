@@ -8,7 +8,7 @@ describe('DateDropdownWrapperComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [DateDropdownAccessor],
+			imports: [ DateDropdownAccessor ],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(DateDropdownAccessor);
