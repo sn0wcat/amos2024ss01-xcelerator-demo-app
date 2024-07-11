@@ -305,14 +305,16 @@ export class XdDetailPage implements OnInit {
 		});
 	}
 
-    mapNth(index: number) {
-        switch (index) {
+    mapNth(n: number) {
+        switch (n) {
             case 1:
                 return 'First';
             case 2:
                 return 'Second';
+            case 3:
+                return `${n}rd`
             default:
-                return `${index}rd`
+                return `${n}th`;
         }
     }
 
