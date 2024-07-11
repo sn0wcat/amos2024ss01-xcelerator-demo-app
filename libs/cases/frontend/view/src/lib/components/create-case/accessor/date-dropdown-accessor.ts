@@ -23,7 +23,7 @@ import { IxModule } from '@siemens/ix-angular';
 			(dateRangeChange)="onDateChange($event)"
 		></ix-date-dropdown>
 	`,
-	imports: [ IxModule, FormsModule ],
+	imports: [IxModule, FormsModule],
 })
 export class DateDropdownAccessor implements ControlValueAccessor {
 	@ViewChild(IxDateDropdown) private ixDateDropdown: IxDateDropdown;
@@ -52,7 +52,7 @@ export class DateDropdownAccessor implements ControlValueAccessor {
 	}
 
 	convertDate(date: string): string {
-		const [ day, month, year ] = date.split('-');
+		const [day, month, year] = date.split('-');
 		return `${year}-${month}-${day}`;
 	}
 }

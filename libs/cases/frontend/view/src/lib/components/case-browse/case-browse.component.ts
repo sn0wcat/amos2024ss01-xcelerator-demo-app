@@ -17,9 +17,9 @@ import { $enum } from 'ts-enum-util';
 @Component({
 	selector: 'lib-brows-cases',
 	standalone: true,
-	imports: [ CommonModule, IxModule, RouterLink ],
+	imports: [CommonModule, IxModule, RouterLink],
 	templateUrl: './case-browse.component.html',
-	styleUrls: [ './case-browse.component.scss' ],
+	styleUrls: ['./case-browse.component.scss'],
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
