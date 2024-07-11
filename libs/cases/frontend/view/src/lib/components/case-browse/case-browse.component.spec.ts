@@ -12,25 +12,29 @@ import { CaseBrowseComponent } from './case-browse.component';
 describe('CaseBrowsComponent', () => {
 	let component: CaseBrowseComponent;
 	let fixture: ComponentFixture<CaseBrowseComponent>;
-    let mockCasesFacade: XdCasesFacade;
+	let mockCasesFacade: XdCasesFacade;
 
 	beforeEach(async () => {
-        mockCasesFacade = {
-            getAllCases: jest.fn().mockReturnValue(of([])),
-        } as unknown as XdCasesFacade
+		mockCasesFacade = {
+			getAllCases: jest.fn().mockReturnValue(of([])),
+		} as unknown as XdCasesFacade;
 
 		await TestBed.configureTestingModule({
-			imports: [ CaseBrowseComponent, HttpClientTestingModule ],
-            providers: [
-                {
-                    provide: ActivatedRoute,
-                    useValue: {},
-                },{ provide: LocalStorageService, useValue: {
-                        getOrCreate: jest.fn().mockReturnValue(signal('Status,Equal,OPEN')),
-                        set: jest.fn()
-                    } },
-                { provide: XdCasesFacade, useValue: mockCasesFacade },
-            ],
+			imports: [CaseBrowseComponent, HttpClientTestingModule],
+			providers: [
+				{
+					provide: ActivatedRoute,
+					useValue: {},
+				},
+				{
+					provide: LocalStorageService,
+					useValue: {
+						getOrCreate: jest.fn().mockReturnValue(signal('Status,Equal,OPEN')),
+						set: jest.fn(),
+					},
+				},
+				{ provide: XdCasesFacade, useValue: mockCasesFacade },
+			],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(CaseBrowseComponent);
@@ -42,23 +46,33 @@ describe('CaseBrowsComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-    describe('filterList', () => {
-        it('should filter cases based on local storage filter', () => {
-            const cases: ICaseResponse[] = [
-                { id: 1, status: ECaseStatus.CANCELLED, priority: ECasePriority.EMERGENCY, type: ECaseType.ANNOTATION } as ICaseResponse,
-                { id: 2, status: ECaseStatus.OPEN, priority: ECasePriority.EMERGENCY, type: ECaseType.ANNOTATION } as ICaseResponse,
-            ];
-            jest.spyOn(mockCasesFacade, 'getAllCases').mockReturnValue(of(cases));
-            fixture.detectChanges();
+	describe('filterList', () => {
+		it('should filter cases based on local storage filter', () => {
+			const cases: ICaseResponse[] = [
+				{
+					id: 1,
+					status: ECaseStatus.CANCELLED,
+					priority: ECasePriority.EMERGENCY,
+					type: ECaseType.ANNOTATION,
+				} as ICaseResponse,
+				{
+					id: 2,
+					status: ECaseStatus.OPEN,
+					priority: ECasePriority.EMERGENCY,
+					type: ECaseType.ANNOTATION,
+				} as ICaseResponse,
+			];
+			jest.spyOn(mockCasesFacade, 'getAllCases').mockReturnValue(of(cases));
+			fixture.detectChanges();
 
-            const processedCases = component['processedCases']();
-            expect(processedCases).toEqual([]);
-        });
-    });
+			const processedCases = component['processedCases']();
+			expect(processedCases).toEqual([]);
+		});
+	});
 
-    describe('getAllCases', () => {
-        it('should call getAllCases from the facade', () => {
-            expect(mockCasesFacade.getAllCases).toHaveBeenCalled();
-        });
-    });
+	describe('getAllCases', () => {
+		it('should call getAllCases from the facade', () => {
+			expect(mockCasesFacade.getAllCases).toHaveBeenCalled();
+		});
+	});
 });
