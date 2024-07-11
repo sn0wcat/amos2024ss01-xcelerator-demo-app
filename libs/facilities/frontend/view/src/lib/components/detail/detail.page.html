@@ -17,6 +17,9 @@
         @if(this.envChart(); as envChart){
             <div echarts [options]="envChart" [theme]="theme()"></div>
         }
+        @if(this.metricsChart(); as metricsChart){
+            <div echarts [options]="metricsChart" [theme]="theme()"></div>
+        }
 
 		<ix-card variant="insight" class="h-full w-full p-4">
 			<ix-card-content>
@@ -60,10 +63,10 @@
                     There are {{ facility.notification }} open cases regarding this facility
                 </ix-typography>
                 <div class="mt-auto p-2">
-                    <ix-button 
+                    <ix-button
                         [routerLink]="['/cases/create',{ facilityId: facility.id }]"
-                    > 
-                        New Case 
+                    >
+                        New Case
                     </ix-button>
                 </div>
             </ix-card-content>
