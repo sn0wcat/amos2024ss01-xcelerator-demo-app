@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -7,7 +7,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { XdBrowseFacade } from '@frontend/facilities/frontend/domain';
 import { StatusToColorRecord } from '@frontend/facilities/frontend/models';
 import { IxModule } from '@siemens/ix-angular';
@@ -48,7 +48,10 @@ export class XdBrowsePage {
        }
     });
 
-    constructor(protected readonly router: Router, protected readonly route: ActivatedRoute, private readonly localStorageService: LocalStorageService) {
+    constructor(
+        protected readonly router: Router,
+        protected readonly location: Location,
+        private readonly localStorageService: LocalStorageService) {
     }
 
     toggleView() {

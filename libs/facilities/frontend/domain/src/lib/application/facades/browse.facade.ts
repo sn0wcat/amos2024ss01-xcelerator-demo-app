@@ -28,7 +28,7 @@ export class XdBrowseFacade {
 							'water-plant',
 							'truck',
 						]),
-						notification: `${faker.number.int({ min: 0, max: 99 })}`,
+						cases: timeSeriesItem.cases,
 						heading: timeSeriesItem.name,
 						subheading: timeSeriesItem.description,
 						status: timeSeriesItem.status,

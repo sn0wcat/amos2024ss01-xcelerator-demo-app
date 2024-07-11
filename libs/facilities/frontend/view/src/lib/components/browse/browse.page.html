@@ -12,7 +12,7 @@
     hasBackButton="true"
     headerTitle="Facilities Overview"
     headerSubtitle="View all facilities and their status"
-    (backButtonClick)="router.navigate(['../'], { relativeTo: route })"
+    (backButtonClick)="location.back()"
 ></ix-content-header>
 
 <ix-content>
@@ -22,7 +22,7 @@
                 @for (facility of facilities; track facility.id) {
                 <ix-push-card
                     [icon]="facility.icon"
-                    [notification]="facility.notification"
+                    [notification]="facility.cases.length > 0 ? facility.cases.length : '' "
                     [heading]="facility.heading"
                     [subheading]="facility.subheading"
                     [variant]="StatusToColorRecord[facility.status]"

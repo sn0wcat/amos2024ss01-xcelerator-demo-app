@@ -11,7 +11,7 @@ describe('CreateCaseComponent', () => {
 		await TestBed.configureTestingModule({
 			imports: [ CreateCaseComponent, HttpClientTestingModule ],
             providers: [
-                { provide: ActivatedRoute, useValue: {}, },
+                { provide: ActivatedRoute, useValue: { snapshot: { params: ''}}, },
             ]
 		}).compileComponents();
 

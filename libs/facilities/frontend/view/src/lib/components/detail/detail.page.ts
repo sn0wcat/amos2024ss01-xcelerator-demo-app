@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -10,7 +10,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { XdDetailsFacade } from '@frontend/facilities/frontend/domain';
 import { StatusToColorRecord } from '@frontend/facilities/frontend/models';
 import { themeSwitcher } from '@siemens/ix';
@@ -39,6 +39,21 @@ import { PUMP_METRICS_FULL_NAME_MAP } from './models/pump-metrics-full-name.map'
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class XdDetailPage implements OnInit {
+
+    protected readonly notificationText = computed(() => {
+        const facility = this.facility();
+        if (!facility) return undefined;
+
+        switch (facility.cases.length) {
+            case 0:
+                return 'There are no cases regarding this facility';
+            case 1:
+                return 'There is one case regarding this facility';
+            default:
+                return `There are ${facility.cases.length} cases regarding this facility`;
+        }
+    })
+
 	protected theme = signal(convertThemeName(themeSwitcher.getCurrentTheme()));
 	protected readonly locked = signal(true);
 	protected readonly StatusToColorRecord = StatusToColorRecord;
@@ -264,8 +279,8 @@ export class XdDetailPage implements OnInit {
 
 
 	constructor(
-        protected router: Router,
 		protected route: ActivatedRoute,
+        protected location: Location,
 		private readonly _modalService: ModalService,
 	) {}
 
@@ -289,4 +304,16 @@ export class XdDetailPage implements OnInit {
 			this.locked.set(!currentValue);
 		});
 	}
+
+    mapNth(index: number) {
+        switch (index) {
+            case 1:
+                return 'First';
+            case 2:
+                return 'Second';
+            default:
+                return `${index}rd`
+        }
+    }
+
 }

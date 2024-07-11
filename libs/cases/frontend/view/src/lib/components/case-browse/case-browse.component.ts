@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -7,7 +7,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { XdCasesFacade } from '@frontend/cases/frontend/domain';
 import { FilterState, IxCategoryFilterCustomEvent, IxModule } from '@siemens/ix-angular';
 import { ICaseResponse } from 'cases-shared-models';
@@ -87,8 +87,7 @@ export class CaseBrowseComponent {
     };
 
     constructor(
-        protected router: Router,
-        protected route: ActivatedRoute,
+        protected location: Location,
         protected localStorage: LocalStorageService,
         private _casesFacade: XdCasesFacade,
     ) {}

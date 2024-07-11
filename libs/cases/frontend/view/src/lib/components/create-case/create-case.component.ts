@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import {
 	ChangeDetectionStrategy, Component, inject, OnInit, signal, ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { faker } from '@faker-js/faker';
 import { XdCasesFacade } from '@frontend/cases/frontend/domain';
 import { XdBrowseFacade } from '@frontend/facilities/frontend/domain';
@@ -43,7 +43,7 @@ export class CreateCaseComponent implements OnInit {
     priorityPlaceholder = signal('Select Priority');
 
     constructor(
-        protected readonly router: Router,
+        protected readonly location: Location,
         protected readonly route: ActivatedRoute,
         private readonly toastService: ToastService
     ) {}
