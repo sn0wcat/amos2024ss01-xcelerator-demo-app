@@ -13,9 +13,9 @@ describe('XdCasesFacade', () => {
 		const timeseriesRequestServiceMock = {
 			getTimeSeries: jest.fn().mockReturnValue(of({})),
 			getAllCases: jest.fn().mockReturnValue(of([])),
-            createCase: jest.fn().mockReturnValue(of({})),
-            updateCase: jest.fn().mockReturnValue(of({})),
-            deleteCase: jest.fn().mockReturnValue(of({})),
+			createCase: jest.fn().mockReturnValue(of({})),
+			updateCase: jest.fn().mockReturnValue(of({})),
+			deleteCase: jest.fn().mockReturnValue(of({})),
 		};
 
 		TestBed.configureTestingModule({
@@ -53,34 +53,34 @@ describe('XdCasesFacade', () => {
 		});
 	});
 
-    describe('createCase', () => {
-        it('should call createCase of CasesRequestService with correct parameters', async () => {
-            const body = { id: 1 } as any;
+	describe('createCase', () => {
+		it('should call createCase of CasesRequestService with correct parameters', async () => {
+			const body = { id: 1 } as any;
 
-            await firstValueFrom(facade.createCase(body));
+			await firstValueFrom(facade.createCase(body));
 
-            expect(casesRequestService.createCase).toHaveBeenCalledWith(body);
-        });
-    });
+			expect(casesRequestService.createCase).toHaveBeenCalledWith(body);
+		});
+	});
 
-    describe('updateCase', () => {
-        it('should call updateCase of CasesRequestService with correct parameters', async () => {
-            const params: ICaseParams = { id: 1 } as ICaseParams;
-            const body = { id: 1 } as any;
+	describe('updateCase', () => {
+		it('should call updateCase of CasesRequestService with correct parameters', async () => {
+			const params: ICaseParams = { id: 1 } as ICaseParams;
+			const body = { id: 1 } as any;
 
-            await firstValueFrom(facade.updateCase(params, body));
+			await firstValueFrom(facade.updateCase(params, body));
 
-            expect(casesRequestService.updateCase).toHaveBeenCalledWith(params, body);
-        });
-    });
+			expect(casesRequestService.updateCase).toHaveBeenCalledWith(params, body);
+		});
+	});
 
-    describe('deleteCase', () => {
-        it('should call deleteCase of CasesRequestService with correct parameters', async () => {
-            const params: ICaseParams = { id: 1 } as ICaseParams;
+	describe('deleteCase', () => {
+		it('should call deleteCase of CasesRequestService with correct parameters', async () => {
+			const params: ICaseParams = { id: 1 } as ICaseParams;
 
-            await firstValueFrom(facade.deleteCase(params));
+			await firstValueFrom(facade.deleteCase(params));
 
-            expect(casesRequestService.deleteCase).toHaveBeenCalledWith(params);
-        });
-    });
+			expect(casesRequestService.deleteCase).toHaveBeenCalledWith(params);
+		});
+	});
 });

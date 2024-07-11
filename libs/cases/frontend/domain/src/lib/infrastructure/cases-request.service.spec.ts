@@ -13,16 +13,16 @@ describe('XdCasesRequestService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [ HttpClientTestingModule ],
+			imports: [HttpClientTestingModule],
 			providers: [
 				XdCasesRequestService,
 				{
 					provide: HttpClient,
 					useValue: {
 						get: jest.fn(),
-                        post: jest.fn(),
-                        put: jest.fn(),
-                        delete: jest.fn(),
+						post: jest.fn(),
+						put: jest.fn(),
+						delete: jest.fn(),
 					},
 				},
 			],
@@ -48,7 +48,7 @@ describe('XdCasesRequestService', () => {
 	describe('getTimeSeries', () => {
 		it('should forward the request to the backend', async () => {
 			const params = { id: faker.number.int() } as ICaseParams;
-			const mockResponse: ICaseParams[] = [ { id: faker.number.int() } ] as ICaseParams[];
+			const mockResponse: ICaseParams[] = [{ id: faker.number.int() }] as ICaseParams[];
 
 			const spy = jest.spyOn(httpClient, 'get').mockReturnValue(of(mockResponse));
 
@@ -59,46 +59,46 @@ describe('XdCasesRequestService', () => {
 		});
 	});
 
-    describe('createCase', () => {
-        it('should forward the request to the backend', async () => {
-            const body = { id: faker.number.int() } as any;
-            const mockResponse = { id: faker.number.int() } as ICaseResponse;
+	describe('createCase', () => {
+		it('should forward the request to the backend', async () => {
+			const body = { id: faker.number.int() } as any;
+			const mockResponse = { id: faker.number.int() } as ICaseResponse;
 
-            const spy = jest.spyOn(httpClient, 'post').mockReturnValue(of(mockResponse));
+			const spy = jest.spyOn(httpClient, 'post').mockReturnValue(of(mockResponse));
 
-            const result = await firstValueFrom(service.createCase(body));
-            expect(spy).toHaveBeenCalledTimes(1);
-            expect(spy).toHaveBeenCalledWith('/api/case', body);
-            expect(result).toEqual(mockResponse);
-        });
-    });
+			const result = await firstValueFrom(service.createCase(body));
+			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledWith('/api/case', body);
+			expect(result).toEqual(mockResponse);
+		});
+	});
 
-    describe('updateCase', () => {
-        it('should forward the request to the backend', async () => {
-            const params = { id: faker.number.int() } as ICaseParams;
-            const body = { id: faker.number.int() } as any;
-            const mockResponse = { id: faker.number.int() } as ICaseResponse;
+	describe('updateCase', () => {
+		it('should forward the request to the backend', async () => {
+			const params = { id: faker.number.int() } as ICaseParams;
+			const body = { id: faker.number.int() } as any;
+			const mockResponse = { id: faker.number.int() } as ICaseResponse;
 
-            const spy = jest.spyOn(httpClient, 'put').mockReturnValue(of(mockResponse));
+			const spy = jest.spyOn(httpClient, 'put').mockReturnValue(of(mockResponse));
 
-            const result = await firstValueFrom(service.updateCase(params, body));
-            expect(spy).toHaveBeenCalledTimes(1);
-            expect(spy).toHaveBeenCalledWith(`/api/case/${params.id}`, body);
-            expect(result).toEqual(mockResponse);
-        });
-    });
+			const result = await firstValueFrom(service.updateCase(params, body));
+			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledWith(`/api/case/${params.id}`, body);
+			expect(result).toEqual(mockResponse);
+		});
+	});
 
-    describe('deleteCase', () => {
-        it('should forward the request to the backend', async () => {
-            const params = { id: faker.number.int() } as ICaseParams;
-            const mockResponse = { id: faker.number.int() } as ICaseResponse;
+	describe('deleteCase', () => {
+		it('should forward the request to the backend', async () => {
+			const params = { id: faker.number.int() } as ICaseParams;
+			const mockResponse = { id: faker.number.int() } as ICaseResponse;
 
-            const spy = jest.spyOn(httpClient, 'delete').mockReturnValue(of(mockResponse));
+			const spy = jest.spyOn(httpClient, 'delete').mockReturnValue(of(mockResponse));
 
-            const result = await firstValueFrom(service.deleteCase(params));
-            expect(spy).toHaveBeenCalledTimes(1);
-            expect(spy).toHaveBeenCalledWith(`/api/case/${params.id}`);
-            expect(result).toEqual(mockResponse);
-        });
-    });
+			const result = await firstValueFrom(service.deleteCase(params));
+			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledWith(`/api/case/${params.id}`);
+			expect(result).toEqual(mockResponse);
+		});
+	});
 });
