@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { XdCasesFacade } from '@frontend/cases/frontend/domain';
 import { IxModule, ModalService, ToastService } from '@siemens/ix-angular';
 import { ECasePriority, ECaseStatus, ECaseType, ICaseResponse } from 'cases-shared-models';
@@ -39,8 +39,8 @@ export class DetailCaseComponent {
 	datePattern = /^\d{4}-\d{2}-\d{2}T00:00:00\.000Z$/;
 
 	constructor(
-		protected router: Router,
-		protected route: ActivatedRoute,
+        protected readonly location: Location,
+        protected readonly route: ActivatedRoute,
 		private readonly _modalService: ModalService,
 		private readonly toastService: ToastService,
 	) {}

@@ -5,7 +5,7 @@
     hasBackButton="true"
     headerTitle="Details of Facility {{ facility.heading }}"
     headerSubtitle="On this page you can see detailed information about the facility including charts about the pump and environment data"
-    (backButtonClick)="router.navigate(['../'], { relativeTo: route })"
+    (backButtonClick)="location.back()"
 ></ix-content-header>
 
 <ix-content>
@@ -56,19 +56,39 @@
             <ix-card-content>
                 <ix-card-title>
                     <ix-icon class="icon" name="tasks-open"></ix-icon>
-                    <span class="notification text-2xl">{{ facility.notification }}</span>
+                    <span class="notification text-2xl">{{ facility.cases.length > 0 ? facility.cases.length : '' }}</span>
                 </ix-card-title>
                 <ix-typography color="std" format="h4"> Open Cases </ix-typography>
                 <ix-typography color="std">
-                    There are {{ facility.notification }} open cases regarding this facility
+                   {{ notificationText() }}
                 </ix-typography>
-                <div class="mt-auto p-2">
-                    <ix-button
-                        [routerLink]="['/cases/create',{ facilityId: facility.id }]"
-                    >
-                        New Case
-                    </ix-button>
+                <div class="flex flex-row justify-between w-full">
+                    @if (facility.cases.length > 0) {
+                        <div>
+                            <div class="flex flex-col pt-2">
+                                <!-- add exception for 4 cases so it shows the 4th case and not 'Go to all Cases' -->
+                                @for (caseItem of facility.cases.slice(0, facility.cases.length === 4 ? 4 : 3);
+                                    track caseItem.id; let i=$index){
+                                    <ix-link-button [routerLink]="['/cases', caseItem.id]">
+                                        Case with id {{ caseItem.id }}
+                                    </ix-link-button>
+                                }
+                            </div>
+                            @if (facility.cases.length > 4 ) {
+                                <ix-link-button [routerLink]="['/cases']">
+                                    Go to all Cases
+                                </ix-link-button>
+                            }
+                        </div>
+                    }
+
+                    <div class="mt-auto p-2">
+                        <ix-button [routerLink]="['/cases/create',{ facilityId: facility.id }]">
+                            New Case
+                        </ix-button>
+                    </div>
                 </div>
+
             </ix-card-content>
         </ix-card>
 

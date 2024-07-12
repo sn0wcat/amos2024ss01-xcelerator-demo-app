@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { faker } from '@faker-js/faker';
-import { map, tap } from 'rxjs';
+import { map } from 'rxjs';
 
 import { FacilitiesRequestService } from '../../infrastructure/facilities-request.service';
 import { TimeSeriesRequestService } from '../../infrastructure/timeseries-request.service';
@@ -29,7 +29,7 @@ export class XdDetailsFacade {
 						'water-plant',
 						'truck',
 					]),
-					notification: `${faker.number.int({ min: 0, max: 99 })}`,
+                    cases: timeSeriesItem.cases,
 					heading: timeSeriesItem.name,
 					subheading: timeSeriesItem.description,
 					status: timeSeriesItem.status,
