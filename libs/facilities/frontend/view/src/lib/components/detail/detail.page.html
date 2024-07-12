@@ -70,7 +70,7 @@
                                 @for (caseItem of facility.cases.slice(0, facility.cases.length === 4 ? 4 : 3);
                                     track caseItem.id; let i=$index){
                                     <ix-link-button [routerLink]="['/cases', caseItem.id]">
-                                        {{ mapNth(i+1)}} Case
+                                        Case with id {{ caseItem.id }}
                                     </ix-link-button>
                                 }
                             </div>
