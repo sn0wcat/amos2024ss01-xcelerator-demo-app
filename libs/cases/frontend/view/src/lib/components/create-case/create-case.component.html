@@ -39,19 +39,21 @@
             </ix-input-group>
 
             <ix-input-group>
-                <span slot="input-start">Title:</span>
+                <label>Title</label>
                 <input type="text" name="title" [(ngModel)]="createCaseForm.title" required />
                 <div class="invalid-feedback">Please insert a title</div>
             </ix-input-group>
 
-            <textarea
-                class="pl-2"
-                placeholder="Enter your Description"
-                name="text"
-                [(ngModel)]="createCaseForm.text"
-                required
-            ></textarea>
-
+            <ix-input-group>
+                <label>Description</label>
+                <textarea
+                    class="pl-2"
+                    
+                    name="text"
+                    [(ngModel)]="createCaseForm.text"
+                    required
+                ></textarea>
+            </ix-input-group>
             <div class="flex flex-row gap-4">
                 <lib-date-dropdown-wrapper
                     [(ngModel)]="createCaseForm.dueDate"
@@ -106,7 +108,7 @@
 
 
             <ix-input-group>
-                <span slot="input-start">Email:</span>
+                <label>Email</label>
                 <input
                     placeholder="example@domain.com"
                     type="email"
