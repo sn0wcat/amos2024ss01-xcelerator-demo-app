@@ -29,10 +29,6 @@ export class XdIotTimeSeriesService extends XdBaseBearerInteractionService imple
 		);
 	}
 
-    onModuleInit(): any {
-        console.log('localSession ', this.isLocalSession())
-    }
-
     /**
 	 * Allows to get the time series data from the IoT Time Series API.
 	 * @see https://documentation.mindsphere.io/MindSphere/apis/iot-iottimeseries/api-iottimeseries-api.html
