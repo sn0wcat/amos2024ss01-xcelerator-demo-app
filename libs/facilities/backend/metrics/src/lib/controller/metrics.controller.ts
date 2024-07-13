@@ -8,20 +8,16 @@ import { XdMetricsService } from '../services/metrics.service';
 @ApiTags(ESwaggerTag.METRICS)
 @Controller('metrics')
 export class XdMetricsController {
-    constructor(private readonly metricsService: XdMetricsService) {
+	constructor(private readonly metricsService: XdMetricsService) {}
 
-    }
-
-    /**
-     * Get the metrics for the asset
-     *
-     * @param params
-     */
-    @Get(':assetId/:propertySetName')
-    @ApiOkResponse({ description: 'Returns metrics data for an asset' })
-    public getMetricsForAsset(
-        @Param() params: GetTimeSeriesParamsDto,
-    ) {
-        return this.metricsService.getMetricsForAsset(params.assetId, params.propertySetName);
-    }
+	/**
+	 * Get the metrics for the asset
+	 *
+	 * @param params
+	 */
+	@Get(':assetId/:propertySetName')
+	@ApiOkResponse({ description: 'Returns metrics data for an asset' })
+	public getMetricsForAsset(@Param() params: GetTimeSeriesParamsDto) {
+		return this.metricsService.getMetricsForAsset(params.assetId, params.propertySetName);
+	}
 }

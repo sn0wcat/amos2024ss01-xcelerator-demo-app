@@ -6,9 +6,9 @@ import { XdMetricsController } from './controller/metrics.controller';
 import { XdMetricsService } from './services/metrics.service';
 
 @Module({
-    imports: [ XdTimeseriesModule, XdPrismaModule ],
-	controllers: [ XdMetricsController ],
-	providers: [ XdMetricsService ],
-	exports: [ XdMetricsService ],
+	imports: [XdTimeseriesModule, XdPrismaModule],
+	controllers: [XdMetricsController],
+	providers: [XdMetricsService],
+	exports: [XdMetricsService],
 })
 export class XdMetricsModule {}
