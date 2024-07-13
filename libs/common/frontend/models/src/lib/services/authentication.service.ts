@@ -32,6 +32,8 @@ export class AuthenticationService {
 
 	login(email: string, password: string) {
 		if (this.checkCredentials(email, password)) {
+            const token = this.generateToken(email, password);
+            localStorage.setItem(this.tokenKey, token);
 			return true;
 		}
 
