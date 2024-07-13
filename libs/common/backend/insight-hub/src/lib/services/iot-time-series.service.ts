@@ -12,7 +12,7 @@ import { XdTokenManagerService } from './token-manager.service';
  * Service to interact with the IoT Time Series API.
  */
 @Injectable()
-export class XdIotTimeSeriesService extends XdBaseBearerInteractionService implements OnModuleInit {
+export class XdIotTimeSeriesService extends XdBaseBearerInteractionService {
 	constructor(
 		private readonly httpClient: HttpService,
 		@Inject(INSIGHT_HUB_OPTIONS)
