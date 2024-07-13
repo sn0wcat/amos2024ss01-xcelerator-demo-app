@@ -12,6 +12,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { XdCasesFacade } from '@frontend/cases/frontend/domain';
 import { IxModule, ModalService, ToastService } from '@siemens/ix-angular';
 import { ECasePriority, ECaseStatus, ECaseType, ICaseResponse } from 'cases-shared-models';
+import { AuthenticationService } from 'common-frontend-models';
 
 import DeleteModalComponent from './delete-modal/deleteModal.component';
 
@@ -43,6 +44,7 @@ export class DetailCaseComponent {
         protected readonly route: ActivatedRoute,
 		private readonly _modalService: ModalService,
 		private readonly toastService: ToastService,
+        protected _authenticationService: AuthenticationService,
 	) {}
 
 	deleteCase() {
@@ -86,8 +88,15 @@ export class DetailCaseComponent {
 		}
 	}
 
+    getUserMail() {
+        return this._authenticationService.getUserMail();
+    }
+
 	onSubmit(): void {
 		const casedetail = this.casedetail();
+        if (casedetail !== undefined) {
+            casedetail.modifiedBy = <string>this.getUserMail();
+        }
 
 		if (casedetail !== undefined) {
 			const validationString = this.validateForm(casedetail);
