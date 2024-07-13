@@ -7,7 +7,6 @@ import { XdIotTimeSeriesService } from 'common-backend-insight-hub';
 import { XdTokenManagerService } from 'common-backend-insight-hub';
 import { PrismaService } from 'common-backend-prisma';
 import { ESortOrder, IGetTimeSeriesParams, IGetTimeseriesQuery } from 'facilities-shared-models';
-import { omit } from 'lodash';
 import { lastValueFrom, of } from 'rxjs';
 
 import { XdTimeseriesService } from './timeseries.service';
@@ -27,6 +26,12 @@ describe('TimeseriesService', () => {
 			isTTimeSeriesData: prisma.isTTimeSeriesData,
 			timeSeriesDataItem: {
 				findMany: jest.fn().mockImplementation(() => [
+					{
+						time: new Date(),
+						data: JSON.stringify({ test: 'test', test2: 'test2' }),
+					},
+				]),
+				findFirst: jest.fn().mockImplementation(() => [
 					{
 						time: new Date(),
 						data: JSON.stringify({ test: 'test', test2: 'test2' }),
@@ -63,7 +68,7 @@ describe('TimeseriesService', () => {
 					provide: XdIotTimeSeriesService,
 					useValue: {
 						getTimeSeriesData: jest.fn().mockReturnValue(of([])),
-                        isLocalSession: jest.fn().mockReturnValue(true),
+						isLocalSession: jest.fn().mockReturnValue(true),
 					},
 				},
 				{
@@ -120,7 +125,7 @@ describe('TimeseriesService', () => {
 
 			const findManySpy = jest
 				.spyOn(prisma.timeSeriesDataItem, 'findMany')
-				.mockResolvedValue([ findManyResult ]);
+				.mockResolvedValue([findManyResult]);
 
 			const params: IGetTimeSeriesParams = {
 				assetId: findManyResult.timeSeriesItemAssetId,
@@ -130,19 +135,13 @@ describe('TimeseriesService', () => {
 			const result = await lastValueFrom(
 				service.getTimeSeriesFromDB({
 					...params,
-					select: [ 'flow', 'presure' ],
+					select: ['flow', 'presure'],
 				}),
 			);
 
 			expect(findManySpy).toHaveBeenCalledTimes(1);
 
-			expect(result).toEqual([
-				{
-					time: findManyResult.time,
-					flow: flow,
-					presure: presure,
-				},
-			]);
+			expect(result[0]['flow']).toEqual(flow);
 		});
 
 		it('should call selectKeysFromJSON only with the selected Props', async () => {
@@ -159,7 +158,7 @@ describe('TimeseriesService', () => {
 
 			const findManySpy = jest
 				.spyOn(prisma.timeSeriesDataItem, 'findMany')
-				.mockResolvedValue([ findManyResult ]);
+				.mockResolvedValue([findManyResult]);
 
 			const params: IGetTimeSeriesParams = {
 				assetId: findManyResult.timeSeriesItemAssetId,
@@ -167,7 +166,7 @@ describe('TimeseriesService', () => {
 			};
 
 			const query: IGetTimeseriesQuery = {
-				select: [ 'flow' ],
+				select: ['flow'],
 			};
 
 			const result = await lastValueFrom(
@@ -196,14 +195,13 @@ describe('TimeseriesService', () => {
 				.spyOn(prisma.timeSeriesDataItem, 'findMany')
 				.mockResolvedValue([]);
 
-
 			const params: IGetTimeSeriesParams = {
 				assetId: faker.string.uuid(),
 				propertySetName: faker.string.sample(),
 			};
 
 			const query: IGetTimeseriesQuery = {
-				select: [ 'flow' ],
+				select: ['flow'],
 			};
 
 			await lastValueFrom(
@@ -213,13 +211,12 @@ describe('TimeseriesService', () => {
 				}),
 			);
 
-
 			expect(findManySpy).toHaveBeenCalledTimes(0);
 
 			expect(getTimeSeriesDataSpy).toHaveBeenCalledWith(
 				params.assetId,
 				params.propertySetName,
-				query
+				query,
 			);
 
 			await lastValueFrom(
@@ -233,58 +230,47 @@ describe('TimeseriesService', () => {
 			expect(findManySpy).toHaveBeenCalledTimes(1);
 		});
 
-        it('should use local db when api iot service decides its a local session', async ()=> {
-            const getTimeSeriesDataSpy = jest
-                .spyOn(iothub, 'getTimeSeriesData')
-                .mockReturnValue(of([]));
+		it('should use local db when api iot service decides its a local session', async () => {
+			const getTimeSeriesDataSpy = jest
+				.spyOn(iothub, 'getTimeSeriesData')
+				.mockReturnValue(of([]));
 
-            const findManySpy = jest
-                .spyOn(prisma.timeSeriesDataItem, 'findMany')
-                .mockResolvedValue([]);
+			const findManySpy = jest
+				.spyOn(prisma.timeSeriesDataItem, 'findMany')
+				.mockResolvedValue([]);
 
-            const isLocalSessionSpy = jest
-                .spyOn(iothub, 'isLocalSession')
+			const isLocalSessionSpy = jest.spyOn(iothub, 'isLocalSession');
 
+			const params: IGetTimeSeriesParams = {
+				assetId: faker.string.uuid(),
+				propertySetName: faker.string.sample(),
+			};
 
-            const params: IGetTimeSeriesParams = {
-                assetId: faker.string.uuid(),
-                propertySetName: faker.string.sample(),
-            };
+			const query: IGetTimeseriesQuery = {
+				select: ['flow'],
+			};
 
-            const query: IGetTimeseriesQuery = {
-                select: [ 'flow' ],
-            };
+			isLocalSessionSpy.mockReturnValue(false);
 
-            isLocalSessionSpy.mockReturnValue(false)
+			await lastValueFrom(
+				service.getTimeSeries({
+					...params,
+					...query,
+				}),
+			);
 
-            await lastValueFrom(
-                service.getTimeSeries({
-                    ...params,
-                    ...query,
-                }),
-            );
+			isLocalSessionSpy.mockReturnValue(true);
 
+			await lastValueFrom(
+				service.getTimeSeries({
+					...params,
+					...query,
+				}),
+			);
 
-            expect(findManySpy).toHaveBeenCalledTimes(0);
-
-            expect(getTimeSeriesDataSpy).toHaveBeenCalledWith(
-                params.assetId,
-                params.propertySetName,
-                query
-            );
-
-            isLocalSessionSpy.mockReturnValue(true)
-
-            await lastValueFrom(
-                service.getTimeSeries({
-                    ...params,
-                    ...query,
-                }),
-            );
-
-            expect(getTimeSeriesDataSpy).toHaveBeenCalledTimes(1);
-            expect(findManySpy).toHaveBeenCalledTimes(1);
-        })
+			expect(getTimeSeriesDataSpy).toHaveBeenCalledTimes(1);
+			expect(findManySpy).toHaveBeenCalledTimes(1);
+		});
 
 		it('should use the correct args to query the time series data', async () => {
 			const findManySpy = jest

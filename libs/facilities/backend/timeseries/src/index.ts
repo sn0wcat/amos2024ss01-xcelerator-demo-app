@@ -1,1 +1,1 @@
-export * from './lib/timeseries.module';
+export * from './lib';
