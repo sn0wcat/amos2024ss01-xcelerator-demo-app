@@ -26,6 +26,7 @@ import DeleteModalComponent from './delete-modal/deleteModal.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailCaseComponent {
+    protected readonly _caseId = this.route.snapshot.params['id'];
 	private readonly _casesFacade = inject(XdCasesFacade);
 	protected readonly _cases = toSignal(this._casesFacade.getAllCases());
 	protected readonly casedetail = computed(() => {
@@ -33,7 +34,7 @@ export class DetailCaseComponent {
 		if (_case === undefined) {
 			return;
 		}
-		return _case.find((_case) => String(_case.id) === this.route.snapshot.params['id']);
+		return _case.find((_case) => String(_case.id) === this._caseId);
 	});
 
 	isEditing = false;

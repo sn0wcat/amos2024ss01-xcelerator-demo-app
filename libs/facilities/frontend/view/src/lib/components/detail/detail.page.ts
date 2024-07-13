@@ -57,7 +57,7 @@ export class XdDetailPage implements OnInit {
 	protected theme = signal(convertThemeName(themeSwitcher.getCurrentTheme()));
 	protected readonly locked = signal(true);
 	protected readonly StatusToColorRecord = StatusToColorRecord;
-	private readonly _assetId = this.route.snapshot.params['id'];
+	protected readonly _assetId = this.route.snapshot.params['id'];
 	private readonly _currentTime = new Date();
 	private readonly _28MinutesAgo = new Date(this._currentTime.getTime() - 28 * 60 * 1000);
 	private readonly _detailsFacade = inject(XdDetailsFacade);
