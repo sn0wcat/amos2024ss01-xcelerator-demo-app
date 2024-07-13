@@ -47,14 +47,9 @@ export class XdTimeseriesController {
 		@Param() params: GetTimeSeriesParamsDto,
 		@Query() query: GetTimeSeriesQueryDto,
 	): Observable<ITimeSeriesDataItemResponse[]> {
-		const { local = false, ...rest } = query;
-		const args = {
-			...params,
-			...rest,
-		};
-
-		return local
-			? this.timeseriesService.getTimeSeriesFromDB(args)
-			: this.timeseriesService.getTimeSeriesFromApi(args);
+		return this.timeseriesService.getTimeSeries({
+            ...params,
+            ...query,
+        });
 	}
 }

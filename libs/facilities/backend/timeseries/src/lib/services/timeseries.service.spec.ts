@@ -63,6 +63,7 @@ describe('TimeseriesService', () => {
 					provide: XdIotTimeSeriesService,
 					useValue: {
 						getTimeSeriesData: jest.fn().mockReturnValue(of([])),
+                        isLocalSession: jest.fn().mockReturnValue(true),
 					},
 				},
 				{
@@ -195,11 +196,6 @@ describe('TimeseriesService', () => {
 				.spyOn(prisma.timeSeriesDataItem, 'findMany')
 				.mockResolvedValue([]);
 
-			jest.spyOn(prisma.timeSeriesItem, 'findUnique').mockResolvedValue({
-				assetId: faker.string.uuid(),
-				propertySetName: faker.string.sample(),
-				variables: {},
-			});
 
 			const params: IGetTimeSeriesParams = {
 				assetId: faker.string.uuid(),
@@ -217,14 +213,13 @@ describe('TimeseriesService', () => {
 				}),
 			);
 
-			expect(getTimeSeriesDataSpy).toHaveBeenCalledTimes(1);
 
 			expect(findManySpy).toHaveBeenCalledTimes(0);
 
 			expect(getTimeSeriesDataSpy).toHaveBeenCalledWith(
 				params.assetId,
 				params.propertySetName,
-				omit(query, 'select'),
+				query
 			);
 
 			await lastValueFrom(
@@ -237,6 +232,59 @@ describe('TimeseriesService', () => {
 			expect(getTimeSeriesDataSpy).toHaveBeenCalledTimes(1);
 			expect(findManySpy).toHaveBeenCalledTimes(1);
 		});
+
+        it('should use local db when api iot service decides its a local session', async ()=> {
+            const getTimeSeriesDataSpy = jest
+                .spyOn(iothub, 'getTimeSeriesData')
+                .mockReturnValue(of([]));
+
+            const findManySpy = jest
+                .spyOn(prisma.timeSeriesDataItem, 'findMany')
+                .mockResolvedValue([]);
+
+            const isLocalSessionSpy = jest
+                .spyOn(iothub, 'isLocalSession')
+
+
+            const params: IGetTimeSeriesParams = {
+                assetId: faker.string.uuid(),
+                propertySetName: faker.string.sample(),
+            };
+
+            const query: IGetTimeseriesQuery = {
+                select: [ 'flow' ],
+            };
+
+            isLocalSessionSpy.mockReturnValue(false)
+
+            await lastValueFrom(
+                service.getTimeSeries({
+                    ...params,
+                    ...query,
+                }),
+            );
+
+
+            expect(findManySpy).toHaveBeenCalledTimes(0);
+
+            expect(getTimeSeriesDataSpy).toHaveBeenCalledWith(
+                params.assetId,
+                params.propertySetName,
+                query
+            );
+
+            isLocalSessionSpy.mockReturnValue(true)
+
+            await lastValueFrom(
+                service.getTimeSeries({
+                    ...params,
+                    ...query,
+                }),
+            );
+
+            expect(getTimeSeriesDataSpy).toHaveBeenCalledTimes(1);
+            expect(findManySpy).toHaveBeenCalledTimes(1);
+        })
 
 		it('should use the correct args to query the time series data', async () => {
 			const findManySpy = jest
