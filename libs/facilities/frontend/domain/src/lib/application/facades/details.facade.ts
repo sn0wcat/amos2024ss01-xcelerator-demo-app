@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { faker } from '@faker-js/faker';
-import { map } from 'rxjs';
+import { lastValueFrom, map, tap } from 'rxjs';
 
 import { FacilitiesRequestService } from '../../infrastructure/facilities-request.service';
 import { TimeSeriesRequestService } from '../../infrastructure/timeseries-request.service';
@@ -57,7 +57,7 @@ export class XdDetailsFacade {
 	 * @param queryParams The query parameters.
 	 */
 	public getTimeSeriesDataItems(assetId: string, propertySetName: string, queryParams: any) {
-		return this._timeseriesService.getTimeSeriesDataItems(
+		return  this._timeseriesService.getTimeSeriesDataItems(
 			{ assetId, propertySetName },
 			queryParams,
 		);

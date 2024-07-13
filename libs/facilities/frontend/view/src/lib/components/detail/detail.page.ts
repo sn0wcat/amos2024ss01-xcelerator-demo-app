@@ -74,6 +74,7 @@ export class XdDetailPage implements OnInit {
 			to: this._currentTime,
 		}),
 	);
+
 	private readonly defaultOptions: EChartsOption = {
         tooltip: {
             trigger: 'axis',
