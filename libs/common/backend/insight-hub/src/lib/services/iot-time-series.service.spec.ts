@@ -9,6 +9,7 @@ import { ITimeSeriesRequestParameter } from '../models';
 import { INSIGHT_HUB_OPTIONS } from '../tokens';
 import { XdIotTimeSeriesService } from './iot-time-series.service';
 import { XdTokenManagerService } from './token-manager.service';
+import { IInsightHub } from 'common-backend-models';
 
 interface MockSelectParameter {
 	flow: number;
@@ -18,6 +19,7 @@ interface MockSelectParameter {
 describe('XdIotTimeSeriesService', () => {
 	let service: XdIotTimeSeriesService;
 	let httpService: HttpService;
+    let insightHubOptions: IInsightHub;
 
 	beforeEach(async () => {
 		const httpServiceMock = {
@@ -55,6 +57,7 @@ describe('XdIotTimeSeriesService', () => {
 
 		service = module.get<XdIotTimeSeriesService>(XdIotTimeSeriesService);
 		httpService = module.get<HttpService>(HttpService);
+        insightHubOptions = module.get(INSIGHT_HUB_OPTIONS);
 	});
 
 	it('should be defined', () => {
@@ -99,4 +102,56 @@ describe('XdIotTimeSeriesService', () => {
 			expect(response).toEqual(mockResponse);
 		});
 	});
+
+    describe('isLocalSession', () => {
+        it('should return true for isLocalSession when apiKey and apiUrl are undefined', () => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            insightHubOptions.apiKey = null;
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            insightHubOptions.apiUrl = null;
+
+            expect(service.isLocalSession()).toBe(true);
+        });
+
+        it('should return true for isLocalSession when apiKey and apiUrl are empty strings', () => {
+            insightHubOptions.apiKey = '';
+            insightHubOptions.apiUrl = '';
+
+            expect(service.isLocalSession()).toBe(true);
+        });
+
+        it('should return true for isLocalSession when apiKey is defined and apiUrl is undefined', () => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+           insightHubOptions.apiUrl = null;
+
+            expect(service.isLocalSession()).toBe(true);
+        });
+
+        it('should return true for isLocalSession when apiKey is undefined and apiUrl is defined', () => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            insightHubOptions.apiKey = null;
+
+            expect(service.isLocalSession()).toBe(true);
+        });
+
+        it('should return true for isLocalSession when apiKey is defined and apiUrl is an empty string', () => {
+            insightHubOptions.apiUrl = '';
+
+            expect(service.isLocalSession()).toBe(true);
+        });
+
+        it('should return true for isLocalSession when apiKey is an empty string and apiUrl is defined', () => {
+            insightHubOptions.apiKey = '';
+
+            expect(service.isLocalSession()).toBe(true);
+        });
+
+        it('should return false for isLocalSession when apiKey and apiUrl are defined', () => {
+            expect(service.isLocalSession()).toBe(false);
+        });
+    });
 });

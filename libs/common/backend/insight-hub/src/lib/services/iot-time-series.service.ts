@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { IInsightHub } from 'common-backend-models';
 import { Observable } from 'rxjs';
 
@@ -12,7 +12,7 @@ import { XdTokenManagerService } from './token-manager.service';
  * Service to interact with the IoT Time Series API.
  */
 @Injectable()
-export class XdIotTimeSeriesService extends XdBaseBearerInteractionService {
+export class XdIotTimeSeriesService extends XdBaseBearerInteractionService implements OnModuleInit {
 	constructor(
 		private readonly httpClient: HttpService,
 		@Inject(INSIGHT_HUB_OPTIONS)
@@ -29,7 +29,11 @@ export class XdIotTimeSeriesService extends XdBaseBearerInteractionService {
 		);
 	}
 
-	/**
+    onModuleInit(): any {
+        console.log('localSession ', this.isLocalSession())
+    }
+
+    /**
 	 * Allows to get the time series data from the IoT Time Series API.
 	 * @see https://documentation.mindsphere.io/MindSphere/apis/iot-iottimeseries/api-iottimeseries-api.html
 	 *
@@ -44,4 +48,11 @@ export class XdIotTimeSeriesService extends XdBaseBearerInteractionService {
 	): Observable<ITimeSeriesResponse> {
 		return super._getData<ITimeSeriesResponse>(`${assetId}/${propertySetName}`, params);
 	}
+
+    /**
+     * Checks if the session is local or not.
+     */
+    public isLocalSession(): boolean {
+        return !this.insightHubOptions.apiKey || !this.insightHubOptions.apiUrl;
+    }
 }
