@@ -1,8 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { faker } from '@faker-js/faker';
-import { lastValueFrom, map, tap } from 'rxjs';
+import * as dayjs from 'dayjs';
+import { map } from 'rxjs';
 
 import { FacilitiesRequestService } from '../../infrastructure/facilities-request.service';
+import { MetricsRequestService } from '../../infrastructure/metrics-request.service';
 import { TimeSeriesRequestService } from '../../infrastructure/timeseries-request.service';
 
 /**
@@ -12,6 +14,7 @@ import { TimeSeriesRequestService } from '../../infrastructure/timeseries-reques
 export class XdDetailsFacade {
 	private readonly _facilitiesService = inject(FacilitiesRequestService);
 	private readonly _timeseriesService = inject(TimeSeriesRequestService);
+	private readonly _metricsService = inject(MetricsRequestService);
 
 	/**
 	 * Get facility
@@ -29,17 +32,27 @@ export class XdDetailsFacade {
 						'water-plant',
 						'truck',
 					]),
-                    cases: timeSeriesItem.cases,
+					cases: timeSeriesItem.cases,
 					heading: timeSeriesItem.name,
 					subheading: timeSeriesItem.description,
 					status: timeSeriesItem.status,
-                    metrics: timeSeriesItem.metrics,
-                    indicatorMsg: timeSeriesItem.indicatorMsg,
+					metrics: timeSeriesItem.metrics,
+					indicatorMsg: timeSeriesItem.indicatorMsg,
 					pumps: faker.number.int({ min: 0, max: 99 }),
 					location: timeSeriesItem.location,
 				};
 			}),
 		);
+	}
+
+    /**
+     * Returns the metrics for the asset
+     *
+     * @param assetId
+     * @param propertySetName
+     */
+	public getMetrics(assetId: string, propertySetName: string) {
+		return this._metricsService.getMetrics({ assetId, propertySetName });
 	}
 
 	/**
@@ -51,15 +64,32 @@ export class XdDetailsFacade {
 	}
 
 	/**
-	 * Get the specific data of a time series property of a facility
+	 * Get the specific data of a time series property of a facility of the last 28 minutes
+	 *
 	 * @param assetId The asset id.
-	 * @param propertySetName The property set name for which we will get the data.
-	 * @param queryParams The query parameters.
 	 */
-	public getTimeSeriesDataItems(assetId: string, propertySetName: string, queryParams: any) {
-		return  this._timeseriesService.getTimeSeriesDataItems(
-			{ assetId, propertySetName },
-			queryParams,
+	public getPumpData(assetId: string) {
+		return this._timeseriesService.getTimeSeriesDataItems(
+			{ assetId, propertySetName: 'PumpData' },
+			{
+				from: dayjs().subtract(28, 'minute').toDate(),
+				to: dayjs().toDate(),
+			},
+		);
+	}
+
+	/**
+	 * Get the environment data of a facility of the last 24 hours
+	 *
+	 * @param assetId
+	 */
+	public getEnvironmentData(assetId: string) {
+		return this._timeseriesService.getTimeSeriesDataItems(
+			{ assetId, propertySetName: 'Environment' },
+			{
+				from: dayjs().subtract(24, 'hours').toDate(),
+				to: dayjs().toDate(),
+			},
 		);
 	}
 }
