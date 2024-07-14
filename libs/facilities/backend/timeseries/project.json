@@ -11,6 +11,9 @@
 			"options": {
 				"jestConfig": "libs/facilities/backend/timeseries/jest.config.ts"
 			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint"
 		}
 	}
 }

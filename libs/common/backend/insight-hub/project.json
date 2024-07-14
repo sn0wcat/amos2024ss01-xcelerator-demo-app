@@ -11,6 +11,9 @@
 			"options": {
 				"jestConfig": "libs/common/backend/insight-hub/jest.config.ts"
 			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint"
 		}
 	}
 }

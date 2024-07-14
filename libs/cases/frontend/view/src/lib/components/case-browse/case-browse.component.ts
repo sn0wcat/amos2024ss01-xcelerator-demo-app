@@ -10,8 +10,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { XdCasesFacade } from '@frontend/cases/frontend/domain';
 import { FilterState, IxCategoryFilterCustomEvent, IxModule } from '@siemens/ix-angular';
-import { ICaseResponse } from 'cases-shared-models';
+import { ECasePriority, ECaseStatus, ECaseType, ICaseResponse } from 'cases-shared-models';
 import { LocalStorageService } from 'common-frontend-models';
+import { $enum } from 'ts-enum-util';
 
 @Component({
 	selector: 'lib-brows-cases',
@@ -60,9 +61,9 @@ export class CaseBrowseComponent {
 		return filteredCases;
 	});
 
-    private readonly statusOptions= [ 'OPEN', 'INPROGRESS', 'OVERDUE', 'ONHOLD', 'DONE', 'CANCELLED', 'ARCHIVED' ];
-    private readonly priorityOptions= [ 'EMERGENCY', 'HIGH', 'MEDIUM', 'LOW' ];
-    private readonly typeOptions =  [ 'PLANNED', 'INCIDENT', 'ANNOTATION' ]
+    private readonly statusOptions= $enum(ECaseStatus).getValues();
+    private readonly priorityOptions= $enum(ECasePriority).getValues();
+    private readonly typeOptions =  $enum(ECaseType).getValues();
 
     protected readonly repeatCategories = true;
     protected filterState = {

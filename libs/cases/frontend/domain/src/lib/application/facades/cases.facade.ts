@@ -27,15 +27,31 @@ export class XdCasesFacade {
 		return this._scanService.getTimeSeries(params);
 	}
 
-	public createCase(body: ICreateCaseBody) {
+	/**
+	 * Creates a new Case
+	 *
+	 * @param body
+	 */
+	public createCase(body: ICreateCaseBody): Observable<ICaseResponse> {
 		return this._scanService.createCase(body);
 	}
 
-    public updateCase(params: ICaseParams, body: ICreateCaseBody) {
-        return this._scanService.updateCase(params,body);
-    }
+	/**
+	 * Updates an existing Case
+	 *
+	 * @param params
+	 * @param body
+	 */
+	public updateCase(params: ICaseParams, body: ICreateCaseBody): Observable<ICaseResponse> {
+		return this._scanService.updateCase(params, body);
+	}
 
-    public deleteCase(params: ICaseParams){
-        return this._scanService.deleteCase(params);
-    }
+	/**
+	 * Deletes an undesired Case
+	 *
+	 * @param params
+	 */
+	public deleteCase(params: ICaseParams): Observable<ICaseResponse> {
+		return this._scanService.deleteCase(params);
+	}
 }
