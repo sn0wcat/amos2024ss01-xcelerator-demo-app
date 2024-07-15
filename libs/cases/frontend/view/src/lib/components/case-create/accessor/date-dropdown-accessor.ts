@@ -7,7 +7,7 @@ import { IxModule } from '@siemens/ix-angular';
  * This Value Accessor is needed to access the value of the date dropdown in the form
  */
 @Component({
-	selector: 'lib-date-dropdown-wrapper',
+	selector: 'lib-case-date-wrapper',
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,
