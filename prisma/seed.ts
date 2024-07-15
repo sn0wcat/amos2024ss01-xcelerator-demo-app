@@ -1,7 +1,6 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 
-import { ECasePriority, ECaseStatus, ECaseType } from '../libs/cases/shared/models/src';
 import pump2envData from './demo_data/PUMP-002_Environment_20240422-220000000_20240423-220000000.json';
 import pump2pumpData from './demo_data/PUMP-002_PumpData_20240422-220000000_20240423-220000000.json';
 import pump10envData from './demo_data/PUMP-010_Environment_20240422-220000000_20240423-220000000.json';
@@ -10,18 +9,19 @@ import pump10pumpData from './demo_data/PUMP-010_PumpData_20240422-220000000_202
 const prisma = new PrismaClient();
 
 const facilityConst = [
-    { name: 'totally legal waste disposal', description: 'We ensure environmentally responsible and completely legitimate waste disposal services.' },
     { name: 'Dribble & Drizzle Station', description: 'A captivating large aquarium located in the Computer Science Department building.' },
     { name: 'Waste Water Processing', description: 'Advanced facility dedicated to efficient and eco-friendly waste water treatment.' },
     { name: 'Submarine Solutions', description: 'Cutting-edge submarine testing facility focused on innovation and safety.' },
     { name: 'Gush & Flush' , description: 'Specialized overflow management services in Truth or Consequences, ensuring smooth and safe water flow.' },
     { name: 'Well, Well, Well', description: 'State-of-the-art water pump facility designed to provide sustainable and reliable access to clean water.' },
+    { name: 'totally legal waste disposal', description: 'We ensure environmentally responsible and completely legitimate waste disposal services.' },
     { name: 'Drop Zone', description: 'Efficient and reliable water delivery service ensuring residents have access to clean water when they need it most.' },
     { name: 'H2-Whoa Facility', description: ' A high-tech facility known for its impressive and groundbreaking water processing solutions.' },
     { name: 'Bucket Brigade', description: 'Reliable emergency water supply service ensuring access to water during critical situations.' },
+    { name: "Pump It Up Station", description: "A modern facility dedicated to high-efficiency water pumping and distribution to urban and rural areas." }
 ];
 
-faker.seed(1234);
+faker.seed(123);
 
 const facilities = facilityConst.map((facility, index) => {
     return {
@@ -34,34 +34,39 @@ const facilities = facilityConst.map((facility, index) => {
 });
 
 const CasesConst = [
-    { title: 'Pump Repair Needed', description: 'The pump is damaged and is operating at a fraction of its original capacity' },
-    { title: 'Overflow Alarm', description: 'The overflow sensor is malfunctioning and causing false alarms' },
-    { title: 'Leak Detection', description: 'A significant leak has been detected in the main pipeline' },
-    { title: 'Pressure Drop', description: 'Sudden pressure drop in the system is affecting water distribution' },
-    { title: 'Filter Replacement', description: 'The water filters are clogged and need immediate replacement' },
-    { title: 'Valve Malfunction', description: 'A critical valve is stuck and preventing proper water flow' },
-    { title: 'Contamination Alert', description: 'Water tests have shown signs of contamination in the supply' },
-    { title: 'Pump Overheating', description: 'The pump is overheating due to continuous operation and insufficient cooling' },
-    { title: 'Sensor Calibration', description: 'Sensors need recalibration to ensure accurate readings' },
-    { title: 'Electrical Fault', description: 'An electrical fault has caused a shutdown of the main control panel' },
-    { title: 'Water Hammer Issue', description: 'Experiencing water hammer effect causing pipe vibrations and noise' },
-    { title: 'System Upgrade', description: 'The system requires an upgrade to handle increased water demand' },
-    { title: 'Backup Generator Failure', description: 'The backup generator has failed and needs urgent repair' },
-    { title: 'Water Quality Testing', description: 'Routine water quality testing has detected abnormal levels of contaminants' },
-    { title: 'Flow Rate Anomaly', description: 'Unexplained fluctuations in water flow rate require investigation' },
+    { title: 'Pump Repair Needed', description: 'The pump is damaged and is operating at a fraction of its original capacity', type: 'INCIDENT', priority: 'HIGH' },
+    { title: 'Overflow Alarm', description: 'The overflow sensor is malfunctioning and causing false alarms', type: 'INCIDENT', priority: 'MEDIUM' },
+    { title: 'Leak Detection', description: 'A significant leak has been detected in the main pipeline', type: 'INCIDENT', priority: 'EMERGENCY' },
+    { title: 'Pressure Drop', description: 'Sudden pressure drop in the system is affecting water distribution', type: 'INCIDENT', priority: 'HIGH' },
+    { title: 'Filter Replacement', description: 'The water filters are clogged and need immediate replacement', type: 'INCIDENT', priority: 'EMERGENCY' },
+    { title: 'Valve Malfunction', description: 'A critical valve is stuck and preventing proper water flow', type: 'INCIDENT', priority: 'HIGH' },
+    { title: 'Contamination Alert', description: 'Water tests have shown signs of contamination in the supply', type: 'INCIDENT', priority: 'HIGH' },
+    { title: 'Pump Overheating', description: 'The pump is overheating due to continuous operation and insufficient cooling', type: 'INCIDENT', priority: 'MEDIUM' },
+    { title: 'Sensor Calibration', description: 'Sensors need recalibration to ensure accurate readings', type: 'PLANNED', priority: 'LOW' },
+    { title: 'Electrical Fault', description: 'An electrical fault has caused a shutdown of the main control panel', type: 'INCIDENT', priority: 'HIGH' },
+    { title: 'Water Hammer Issue', description: 'Experiencing water hammer effect causing pipe vibrations and noise', type: 'INCIDENT', priority: 'MEDIUM' },
+    { title: 'System Upgrade', description: 'The system requires an upgrade to handle increased water demand', type: 'ANNOTATION', priority: 'MEDIUM' },
+    { title: 'Backup Generator Failure', description: 'The backup generator has failed and needs urgent repair', type: 'INCIDENT', priority: 'EMERGENCY' },
+    { title: 'Water Quality Testing', description: 'Routine water quality testing has detected abnormal levels of contaminants', type: 'ANNOTATION', priority: 'MEDIUM' },
+    { title: 'Flow Rate Anomaly', description: 'Unexplained fluctuations in water flow rate require investigation', type: 'ANNOTATION', priority: 'LOW' },
+    { title: 'Pipe Burst', description: 'A major pipe has burst, causing significant water loss', type: 'INCIDENT', priority: 'EMERGENCY' },
+    { title: 'Pump Station Power Outage', description: 'A power outage has halted operations at the pump station', type: 'INCIDENT', priority: 'HIGH' },
+    { title: 'Tank Overflow', description: 'A storage tank is overflowing due to faulty level sensors', type: 'INCIDENT', priority: 'HIGH' },
+    { title: 'Unauthorized Access', description: 'There has been unauthorized access to the control system', type: 'INCIDENT', priority: 'HIGH' },
+    { title: 'Maintenance Schedule', description: 'Regular maintenance is due for several system components', type: 'PLANNED', priority: 'LOW' }
 ];
 
 // still requires the assetId to be added
-const cases = CasesConst.map((caseItem, index) => {
+let cases = CasesConst.map((caseItem, index) => {
     return {
         handle: 'AA-' + faker.number.int({ min: 1000, max: 9999 }),
         dueDate: faker.date.soon({ days: 30}),
-        status: ECaseStatus.OPEN,
+        status: faker.helpers.arrayElement(['OPEN', 'OPEN', 'INPROGRESS', 'DONE', 'ARCHIVED']),
         title: caseItem.title,
         description: caseItem.description,
-        type: faker.helpers.enumValue(ECaseType),
-        source: 'Internal System ' + faker.number.int({min: 1, max: 10}),
-        priority: faker.helpers.enumValue(ECasePriority),
+        type: caseItem.type,
+        source: faker.helpers.arrayElement(['Internal', 'External' ]) + ' System ' + faker.number.int({min: 1, max: 10}),
+        priority: caseItem.priority,
         createdBy: faker.internet.email(),
         eTag: faker.string.alphanumeric(10),
     };
@@ -197,8 +202,10 @@ async function seedSingleFacility({
         data: [newPumpData, newEnvData].flat(),
     });
 
-    // create new case data from JSON file
-    const caseData = faker.helpers.arrayElements(cases, { min: 0, max: 2 })
+    // take 0-2 cases from the cases array and remove them
+    const caseData = faker.helpers.arrayElements(cases, { min: 0, max: 3 })
+    cases = cases.filter((item) => !caseData.includes(item));
+
     const newCaseData = caseData.map((data: any) => {
         return {
             handle: data.handle,
