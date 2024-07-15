@@ -145,34 +145,6 @@ export class XdTimeseriesService {
 		);
 	}
 
-	// 	return from(
-	// 		this.prismaService.timeSeriesDataItem.findMany({
-	// 			where: {
-	// 				timeSeriesItemAssetId: assetId,
-	// 				timeSeriesItemPropertySetName: propertySetName,
-	// 				time: {
-	// 					gte: args.from,
-	// 					lte: args.to,
-	// 				},
-	// 			},
-	// 			take: args.limit,
-	// 			orderBy: {
-	// 				time: args.sort,
-	// 			},
-	// 		}),
-	// 	).pipe(
-	// 		map((items) => {
-	// 			return items.map((item) => ({
-	// 				time: item.time,
-	// 				...this.prismaService.selectKeysFromJSON(item.data, args.select),
-	// 			}));
-	// 		}),
-	// 		catchError((err: Error) => {
-	// 			throw err;
-	// 		}),
-	// 	);
-	// }
-
 	/**
 	 * Get all timeseries data
 	 */
