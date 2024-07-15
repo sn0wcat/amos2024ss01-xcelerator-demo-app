@@ -6,7 +6,7 @@ import { IxModule, themeSwitcher } from '@siemens/ix-angular';
 import { AuthenticationService } from 'common-frontend-models';
 
 @Component({
-    selector: 'lib-acount-login',
+    selector: 'lib-account-login',
     standalone: true,
     imports: [ CommonModule, FormsModule, IxModule ],
     templateUrl: './login.page.html',
@@ -18,12 +18,13 @@ export class LoginPage {
     public email = '';
     public password = '';
 
-    protected formValid = signal(false);
-    protected loginSuccess = signal(false);
     protected wasValidated = false;
     protected showPassword = false;
 
     private readonly emailRegExp = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+    protected formValid = signal(false);
+    protected loginSuccess = signal(false);
 
     constructor(
         private _router: Router,

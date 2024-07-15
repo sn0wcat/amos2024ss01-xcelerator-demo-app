@@ -27,12 +27,13 @@ import { LegalInformationComponent } from './legal-information/legal-information
 })
 export class HeaderComponent {
 
+    protected userMail = this.authenticationService.getUserMail();
+
     protected lightMode = computed(() => {
         const theme = this._localStorageService.getOrCreate('theme', 'theme-classic-dark')();
         themeSwitcher.setTheme(theme);
         return theme === 'theme-classic-light';
     });
-    protected userMail = this.authenticationService.getUserMail();
 
     readonly routerEvents = toSignal(
         this._router.events.pipe(filter((e) => e instanceof NavigationEnd)),

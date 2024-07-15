@@ -73,7 +73,7 @@
 					>
 				</ix-card-title>
 				<ix-typography color="std" format="h4"> Open Cases </ix-typography>
-				<ix-typography color="std"> {{ notificationText() }} </ix-typography>
+				<ix-typography color="std"> {{ getCasesText(facility.cases.length) }} </ix-typography>
 				<div class="flex flex-row justify-between w-full">
 					@if (facility.cases.length > 0) {
 					<div>

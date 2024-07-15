@@ -9,7 +9,7 @@ import { XdCasesRequestService } from '../../infrastructure/cases-request.servic
  */
 @Injectable({ providedIn: 'root' })
 export class XdCasesFacade {
-	private readonly _scanService = inject(XdCasesRequestService);
+	constructor(private _scanService: XdCasesRequestService){}
 
 	/**
 	 * Get all cases via infrastructure.

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { faker } from '@faker-js/faker';
 import { map } from 'rxjs';
 
@@ -9,7 +9,8 @@ import { FacilitiesRequestService } from '../../infrastructure/facilities-reques
  */
 @Injectable({ providedIn: 'root' })
 export class XdBrowseFacade {
-	private readonly _scanService = inject(FacilitiesRequestService);
+
+    constructor(private readonly _scanService: FacilitiesRequestService) {}
 
 	/**
 	 * Get all the facilities.

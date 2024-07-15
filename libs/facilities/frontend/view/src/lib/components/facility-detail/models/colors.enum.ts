@@ -1,4 +1,4 @@
-export enum Colors {
+export enum colors {
     WATER = '#1E90FF',
     TEMPERATURE = '#ff8000',
     PRESSURE1 = '#00FF00',

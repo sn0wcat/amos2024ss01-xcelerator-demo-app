@@ -3,7 +3,6 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	computed,
-	inject,
 	ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -27,18 +26,18 @@ import DeleteModalComponent from './delete-modal/delete-modal.component';
 })
 export class CaseDetailPage {
     protected readonly _caseId = this.route.snapshot.params['id'];
-	private readonly _casesFacade = inject(XdCasesFacade);
-	protected readonly _cases = toSignal(this._casesFacade.getAllCases());
-	protected readonly casedetail = computed(() => {
-		const _case = this._cases();
-		if (_case === undefined) {
-			return;
-		}
-		return _case.find((_case) => String(_case.id) === this._caseId);
-	});
 
 	isEditing = false;
 	datePattern = /^\d{4}-\d{2}-\d{2}T00:00:00\.000Z$/;
+
+    protected readonly _cases = toSignal(this._casesFacade.getAllCases());
+    protected readonly casedetail = computed(() => {
+        const _case = this._cases();
+        if (_case === undefined) {
+            return;
+        }
+        return _case.find((_case) => String(_case.id) === this._caseId);
+    });
 
 	constructor(
         protected readonly location: Location,
@@ -46,6 +45,7 @@ export class CaseDetailPage {
 		private readonly _modalService: ModalService,
 		private readonly toastService: ToastService,
         protected _authenticationService: AuthenticationService,
+        private readonly _casesFacade: XdCasesFacade,
 	) {}
 
 	deleteCase() {

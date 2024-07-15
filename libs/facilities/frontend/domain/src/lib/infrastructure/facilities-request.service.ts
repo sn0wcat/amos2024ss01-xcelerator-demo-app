@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
     IFacilitiesResponse,
     IGetFacilitiesParams,
@@ -10,8 +10,10 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class FacilitiesRequestService {
-    private readonly _httpClient = inject(HttpClient);
+
     private readonly _baseRoute = '/api/facilities';
+
+    constructor(private readonly _httpClient: HttpClient) {}
 
     public getAllFacilities(): Observable<IFacilitiesResponse[]> {
         return this._httpClient.get<IFacilitiesResponse[]>(this._baseRoute);

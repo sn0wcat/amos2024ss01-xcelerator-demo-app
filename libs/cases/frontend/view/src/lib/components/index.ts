@@ -1,3 +1,3 @@
-export * from './create-case';
-export * from './detail-case';
+export * from './case-create';
+export * from './case-detail';
 export * from './case-browse';

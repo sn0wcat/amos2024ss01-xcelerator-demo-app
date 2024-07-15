@@ -1,6 +1,6 @@
 import { CommonModule, Location } from '@angular/common';
 import {
-	ChangeDetectionStrategy, Component, inject, OnInit, signal, ViewEncapsulation,
+	ChangeDetectionStrategy, Component, OnInit, signal, ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
@@ -34,19 +34,6 @@ import { DateDropdownAccessor } from './accessor/date-dropdown-accessor';
 export class CaseCreatePage implements OnInit {
 
     protected readonly StatusToColorRecord = StatusToColorRecord;
-    private readonly _browseFacade = inject(XdBrowseFacade);
-    protected readonly _casesFacade = inject(XdCasesFacade);
-    protected readonly facilities = toSignal(this._browseFacade.getAllFacilities());
-
-    facilityPlaceholder = signal('Select Facility');
-    typePlaceholder = signal('Select Type');
-    priorityPlaceholder = signal('Select Priority');
-
-    constructor(
-        protected readonly location: Location,
-        protected readonly route: ActivatedRoute,
-        private readonly toastService: ToastService
-    ) {}
 
     casePriority = ECasePriority;
     caseType = ECaseType;
@@ -62,6 +49,20 @@ export class CaseCreatePage implements OnInit {
         email: '',
         text: '',
     };
+
+    protected readonly facilities = toSignal(this._browseFacade.getAllFacilities());
+
+    facilityPlaceholder = signal('Select Facility');
+    typePlaceholder = signal('Select Type');
+    priorityPlaceholder = signal('Select Priority');
+
+    constructor(
+        protected readonly location: Location,
+        protected readonly route: ActivatedRoute,
+        private readonly toastService: ToastService,
+        private readonly _browseFacade: XdBrowseFacade,
+        private readonly _casesFacade: XdCasesFacade,
+    ) {}
 
     ngOnInit(){
         this.resizeObserver('input-facilitySelection', 'facilitySelection');

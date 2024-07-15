@@ -24,6 +24,26 @@ import { $enum } from 'ts-enum-util';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseBrowsePage {
+
+    protected readonly repeatCategories = true;
+
+    private readonly statusOptions= $enum(ECaseStatus).getValues();
+
+    protected readonly categories = {
+        Status: {
+            label: 'status',
+            options: this.statusOptions
+        },
+        Priority: {
+            label: 'priority',
+            options: $enum(ECasePriority).getValues()
+        },
+        Type: {
+            label: 'type',
+            options: $enum(ECaseType).getValues()
+        }
+    };
+
     private readonly _filter: Signal<{id: string, value: string, operator: string}[]> = computed(() =>
         this.stringToFilter(
             this.localStorage.getOrCreate('caseFilter', 'Status,Equal,OPEN')()
@@ -61,30 +81,9 @@ export class CaseBrowsePage {
 		return filteredCases;
 	});
 
-    private readonly statusOptions= $enum(ECaseStatus).getValues();
-    private readonly priorityOptions= $enum(ECasePriority).getValues();
-    private readonly typeOptions =  $enum(ECaseType).getValues();
-
-    protected readonly repeatCategories = true;
     protected filterState = {
         tokens: [],
         categories: this._filter(),
-    };
-
-    protected readonly categories = {
-        Status: {
-            label: 'status',
-            options: this.statusOptions
-        },
-        Priority: {
-            label: 'priority',
-            options: this.priorityOptions
-        },
-        Type: {
-            label: 'type',
-            options: this.typeOptions
-        }
-
     };
 
     constructor(

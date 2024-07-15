@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { faker } from '@faker-js/faker';
 import * as dayjs from 'dayjs';
 import { map } from 'rxjs';
@@ -12,9 +12,11 @@ import { TimeSeriesRequestService } from '../../infrastructure/timeseries-reques
  */
 @Injectable({ providedIn: 'root' })
 export class XdDetailsFacade {
-	private readonly _facilitiesService = inject(FacilitiesRequestService);
-	private readonly _timeseriesService = inject(TimeSeriesRequestService);
-	private readonly _metricsService = inject(MetricsRequestService);
+
+    constructor(private readonly _facilitiesService: FacilitiesRequestService,
+                private readonly _timeseriesService: TimeSeriesRequestService,
+                private readonly _metricsService: MetricsRequestService
+    ) {}
 
 	/**
 	 * Get facility
@@ -46,21 +48,12 @@ export class XdDetailsFacade {
 	}
 
     /**
-     * Returns the metrics for the asset
+     * Returns the metrics for the pump
      *
      * @param assetId
-     * @param propertySetName
      */
-	public getMetrics(assetId: string, propertySetName: string) {
-		return this._metricsService.getMetrics({ assetId, propertySetName });
-	}
-
-	/**
-	 * Get a list of all the available timeSeries properties
-	 * @param assetId The asset id.
-	 */
-	public getTimeSeriesItems(assetId: string) {
-		return this._timeseriesService.getTimeSeriesItems({ assetId });
+	public getPumpMetrics(assetId: string) {
+		return this._metricsService.getMetrics({ assetId, propertySetName: 'PumpData' });
 	}
 
 	/**

@@ -3,7 +3,6 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	computed,
-	inject,
 	OnInit,
 	Signal,
 	signal,
@@ -24,7 +23,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { $enum } from 'ts-enum-util';
 
 import LockModalComponent from './lock-modal/lock-modal.component';
-import { Colors } from './models/colors';
+import { barChartOptions, environmentOptions, pumpOptions } from './models/const';
 import { EMetricsCategory } from './models/metrics-category.enum';
 import { METRIC_CATEGORY_COLOR_INFORMATION } from './models/metrics-category-information.map';
 import { PUMP_METRICS_FULL_NAME_MAP } from './models/pump-metrics-full-name.map';
@@ -39,140 +38,23 @@ import { PUMP_METRICS_FULL_NAME_MAP } from './models/pump-metrics-full-name.map'
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityDetailPage implements OnInit {
-	protected readonly notificationText = computed(() => {
-		const facility = this.facility();
-		if (!facility) return undefined;
 
-		switch (facility.cases.length) {
-			case 0:
-				return 'There are no cases regarding this facility';
-			case 1:
-				return 'There is one case regarding this facility';
-			default:
-				return `There are ${facility.cases.length} cases regarding this facility`;
-		}
-	});
+    protected readonly StatusToColorRecord = StatusToColorRecord;
+    protected readonly _assetId = this.route.snapshot.params['id'];
 
-	protected theme = signal(convertThemeName(themeSwitcher.getCurrentTheme()));
-	protected readonly locked = signal(true);
-	protected readonly StatusToColorRecord = StatusToColorRecord;
-	protected readonly _assetId = this.route.snapshot.params['id'];
-	private readonly _currentTime = new Date();
-	private readonly _28MinutesAgo = new Date(this._currentTime.getTime() - 28 * 60 * 1000);
-	private readonly _detailsFacade = inject(XdDetailsFacade);
-	protected readonly facility = toSignal(this._detailsFacade.getFacility(this._assetId));
-	protected readonly pumpData = toSignal(this._detailsFacade.getPumpData(this._assetId));
-	protected readonly envData = toSignal(this._detailsFacade.getEnvironmentData(this._assetId));
-	protected readonly metricsData = toSignal(
-		this._detailsFacade.getMetrics(this._assetId, 'PumpData'),
-	);
+    protected readonly facility = toSignal(this._detailsFacade.getFacility(this._assetId));
 
-	private readonly defaultOptions: EChartsOption = {
-		tooltip: {
-			trigger: 'axis',
-			renderMode: 'auto',
-			axisPointer: {
-				axis: 'auto',
-				crossStyle: {
-					textStyle: {
-						precision: 2,
-					},
-				},
-			},
-		},
-		xAxis: {
-			type: 'time',
-			name: 'Time',
-			nameLocation: 'middle',
-			nameGap: 30,
-		},
-		yAxis: {
-			type: 'value',
-			name: 'Value',
-			nameLocation: 'middle',
-			nameGap: 30,
-		},
-		legend: {
-			top: 30,
-			left: 20,
-			right: 20,
-		},
-		grid: {
-			top: 80,
-		},
-	};
-	private readonly barChartOptions: EChartsOption = {
-		tooltip: {
-			trigger: 'axis',
-			renderMode: 'auto',
-			axisPointer: {
-				axis: 'auto',
-				crossStyle: {
-					textStyle: {
-						precision: 2,
-					},
-				},
-			},
-		},
-		legend: {
-			top: 30,
-			left: 80,
-		},
-		grid: {
-			top: 80,
-		},
-		title: {
-			text: 'Pump Metrics',
-			left: 'center',
-		},
-		yAxis: {
-			type: 'value',
-			nameLocation: 'middle',
-		},
-	};
-	private readonly pumpOptions: EChartsOption = {
-		...this.defaultOptions,
-		title: {
-			text: 'Pump Data',
-			left: 'center',
-		},
-		series: [
-			{
-				name: 'Flow (l/s)',
-				type: 'line',
-				itemStyle: { color: Colors.WATER },
-				lineStyle: { color: Colors.WATER },
-			},
-			{
-				name: 'Motor Current (V)',
-				type: 'line',
-				itemStyle: { color: Colors.MOTORCURRENT },
-				lineStyle: { color: Colors.MOTORCURRENT },
-			},
-			{
-				name: 'Stuffing Box Temperature (°C)',
-				type: 'line',
-				itemStyle: { color: Colors.TEMPERATURE },
-				lineStyle: { color: Colors.TEMPERATURE },
-			},
-			{
-				name: 'Pressure In (hPa)',
-				type: 'line',
-				itemStyle: { color: Colors.PRESSURE1 },
-				lineStyle: { color: Colors.PRESSURE1 },
-			},
-			{
-				name: 'Pressure Out (hPa)',
-				type: 'line',
-				itemStyle: { color: Colors.PRESSURE2 },
-				lineStyle: { color: Colors.PRESSURE2 },
-			},
-		],
-	};
+    protected theme = signal(convertThemeName(themeSwitcher.getCurrentTheme()));
+    protected readonly locked = signal(true);
+
+    protected readonly pumpData = toSignal(this._detailsFacade.getPumpData(this._assetId));
+    protected readonly envData = toSignal(this._detailsFacade.getEnvironmentData(this._assetId));
+    protected readonly metricsData = toSignal(this._detailsFacade.getPumpMetrics(this._assetId));
+
 	protected readonly pumpChart: Signal<EChartsOption | undefined> = computed(() => {
 		const pumpData = this.pumpData();
 		const pumpChart = {
-			...this.pumpOptions,
+			...pumpOptions,
 		};
 
 		if (!pumpData) return pumpChart;
@@ -189,33 +71,6 @@ export class FacilityDetailPage implements OnInit {
 		pumpChart.series[4].data = pumpData.map((item) => [item.time, item['PressureOut']]);
 		return pumpChart;
 	});
-	private readonly envOptions: EChartsOption = {
-		...this.defaultOptions,
-		title: {
-			text: 'Environment Data',
-			left: 'center',
-		},
-		series: [
-			{
-				name: 'Temperature (°C)',
-				type: 'line',
-				itemStyle: { color: Colors.TEMPERATURE },
-				lineStyle: { color: Colors.TEMPERATURE },
-			},
-			{
-				name: 'Humidity (%)',
-				type: 'line',
-				itemStyle: { color: Colors.WATER },
-				lineStyle: { color: Colors.WATER },
-			},
-			{
-				name: 'Pressure (kPa)',
-				type: 'line',
-				itemStyle: { color: Colors.PRESSURE1 },
-				lineStyle: { color: Colors.PRESSURE1 },
-			},
-		],
-	};
 
 	protected readonly envChart: Signal<EChartsOption | undefined> = computed(() => {
 		const envData = this.envData();
@@ -223,7 +78,7 @@ export class FacilityDetailPage implements OnInit {
 		if (!envData) return undefined;
 
 		const envChart = {
-			...this.envOptions,
+			...environmentOptions,
 		};
 
 		if (!envChart.series || !(envChart.series instanceof Array)) return undefined;
@@ -254,7 +109,7 @@ export class FacilityDetailPage implements OnInit {
 			};
 		});
 
-		return defaults(this.barChartOptions, {
+		return defaults(barChartOptions, {
 			xAxis: {
 				type: 'category',
 				data: xAxisData,
@@ -273,6 +128,7 @@ export class FacilityDetailPage implements OnInit {
 		protected route: ActivatedRoute,
 		protected location: Location,
 		private readonly _modalService: ModalService,
+        private readonly _detailsFacade: XdDetailsFacade,
 	) {}
 
 	ngOnInit() {
@@ -296,16 +152,15 @@ export class FacilityDetailPage implements OnInit {
 		});
 	}
 
-	mapNth(n: number) {
-		switch (n) {
-			case 1:
-				return 'First';
-			case 2:
-				return 'Second';
-			case 3:
-				return `${n}rd`;
-			default:
-				return `${n}th`;
-		}
-	}
+    getCasesText(cases: number,){
+        switch (cases) {
+            case 0:
+                return 'There are no cases regarding this facility';
+            case 1:
+                return 'There is one case regarding this facility';
+            default:
+                return `There are ${cases} cases regarding this facility`;
+        }
+    }
+
 }

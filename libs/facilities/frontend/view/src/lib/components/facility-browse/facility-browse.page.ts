@@ -3,7 +3,6 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    inject,
     ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -25,34 +24,35 @@ import { EPumpStatus } from 'facilities-shared-models';
 })
 export class FacilityBrowsePage {
 
-	protected showCardList = computed(() =>
-       this.localStorageService.getOrCreate('showCardList', 'true')() === 'true'
+    protected readonly StatusToColorRecord = StatusToColorRecord;
+
+    protected showCardList = computed(() =>
+        this.localStorageService.getOrCreate('showCardList', 'true')() === 'true'
     );
 
     protected filterIssues = computed(() =>
         this.localStorageService.getOrCreate('filterIssues', 'true')() === 'true'
     );
 
-    protected readonly StatusToColorRecord = StatusToColorRecord;
-	private readonly _browseFacade = inject(XdBrowseFacade);
 	protected readonly allFacilities = toSignal(this._browseFacade.getAllFacilities());
     protected readonly facilities = computed(() => {
-        const facilities = this.allFacilities();
+        let facilities = this.allFacilities();
         if(!facilities)
             return undefined;
 
        if(this.filterIssues()) {
-           return facilities.filter(facility => facility.status != EPumpStatus.REGULAR);
-       } else {
-           return facilities;
+           facilities = facilities.filter(facility => facility.status != EPumpStatus.REGULAR);
        }
+
+       return facilities;
     });
 
     constructor(
         protected readonly router: Router,
         protected readonly location: Location,
-        private readonly localStorageService: LocalStorageService) {
-    }
+        private readonly localStorageService: LocalStorageService,
+        private readonly _browseFacade: XdBrowseFacade,
+    ) {}
 
     toggleView() {
 		this.localStorageService.set('showCardList', (!this.showCardList()).toString());
@@ -62,5 +62,4 @@ export class FacilityBrowsePage {
         this.localStorageService.set('filterIssues', (!this.filterIssues()).toString());
     }
 
-    protected readonly length = length;
 }
