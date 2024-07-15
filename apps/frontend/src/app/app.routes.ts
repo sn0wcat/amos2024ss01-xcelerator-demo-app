@@ -18,7 +18,7 @@ export const APP_ROUTES: Route[] = [
 				path: '',
                 canActivate: [ AuthenticationGuard ],
 				loadComponent: () =>
-					import('./pages/home/home.component').then((m) => m.HomeComponent),
+					import('./pages/home/home.page').then((m) => m.HomePage),
 			},
             {
                 path: 'home',
@@ -53,7 +53,7 @@ export const APP_ROUTES: Route[] = [
 		path: 'not-found',
         canActivate: [ AuthenticationGuard ],
 		loadComponent: () =>
-			import('./pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
+			import('./pages/not-found/not-found.page').then((m) => m.NotFoundPage),
 	},
 	{
 		path: 'account',

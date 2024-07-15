@@ -21,7 +21,7 @@ export const CASES_SHELL_ROUTES: Route[] = [
 				path: '',
                 canActivate: [ AuthenticationGuard ],
 				loadComponent: () =>
-					import('cases-frontend-view').then((m) => m.CaseBrowseComponent),
+					import('cases-frontend-view').then((m) => m.CaseBrowsePage),
 			},
 			{
 				// Route to create a case
@@ -31,7 +31,7 @@ export const CASES_SHELL_ROUTES: Route[] = [
 					breadcrumb: 'Create',
 				},
 				loadComponent: () =>
-					import('cases-frontend-view').then((m) => m.CreateCaseComponent),
+					import('cases-frontend-view').then((m) => m.CaseCreatePage),
 			},
 			{
 				// Route to detail case
@@ -41,7 +41,7 @@ export const CASES_SHELL_ROUTES: Route[] = [
 					breadcrumb: 'Details',
 				},
 				loadComponent: () =>
-					import('cases-frontend-view').then((m) => m.DetailCaseComponent),
+					import('cases-frontend-view').then((m) => m.CaseDetailPage),
 			},
 		],
 	},

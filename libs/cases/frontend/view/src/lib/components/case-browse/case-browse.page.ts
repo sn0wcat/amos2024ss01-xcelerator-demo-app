@@ -18,12 +18,12 @@ import { $enum } from 'ts-enum-util';
 	selector: 'lib-brows-cases',
 	standalone: true,
 	imports: [ CommonModule, IxModule, RouterLink ],
-	templateUrl: './case-browse.component.html',
-	styleUrls: [ './case-browse.component.scss' ],
+	templateUrl: './case-browse.page.html',
+	styleUrls: [ './case-browse.page.scss' ],
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseBrowseComponent {
+export class CaseBrowsePage {
     private readonly _filter: Signal<{id: string, value: string, operator: string}[]> = computed(() =>
         this.stringToFilter(
             this.localStorage.getOrCreate('caseFilter', 'Status,Equal,OPEN')()

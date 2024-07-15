@@ -1,24 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { NotFoundComponent } from './not-found.component';
+import { HomePage } from './home.page';
 
-describe('NotFoundComponent', () => {
-	let component: NotFoundComponent;
-	let fixture: ComponentFixture<NotFoundComponent>;
+describe('HomeComponent', () => {
+	let component: HomePage;
+	let fixture: ComponentFixture<HomePage>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [ NotFoundComponent ],
+			imports: [ HomePage ],
 			providers: [
 				{
 					provide: ActivatedRoute,
-					useValue: {},
+					useValue: { snapshot: { params: { id: '1' } } },
 				},
 			],
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(NotFoundComponent);
+		fixture = TestBed.createComponent(HomePage);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

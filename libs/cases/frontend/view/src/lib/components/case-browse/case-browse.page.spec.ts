@@ -7,11 +7,11 @@ import { ECasePriority, ECaseStatus, ECaseType, ICaseResponse } from 'cases-shar
 import { LocalStorageService } from 'common-frontend-models';
 import { of } from 'rxjs';
 
-import { CaseBrowseComponent } from './case-browse.component';
+import { CaseBrowsePage } from './case-browse.page';
 
 describe('CaseBrowsComponent', () => {
-	let component: CaseBrowseComponent;
-	let fixture: ComponentFixture<CaseBrowseComponent>;
+	let component: CaseBrowsePage;
+	let fixture: ComponentFixture<CaseBrowsePage>;
 	let mockCasesFacade: XdCasesFacade;
 
 	beforeEach(async () => {
@@ -20,7 +20,7 @@ describe('CaseBrowsComponent', () => {
 		} as unknown as XdCasesFacade;
 
 		await TestBed.configureTestingModule({
-			imports: [ CaseBrowseComponent, HttpClientTestingModule ],
+			imports: [ CaseBrowsePage, HttpClientTestingModule ],
 			providers: [
 				{
 					provide: ActivatedRoute,
@@ -37,7 +37,7 @@ describe('CaseBrowsComponent', () => {
 			],
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(CaseBrowseComponent);
+		fixture = TestBed.createComponent(CaseBrowsePage);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
