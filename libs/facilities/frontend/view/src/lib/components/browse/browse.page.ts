@@ -61,4 +61,6 @@ export class XdBrowsePage {
     toggleFilter() {
         this.localStorageService.set('filterIssues', (!this.filterIssues()).toString());
     }
+
+    protected readonly length = length;
 }

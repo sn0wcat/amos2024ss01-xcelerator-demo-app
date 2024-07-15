@@ -1,12 +1,13 @@
-@if (filterIssues()) {
-    <ix-content-header
-        class="pl-4 pt-4"
-        hasBackButton="true"
-        headerTitle="Facilities Overview"
-        headerSubtitle="View all facilities that are not running properly"
-        (backButtonClick)="location.back()"
-    ></ix-content-header>
+<ix-content-header
+    class="pl-4 pt-4"
+    hasBackButton="true"
+    headerTitle="Facilities Overview"
+    headerSubtitle="View all facilities that are not running properly"
+    [headerSubtitle]="filterIssues() ? 'View all facilities that are not running properly' : 'View all facilities and their status'"
+    (backButtonClick)="location.back()"
+></ix-content-header>
 
+@if (filterIssues() && facilities()?.length === 0) {
     <ix-empty-state
         class="mt-8"
         header="No facilities with issues"
@@ -15,15 +16,8 @@
         action="Switch to full list"
         (actionClick)="toggleFilter()"
     ></ix-empty-state>
-} @else {
-    <ix-content-header
-        class="pl-4 pt-4"
-        hasBackButton="true"
-        headerTitle="Facilities Overview"
-        headerSubtitle="View all facilities and their status"
-        (backButtonClick)="location.back()"
-    ></ix-content-header>
 }
+
 @if (!allFacilities()) {
     <ix-empty-state
         class="mt-8"
