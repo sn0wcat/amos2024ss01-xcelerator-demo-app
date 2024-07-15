@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { HttpService } from '@nestjs/axios';
-import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AxiosResponse } from 'axios';
 import { IInsightHub } from 'common-backend-models';

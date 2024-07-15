@@ -17,4 +17,8 @@ export const SWAGGER_TAG_INFORMATION: Record<ESwaggerTag, ISwaggerTagInformation
 		name: 'Cases',
 		description: 'Endpoints for managing cases',
 	},
+    [ESwaggerTag.METRICS]: {
+        name: 'Metrics',
+        description: 'Endpoints for managing metrics',
+    },
 };
