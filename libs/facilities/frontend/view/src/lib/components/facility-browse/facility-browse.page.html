@@ -48,22 +48,15 @@
                                 [variant]="StatusToColorRecord[facility.status]"
                                 [routerLink]="['/facilities', facility.id]"
                             >
-                                @if (facility.location?.locality !== undefined && facility.location?.country !== undefined) {
-                                    <p>Location: {{ facility.location?.postalCode }} {{ facility.location?.locality }}
-                                        , {{ facility.location?.country }}</p>
-                                } @else if (facility.location?.country !== undefined) {
-                                    Location:{{ facility.location?.country }}
-                                } @else if (facility.location?.locality !== undefined) {
-                                    <p>Location: {{ facility.location?.locality }}</p>
-                                } @else {
-                                    <p>Location: Not specified</p>
-                                }
-
-                                @if (facility.location?.streetAddress !== undefined) {
+                                @if (facility.location?.locality) {
+                                    <p>
+                                        Location: {{ facility.location?.postalCode }} {{ facility.location?.locality }}
+                                        , {{ facility.location?.country }}
+                                    </p>
                                     <p>Address: {{ facility.location?.streetAddress }}</p>
-                                }
-                                @if (facility.location?.region !== undefined) {
                                     <p>Region: {{ facility.location?.region }}</p>
+                                } @else {
+                                    Location: not specified
                                 }
 
                                 <div class="flex">
@@ -84,13 +77,9 @@
                         <div>
                             <strong>{{ facility.heading }}</strong>
                             <p>{{ facility.subheading }}</p>
-                            @if (facility.location?.locality !== undefined && facility.location?.country !== undefined) {
+                            @if (facility.location?.locality) {
                                 <p>Location: {{ facility.location?.locality }}, {{ facility.location?.country }}</p>
-                            } @else if (facility.location?.country !== undefined) {
-                                Location:{{ facility.location?.country }}
-                            } @else if (facility.location?.locality !== undefined) {
-                                <p>Location: {{ facility.location?.locality }}</p>
-                            } @else {
+                            }  @else {
                                 <p>Location: Not specified</p>
                             }
 

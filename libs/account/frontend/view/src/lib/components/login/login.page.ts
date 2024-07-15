@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IxModule, themeSwitcher } from '@siemens/ix-angular';
+import { IxModule } from '@siemens/ix-angular';
 import { AuthenticationService } from 'common-frontend-models';
 
 @Component({
@@ -29,11 +29,7 @@ export class LoginPage {
     constructor(
         private readonly _router: Router,
         private readonly _authenticationService: AuthenticationService,
-    ) {
-        // this site is always in dark mode
-        themeSwitcher.setTheme('theme-classic-dark');
-    }
-
+    ) {}
 
     onSubmit() {
         this.wasValidated = true;

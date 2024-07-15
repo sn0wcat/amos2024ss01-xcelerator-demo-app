@@ -132,27 +132,22 @@
             ></ix-empty-state>
         } @else {
             @if (getFacility(); as facility) {
-                <div>
-                    <ix-tile size="big" class="mr-1">
-                        <div class="mt-4" slot="header">{{ facility.heading }}</div>
-                        <div class="mt-7 text-l">{{ facility.subheading }}</div>
+                <div class="flex flex-col gap-2">
+                    <ix-tile size="small">
+                        <div slot="header">{{ facility.heading }}</div>
                     </ix-tile>
 
-                    @if (facility.location?.locality !== undefined && facility.location?.country !== undefined) {
+                    <ix-tile size="big">
+                        <div class="text-l">{{ facility.subheading }}</div>
+                    </ix-tile>
+
+                    @if (facility.location?.locality) {
                         <ix-tile class="mt-2" size="small">
                             <p>{{ facility.location?.locality }}, {{ facility.location?.country }}</p>
                         </ix-tile>
-                    } @else if (facility.location?.country !== undefined) {
-                        <ix-tile class="mt-2" size="small">
-                            <p>{{ facility.location?.country }}</p>
-                        </ix-tile>
-                    } @else if (facility.location?.locality !== undefined) {
-                        <ix-tile class="mt-2" size="small">
-                            <p>{{ facility.location?.locality }}</p>
-                        </ix-tile>
                     }
 
-                    <ix-tile class="mt-2" size="small">
+                    <ix-tile size="small">
                         <div class="flex">
                             <ix-typography color="std">status:&nbsp;</ix-typography>
                             <ix-typography [ngClass]="StatusToColorRecord[facility.status]"
@@ -161,11 +156,7 @@
                         </div>
                     </ix-tile>
 
-                    <ix-button
-                        class="mt-4"
-                        variant="secondary"
-                        [routerLink]="['/facilities', facility.id]"
-                    >
+                    <ix-button class="w-[191px]" variant="secondary" [routerLink]="['/facilities', facility.id]">
                         View Facility
                     </ix-button>
                 </div>

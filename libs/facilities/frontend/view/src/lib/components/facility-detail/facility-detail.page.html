@@ -27,30 +27,17 @@
 				<ix-typography color="std">{{ facility.heading }}</ix-typography>
 				<ix-typography color="std">{{ facility.subheading }}</ix-typography>
 				<ix-typography color="std">
-					@if(facility.location?.streetAddress !== undefined &&
-					facility.location?.locality !== undefined && facility.location?.country !==
-					undefined){
-					<p>
-						Location: {{ facility.location?.streetAddress }}, {{
-						facility.location?.postalCode }} {{ facility.location?.locality }}, {{
-						facility.location?.country }}
-					</p>
-					} @else if(facility.location?.streetAddress !== undefined &&
-					facility.location?.locality !== undefined){
-					<p>
-						Location: {{ facility.location?.streetAddress }}, {{
-						facility.location?.postalCode }} {{ facility.location?.locality }}
-					</p>
-					} @else if (facility.location?.country !== undefined) { Location: {{
-					facility.location?.postalCode }} {{ facility.location?.country }} } @else if
-					(facility.location?.locality !== undefined) {
-					<p>
-						Location: {{ facility.location?.postalCode}} {{ facility.location?.locality
-						}}
-					</p>
-					} @else {
-					<p>Location: Not specified</p>
-					}
+                    @if (facility.location?.locality) {
+                        <p>
+                            Location: {{ facility.location?.postalCode }} {{ facility.location?.locality }}
+                            , {{ facility.location?.country }}
+                        </p>
+                        <p>Address: {{ facility.location?.streetAddress }}</p>
+                        <p>Region: {{ facility.location?.region }}</p>
+                    } @else {
+                        Location: not specified
+                    }
+
 				</ix-typography>
 				<div class="flex">
 					<ix-typography color="std">status:&nbsp;</ix-typography>
