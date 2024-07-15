@@ -24,7 +24,7 @@ describe('BrowseComponent', () => {
 					useValue: {
 						getAllFacilities: jest
 							.fn()
-							.mockReturnValue(of([ { id: '1', propertySetName: 'test' } ])),
+							.mockReturnValue(of([ { id: '1', propertySetName: 'test', cases: [] } ])),
                     },
 				},
 				{

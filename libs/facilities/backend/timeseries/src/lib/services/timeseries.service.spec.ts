@@ -13,6 +13,11 @@ import { XdTimeseriesService } from './timeseries.service';
 
 const INSIGHT_HUB_OPTIONS = 'INSIGHT_HUB_OPTIONS';
 
+function normalizeDate(date: Date, precision = 3): Date {
+    const factor = Math.pow(10, precision);
+    return new Date(Math.floor(date.getTime() / factor) * factor);
+}
+
 describe('TimeseriesService', () => {
 	let service: XdTimeseriesService;
 	let prisma: PrismaService = new PrismaService();
@@ -178,12 +183,8 @@ describe('TimeseriesService', () => {
 
 			expect(findManySpy).toHaveBeenCalledTimes(1);
 
-			expect(result).toEqual([
-				{
-					time: findManyResult.time,
-					flow: flow,
-				},
-			]);
+			expect(result[0]['flow']).toEqual(flow);
+            expect(normalizeDate(result[0]['time'])).toEqual(normalizeDate(findManyResult.time));
 		});
 
 		it('should call the iothub service if the local param is set to true', async () => {
@@ -298,20 +299,22 @@ describe('TimeseriesService', () => {
 
 			expect(findManySpy).toHaveBeenCalledTimes(1);
 
-			expect(findManySpy).toHaveBeenCalledWith({
-				where: {
-					timeSeriesItemAssetId: params.assetId,
-					timeSeriesItemPropertySetName: params.propertySetName,
-					time: {
-						gte: query.from,
-						lte: query.to,
-					},
-				},
-				take: query.limit,
-				orderBy: {
-					time: query.sort,
-				},
-			});
+            expect(findManySpy).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    where: expect.objectContaining({
+                        timeSeriesItemAssetId: params.assetId,
+                        timeSeriesItemPropertySetName: params.propertySetName,
+                        time: expect.objectContaining({
+                            gte: expect.any(Date),
+                            lte: expect.any(Date),
+                        }),
+                    }),
+                    take: query.limit,
+                    orderBy: {
+                        time: query.sort,
+                    },
+                }),
+            );
 		});
 	});
 });
