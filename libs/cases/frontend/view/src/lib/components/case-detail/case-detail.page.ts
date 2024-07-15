@@ -28,7 +28,7 @@ export class CaseDetailPage {
     protected readonly _caseId = this._route.snapshot.params['id'];
 
 	protected isEditing = false;
-	private readonly _datePattern = /^\d{4}-\d{2}-\d{2}T00:00:00\.000Z$/;
+	private readonly _datePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
 
     private readonly cases = toSignal(this._casesFacade.getAllCases());
     protected readonly caseItem = computed(() => {

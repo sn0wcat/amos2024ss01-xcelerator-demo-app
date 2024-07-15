@@ -2,30 +2,29 @@
     class="pl-4 pt-4"
     hasBackButton="true"
     headerTitle="Facilities Overview"
-    headerSubtitle="View all facilities that are not running properly"
     [headerSubtitle]="filterIssues() ? 'View all facilities that are not running properly' : 'View all facilities and their status'"
     (backButtonClick)="location.back()"
 ></ix-content-header>
 
-@if (filterIssues() && facilities()?.length === 0) {
-    <ix-empty-state
-        class="mt-8"
-        header="No facilities with issues"
-        subHeader="All facilities are running properly. Switch to the full list to view all facilities."
-        icon="check"
-        action="Switch to full list"
-        (actionClick)="toggleFilter()"
-    ></ix-empty-state>
-}
-
-@if (!allFacilities()) {
-    <ix-empty-state
-        class="mt-8"
-        header="No facilities available"
-        icon="document-fail"
-    ></ix-empty-state>
+@if (!facilities() || facilities()?.length === 0){
+    @if(filterIssues() && facilities()){
+        <ix-empty-state
+            class="mt-8"
+            header="No facilities with issues"
+            subHeader="All facilities are running properly. Switch to the full list to view all facilities."
+            icon="check"
+            action="Switch to full list"
+            (actionClick)="toggleFilter()"
+        ></ix-empty-state>
+    } @else {
+        <ix-empty-state
+            class="mt-8"
+            header="No facilities available"
+            icon="document-fail"
+        ></ix-empty-state>
+    }
 } @else {
-    <div class="absolute top-20 right-4 !z-[50] flex flex-row-reverse gap-x-4">
+    <div class="top-right-button flex flex-row-reverse gap-x-4">
         <ix-button (click)="toggleView()">
             Switch to {{ showCardList() ? 'Event List' : 'Card List' }}
         </ix-button>

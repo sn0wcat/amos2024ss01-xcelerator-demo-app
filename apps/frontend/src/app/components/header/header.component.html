@@ -27,9 +27,7 @@
     </ix-breadcrumb>
 
     @if (!isHomePage()){
-        <div class="absolute top-10 right-4 !z-[50] flex flex-row-reverse gap-x-4">
-            <ix-button icon="refresh" (click)="refresh()">Refresh</ix-button>
-        </div>
+        <ix-button class="absolute top-10 right-4" icon="refresh" (click)="refresh()">Refresh</ix-button>
     }
 
     <ix-menu>
