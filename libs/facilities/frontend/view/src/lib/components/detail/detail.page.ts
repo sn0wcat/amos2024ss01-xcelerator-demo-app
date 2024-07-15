@@ -1,13 +1,13 @@
 import { CommonModule, Location } from '@angular/common';
 import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    inject,
-    OnInit,
-    Signal,
-    signal,
-    ViewEncapsulation,
+	ChangeDetectionStrategy,
+	Component,
+	computed,
+	inject,
+	OnInit,
+	Signal,
+	signal,
+	ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -32,27 +32,26 @@ import { PUMP_METRICS_FULL_NAME_MAP } from './models/pump-metrics-full-name.map'
 @Component({
 	selector: 'lib-detail',
 	standalone: true,
-	imports: [ CommonModule, IxModule, NgxEchartsModule, LockModalComponent, RouterLink ],
+	imports: [CommonModule, IxModule, NgxEchartsModule, LockModalComponent, RouterLink],
 	templateUrl: './detail.page.html',
 	styleUrl: './detail.page.scss',
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class XdDetailPage implements OnInit {
+	protected readonly notificationText = computed(() => {
+		const facility = this.facility();
+		if (!facility) return undefined;
 
-    protected readonly notificationText = computed(() => {
-        const facility = this.facility();
-        if (!facility) return undefined;
-
-        switch (facility.cases.length) {
-            case 0:
-                return 'There are no cases regarding this facility';
-            case 1:
-                return 'There is one case regarding this facility';
-            default:
-                return `There are ${facility.cases.length} cases regarding this facility`;
-        }
-    })
+		switch (facility.cases.length) {
+			case 0:
+				return 'There are no cases regarding this facility';
+			case 1:
+				return 'There is one case regarding this facility';
+			default:
+				return `There are ${facility.cases.length} cases regarding this facility`;
+		}
+	});
 
 	protected theme = signal(convertThemeName(themeSwitcher.getCurrentTheme()));
 	protected readonly locked = signal(true);
@@ -62,31 +61,25 @@ export class XdDetailPage implements OnInit {
 	private readonly _28MinutesAgo = new Date(this._currentTime.getTime() - 28 * 60 * 1000);
 	private readonly _detailsFacade = inject(XdDetailsFacade);
 	protected readonly facility = toSignal(this._detailsFacade.getFacility(this._assetId));
-	protected readonly pumpData = toSignal(
-		this._detailsFacade.getTimeSeriesDataItems(this._assetId, 'PumpData', {
-			from: this._28MinutesAgo,
-			to: this._currentTime,
-		}),
+	protected readonly pumpData = toSignal(this._detailsFacade.getPumpData(this._assetId));
+	protected readonly envData = toSignal(this._detailsFacade.getEnvironmentData(this._assetId));
+	protected readonly metricsData = toSignal(
+		this._detailsFacade.getMetrics(this._assetId, 'PumpData'),
 	);
-	protected readonly envData = toSignal(
-		this._detailsFacade.getTimeSeriesDataItems(this._assetId, 'Environment', {
-			from: this._28MinutesAgo,
-			to: this._currentTime,
-		}),
-	);
+
 	private readonly defaultOptions: EChartsOption = {
-        tooltip: {
-            trigger: 'axis',
-            renderMode: 'auto',
-            axisPointer: {
-                axis: 'auto',
-                crossStyle: {
-                    textStyle: {
-                        precision: 2,
-                    }
-                }
-            }
-        },
+		tooltip: {
+			trigger: 'axis',
+			renderMode: 'auto',
+			axisPointer: {
+				axis: 'auto',
+				crossStyle: {
+					textStyle: {
+						precision: 2,
+					},
+				},
+			},
+		},
 		xAxis: {
 			type: 'time',
 			name: 'Time',
@@ -108,35 +101,35 @@ export class XdDetailPage implements OnInit {
 			top: 80,
 		},
 	};
-    private readonly barChartOptions: EChartsOption = {
-        tooltip: {
-            trigger: 'axis',
-            renderMode: 'auto',
-            axisPointer: {
-                axis: 'auto',
-                crossStyle: {
-                    textStyle: {
-                        precision: 2,
-                    }
-                }
-            }
-        },
-        legend: {
-            top: 30,
-            left: 80,
-        },
-        grid: {
-            top: 80,
-        },
-        title: {
-            text: 'Pump Metrics',
-            left: 'center',
-        },
-        yAxis: {
-            type: 'value',
-            nameLocation: 'middle',
-        },
-    }
+	private readonly barChartOptions: EChartsOption = {
+		tooltip: {
+			trigger: 'axis',
+			renderMode: 'auto',
+			axisPointer: {
+				axis: 'auto',
+				crossStyle: {
+					textStyle: {
+						precision: 2,
+					},
+				},
+			},
+		},
+		legend: {
+			top: 30,
+			left: 80,
+		},
+		grid: {
+			top: 80,
+		},
+		title: {
+			text: 'Pump Metrics',
+			left: 'center',
+		},
+		yAxis: {
+			type: 'value',
+			nameLocation: 'middle',
+		},
+	};
 	private readonly pumpOptions: EChartsOption = {
 		...this.defaultOptions,
 		title: {
@@ -178,23 +171,22 @@ export class XdDetailPage implements OnInit {
 	};
 	protected readonly pumpChart: Signal<EChartsOption | undefined> = computed(() => {
 		const pumpData = this.pumpData();
-		if (!pumpData) return undefined;
-
 		const pumpChart = {
 			...this.pumpOptions,
 		};
 
+		if (!pumpData) return pumpChart;
+
 		if (!pumpChart.series || !(pumpChart.series instanceof Array)) return undefined;
 
-		pumpChart.series[0].data = pumpData.map((item) => [ item.time, item['Flow'] ]);
-		pumpChart.series[1].data = pumpData.map((item) => [ item.time, item['MotorCurrent'] ]);
+		pumpChart.series[0].data = pumpData.map((item) => [item.time, item['Flow']]);
+		pumpChart.series[1].data = pumpData.map((item) => [item.time, item['MotorCurrent']]);
 		pumpChart.series[2].data = pumpData.map((item) => [
 			item.time,
 			item['StuffingBoxTemperature'],
 		]);
-		pumpChart.series[3].data = pumpData.map((item) => [ item.time, item['PressureIn'] ]);
-		pumpChart.series[4].data = pumpData.map((item) => [ item.time, item['PressureOut'] ]);
-
+		pumpChart.series[3].data = pumpData.map((item) => [item.time, item['PressureIn']]);
+		pumpChart.series[4].data = pumpData.map((item) => [item.time, item['PressureOut']]);
 		return pumpChart;
 	});
 	private readonly envOptions: EChartsOption = {
@@ -225,62 +217,61 @@ export class XdDetailPage implements OnInit {
 		],
 	};
 
-    protected readonly envChart: Signal<EChartsOption | undefined> = computed(() => {
-        const envData = this.envData();
-        if (!envData) return undefined;
+	protected readonly envChart: Signal<EChartsOption | undefined> = computed(() => {
+		const envData = this.envData();
 
-        const envChart = {
-            ...this.envOptions,
-        };
+		if (!envData) return undefined;
 
-        if (!envChart.series || !(envChart.series instanceof Array)) return undefined;
+		const envChart = {
+			...this.envOptions,
+		};
 
-        envChart.series[0].data = envData.map((item) => [ item.time, item['Temperature'] ]);
-        envChart.series[1].data = envData.map((item) => [ item.time, item['Humidity'] ]);
-        envChart.series[2].data = envData.map((item) => [ item.time, item['Pressure'] ]);
-        return envChart;
-    });
+		if (!envChart.series || !(envChart.series instanceof Array)) return undefined;
 
-    protected readonly metricsChart: Signal<EChartsOption | undefined> = computed(() => {
-        const facility = this.facility();
-        if (!facility) return undefined;
+		envChart.series[0].data = envData.map((item) => [item.time, item['Temperature']]);
+		envChart.series[1].data = envData.map((item) => [item.time, item['Humidity']]);
+		envChart.series[2].data = envData.map((item) => [item.time, item['Pressure']]);
+		return envChart;
+	});
 
-        const metrics = facility.metrics;
+	protected readonly metricsChart: Signal<EChartsOption | undefined> = computed(() => {
+		const metricsData = this.metricsData();
 
-        if (!metrics || Array.isArray(metrics) && metrics.length === 0) return undefined;
+		if (!metricsData) return undefined;
 
-        const xAxisData = map(metrics, item => PUMP_METRICS_FULL_NAME_MAP[item.name].replace(/ /g, '\n').trim());
-        const seriesKeys = $enum(EMetricsCategory).getValues();
+		const xAxisData = map(metricsData, (item) =>
+			PUMP_METRICS_FULL_NAME_MAP[item.name].replace(/ /g, '\n').trim(),
+		);
+		const seriesKeys = $enum(EMetricsCategory).getValues();
 
-        const seriesData = map(seriesKeys, (key) => {
-            return {
-                name: METRIC_CATEGORY_COLOR_INFORMATION[key].abbreviation,
-                data: map(metrics, (item: IPumpMetrics) => parseFloat(item[key]!.toFixed(2))),
-                type: 'bar',
-                emphasis: { focus: 'series' },
-                itemStyle: { color: METRIC_CATEGORY_COLOR_INFORMATION[key].color },
-            };
-        });
+		const seriesData = map(seriesKeys, (key) => {
+			return {
+				name: METRIC_CATEGORY_COLOR_INFORMATION[key].abbreviation,
+				data: map(metricsData, (item: IPumpMetrics) => item[key]),
+				type: 'bar',
+				emphasis: { focus: 'series' },
+				itemStyle: { color: METRIC_CATEGORY_COLOR_INFORMATION[key].color },
+			};
+		});
 
-        return defaults(this.barChartOptions, {
-            xAxis: {
-                type: 'category',
-                data: xAxisData,
-                nameLocation: 'middle',
-                axisLabel: {
-                    width: 100,
-                    overflow: 'truncate',
-                    interval: 0,
-                },
-            },
-            series: seriesData,
-        });
-    });
-
+		return defaults(this.barChartOptions, {
+			xAxis: {
+				type: 'category',
+				data: xAxisData,
+				nameLocation: 'middle',
+				axisLabel: {
+					width: 100,
+					overflow: 'truncate',
+					interval: 0,
+				},
+			},
+			series: seriesData,
+		});
+	});
 
 	constructor(
 		protected route: ActivatedRoute,
-        protected location: Location,
+		protected location: Location,
 		private readonly _modalService: ModalService,
 	) {}
 
@@ -288,7 +279,7 @@ export class XdDetailPage implements OnInit {
 		registerTheme(echarts);
 
 		themeSwitcher.themeChanged.on((theme: string) => {
-            this.theme.set(convertThemeName(theme));
+			this.theme.set(convertThemeName(theme));
 		});
 	}
 
@@ -305,17 +296,16 @@ export class XdDetailPage implements OnInit {
 		});
 	}
 
-    mapNth(n: number) {
-        switch (n) {
-            case 1:
-                return 'First';
-            case 2:
-                return 'Second';
-            case 3:
-                return `${n}rd`
-            default:
-                return `${n}th`;
-        }
-    }
-
+	mapNth(n: number) {
+		switch (n) {
+			case 1:
+				return 'First';
+			case 2:
+				return 'Second';
+			case 3:
+				return `${n}rd`;
+			default:
+				return `${n}th`;
+		}
+	}
 }

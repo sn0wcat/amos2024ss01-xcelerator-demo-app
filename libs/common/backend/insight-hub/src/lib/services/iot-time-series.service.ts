@@ -29,7 +29,7 @@ export class XdIotTimeSeriesService extends XdBaseBearerInteractionService {
 		);
 	}
 
-	/**
+    /**
 	 * Allows to get the time series data from the IoT Time Series API.
 	 * @see https://documentation.mindsphere.io/MindSphere/apis/iot-iottimeseries/api-iottimeseries-api.html
 	 *
@@ -44,4 +44,11 @@ export class XdIotTimeSeriesService extends XdBaseBearerInteractionService {
 	): Observable<ITimeSeriesResponse> {
 		return super._getData<ITimeSeriesResponse>(`${assetId}/${propertySetName}`, params);
 	}
+
+    /**
+     * Checks if the session is local or not.
+     */
+    public isLocalSession(): boolean {
+        return !this.insightHubOptions.apiKey || !this.insightHubOptions.apiUrl;
+    }
 }

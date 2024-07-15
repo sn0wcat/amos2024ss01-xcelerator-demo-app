@@ -97,11 +97,11 @@ async function seedSingleFacility({
 			timeSeriesItemPropertySetName: tsItemPumpData.propertySetName,
 
 			data: {
-				motorCurrent: data.MotorCurrent,
-				pressureOut: data.PressureOut,
-				stuffingBoxTemperature: data.StuffingBoxTemperature,
-				pressureIn: data.PressureIn,
-				flow: data.Flow,
+				MotorCurrent: data.MotorCurrent,
+				PressureOut: data.PressureOut,
+				StuffingBoxTemperature: data.StuffingBoxTemperature,
+				PressureIn: data.PressureIn,
+				Flow: data.Flow,
 			} as Prisma.JsonObject,
 		};
 	});
@@ -135,12 +135,12 @@ async function seedSingleFacility({
 			timeSeriesItemPropertySetName: tSItemEnv.propertySetName,
 
 			data: {
-				pressureQc: data.Pressure_qc,
-				temperature: data.Temperature,
-				temperatureQc: data.Temperature_qc,
-				humidityQc: data.Humidity_qc,
-				humidity: data.Humidity,
-				pressure: data.Pressure,
+				PressureQc: data.Pressure_qc,
+				Temperature: data.Temperature,
+				TemperatureQc: data.Temperature_qc,
+				HumidityQc: data.Humidity_qc,
+				Humidity: data.Humidity,
+				Pressure: data.Pressure,
 			} as Prisma.JsonObject,
 		};
 	});

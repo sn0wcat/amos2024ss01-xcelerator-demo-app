@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 import { FacilitiesRequestService } from '../../infrastructure/facilities-request.service';
+import { MetricsRequestService } from '../../infrastructure/metrics-request.service';
 import { TimeSeriesRequestService } from '../../infrastructure/timeseries-request.service';
 import { XdDetailsFacade } from './details.facade';
 
@@ -27,6 +28,12 @@ describe('XdDetailsFacadeService', () => {
 					useValue: {
 						getTimeSeriesItems: jest.fn().mockReturnValue(of([])),
 						getTimeSeriesDataItems: jest.fn().mockReturnValue(of([])),
+					},
+				},
+				{
+					provide: MetricsRequestService,
+					useValue: {
+						getMetrics: jest.fn().mockReturnValue(of([])),
 					},
 				},
 			],

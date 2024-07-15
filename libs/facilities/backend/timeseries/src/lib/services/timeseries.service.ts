@@ -1,15 +1,15 @@
-import { checkPumpStatus } from '@frontend/facilities/backend/utils';
 import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ETimeSeriesOrdering, XdIotTimeSeriesService } from 'common-backend-insight-hub';
 import { PrismaService } from 'common-backend-prisma';
 import {
-    IGetTimeSeriesParams,
-    IGetTimeseriesQuery,
-    ITimeSeriesDataItemResponse,
-    ITimeSeriesItemResponse, ITimeSeriesPumpReport,
+	IGetTimeSeriesParams,
+	IGetTimeseriesQuery,
+	ITimeSeriesDataItemResponse,
+	ITimeSeriesItemResponse,
 } from 'facilities-shared-models';
-import { pick } from 'lodash';
-import { catchError, from, map, Observable, switchMap } from 'rxjs';
+import { omit } from 'lodash';
+import { from, map, Observable, switchMap } from 'rxjs';
+import dayjs = require('dayjs');
 
 @Injectable()
 export class XdTimeseriesService {
@@ -21,151 +21,126 @@ export class XdTimeseriesService {
 	) {}
 
 	/**
+	 * Acts as a gateway to get the time series data from either the API or the DB.
+	 *
+	 * @param args - the query and parameters based arguments to get the time series data
+	 */
+	public getTimeSeries(args: IGetTimeSeriesParams & IGetTimeseriesQuery) {
+		const result$ = this.iotTimeSeriesService.isLocalSession()
+			? this.getTimeSeriesFromDB(args)
+			: this.getTimeSeriesFromApi(args);
+
+		return result$;
+	}
+
+	/**
 	 * Get timeseries data based on the assetId and propertySetName from the API
+	 *
+	 * @param args - the query and parameters based arguments to get the time series data
 	 */
 	public getTimeSeriesFromApi(
 		args: IGetTimeSeriesParams & IGetTimeseriesQuery,
 	): Observable<ITimeSeriesDataItemResponse[] | never[]> {
-		const { assetId, propertySetName, sort, select, ...params } = args;
+		const { assetId, propertySetName, sort, ...params } = args;
+		return this.iotTimeSeriesService
+			.getTimeSeriesData<
+				any,
+				{
+					_time: string;
+					[key: string]: any;
+				}[]
+			>(assetId, propertySetName, {
+				...params,
+				// Todo: Fix this in a future PR
+				sort: sort as unknown as ETimeSeriesOrdering,
+			})
+			.pipe(
+				map((items) => {
+					return items.map((item) => ({
+						time: new Date(item._time),
+						...omit(item, '_time'),
+					}));
+				}),
+			);
+	}
 
+	private findFirstTime(assetId: string, propertySetName: string) {
 		return from(
-			this.prismaService.timeSeriesItem.findUnique({
-				where: { assetId_propertySetName: { assetId, propertySetName } },
-			}),
-		).pipe(
-			map((item) => {
-				if (!item) {
-					throw new HttpException(
-						`No timeseries data found for assetId: ${assetId} and propertySetName: ${propertySetName}`,
-						HttpStatus.NOT_FOUND,
-					);
-				}
-				return item;
-			}),
-			switchMap(() => {
-				return this.iotTimeSeriesService
-					.getTimeSeriesData<
-						any,
-						{
-							_time: string;
-
-							[key: string]: any;
-						}[]
-					>(assetId, propertySetName, {
-						...params,
-						// Todo: Fix this in a future PR
-						sort: sort as unknown as ETimeSeriesOrdering,
-					})
-					.pipe(
-						map((items) => {
-							const data = items.map((item) => {
-								const { _time, ...rest } = item;
-								return {
-									...rest,
-									time: new Date(_time),
-								};
-							});
-							const { status, indicatorMsg, metrics } = checkPumpStatus(
-								data as unknown as ITimeSeriesPumpReport[],
-							);
-
-							const timeSeriesData = data.map(({ time, ...rest }) => {
-								return this.prismaService.timeSeriesDataItem.upsert({
-									where: {
-										timeSeriesItemAssetId_timeSeriesItemPropertySetName_time: {
-											timeSeriesItemAssetId: assetId,
-											timeSeriesItemPropertySetName: propertySetName,
-											time: time,
-										},
-									},
-									update: {},
-									create: {
-										time: time,
-										timeSeriesItemAssetId: assetId,
-										timeSeriesItemPropertySetName: propertySetName,
-										data: rest,
-									},
-								});
-							});
-
-                            const updatedPumpData = this.prismaService.asset.upsert({
-								where: {
-									assetId,
-								},
-								update: {
-									status,
-                                    indicatorMsg,
-                                    metrics: {
-                                        deleteMany: {},
-                                        create: metrics
-                                    }
-								},
-								create: {
-									assetId,
-									status,
-                                    indicatorMsg,
-									location: {
-										create: {
-											latitude: 0,
-											longitude: 0,
-										},
-									},
-									name: 'Pump',
-									typeId: 'pump',
-                                    metrics: {
-                                        create: metrics
-                                    }
-								},
-							});
-
-							this.prismaService.$transaction([ ...timeSeriesData, updatedPumpData ]);
-
-							if (select) {
-								return data.map((item) => ({
-									...pick(item, select),
-									time: item.time,
-								}));
-							}
-
-							return data;
-						}),
-					);
+			this.prismaService.timeSeriesDataItem.findFirst({
+				where: {
+					timeSeriesItemAssetId: assetId,
+					timeSeriesItemPropertySetName: propertySetName,
+				},
+				orderBy: {
+					time: 'desc',
+				},
 			}),
 		);
 	}
 
+	private normalizeTimes(time: Date, from?: Date, to?: Date) {
+		let normalizedFromTime: Date | undefined;
+		let normalizedToTime: Date | undefined;
+		const timeDifference = dayjs().diff(time, 'millisecond', true);
+
+		if (from) {
+			normalizedFromTime = dayjs(from).subtract(timeDifference, 'millisecond').toDate();
+		}
+		if (to) {
+			normalizedToTime = dayjs(to).subtract(timeDifference, 'millisecond').toDate();
+		}
+
+		return { normalizedFromTime, normalizedToTime, timeDifference };
+	}
+
 	/**
 	 * Get timeseries data based on the assetId and propertySetName from the DB
+	 *
+	 * @param args - the query and parameters based arguments to get the time series data
 	 */
 	public getTimeSeriesFromDB(
 		args: IGetTimeSeriesParams & IGetTimeseriesQuery,
 	): Observable<ITimeSeriesDataItemResponse[]> {
 		const { assetId, propertySetName } = args;
 
-		return from(
-			this.prismaService.timeSeriesDataItem.findMany({
-				where: {
-					timeSeriesItemAssetId: assetId,
-					timeSeriesItemPropertySetName: propertySetName,
-					time: {
-						gte: args.from,
-						lte: args.to,
-					},
-				},
-				take: args.limit,
-				orderBy: {
-					time: args.sort,
-				},
+		return this.findFirstTime(assetId, propertySetName).pipe(
+			switchMap((item) => {
+				if (!item) {
+					throw new HttpException('timeSeriesItem not found', HttpStatus.NOT_FOUND);
+				}
+
+				const { normalizedFromTime, normalizedToTime, timeDifference } =
+					this.normalizeTimes(item.time, args.from, args.to);
+
+				return from(
+					this.prismaService.timeSeriesDataItem.findMany({
+						where: {
+							timeSeriesItemAssetId: assetId,
+							timeSeriesItemPropertySetName: propertySetName,
+							time: {
+								gte: normalizedFromTime,
+								lte: normalizedToTime,
+							},
+						},
+						take: args.limit,
+						orderBy: {
+							time: args.sort,
+						},
+					}),
+				).pipe(map((result) => ({ result, timeDifference })));
 			}),
-		).pipe(
-			map((items) => {
-				return items.map((item) => ({
-					time: item.time,
+			map(({ result, timeDifference }) => {
+				if (!Array.isArray(result)) {
+					throw new HttpException(
+						'Unexpected result format',
+						HttpStatus.INTERNAL_SERVER_ERROR,
+					);
+				}
+
+				return result.map((item) => ({
+					time: dayjs(item.time).add(timeDifference, 'millisecond').toDate(),
 					...this.prismaService.selectKeysFromJSON(item.data, args.select),
 				}));
-			}),
-			catchError((err: Error) => {
-				throw err;
 			}),
 		);
 	}

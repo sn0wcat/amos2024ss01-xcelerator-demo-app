@@ -82,7 +82,7 @@ export class EnvironmentVariables implements IEnvironmentVariables {
 	/**
 	 * The URL of the API to use for the IotTimeSeriesService
 	 */
-	@IsDefined()
+	@IsOptional()
 	@IsString()
 	@MinLength(1)
 	INSIGHT_HUB_API_URL?: string;
@@ -90,7 +90,7 @@ export class EnvironmentVariables implements IEnvironmentVariables {
 	/**
 	 * The API key to use for the IotTimeSeriesService
 	 */
-	@IsDefined()
+	@IsOptional()
 	@IsString()
 	@MinLength(1)
 	INSIGHT_HUB_API_KEY?: string;
