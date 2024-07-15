@@ -7,7 +7,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { XdCasesFacade } from '@frontend/cases/frontend/domain';
 import { FilterState, IxCategoryFilterCustomEvent, IxModule } from '@siemens/ix-angular';
 import { ECasePriority, ECaseStatus, ECaseType, ICaseResponse } from 'cases-shared-models';
@@ -30,7 +30,7 @@ export class CaseBrowseComponent {
         )
     );
 
-	private readonly _cases = toSignal(this._casesFacade.getAllCases());
+	protected readonly _cases = toSignal(this._casesFacade.getAllCases());
 	protected readonly processedCases = computed(() => {
         const initialCases = this._cases();
         if (initialCases === undefined) {
@@ -91,6 +91,7 @@ export class CaseBrowseComponent {
         protected location: Location,
         protected localStorage: LocalStorageService,
         private _casesFacade: XdCasesFacade,
+        private router: Router
     ) {}
 
 	getStatusClasses(_case: ICaseResponse) {
@@ -127,5 +128,9 @@ export class CaseBrowseComponent {
             const filterParts = f.split(',');
             return { id: filterParts[0], operator: filterParts[1], value: filterParts[2] };
         })
+    }
+
+    navigateToCreateCase() {
+        this.router.navigate([ '/cases/create' ]);
     }
 }

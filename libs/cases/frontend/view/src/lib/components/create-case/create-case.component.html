@@ -2,7 +2,7 @@
     class="pl-4 pt-4"
     hasBackButton="true"
     headerTitle="Create a new Case"
-    headerSubtitle="View all facilities and their status"
+    headerSubtitle="Select a facility and fill in the form to create a new case"
     (backButtonClick)="location.back()"
 ></ix-content-header>
 
@@ -48,7 +48,7 @@
                 <label>Description</label>
                 <textarea
                     class="pl-2"
-                    
+
                     name="text"
                     [(ngModel)]="createCaseForm.text"
                     required
@@ -123,42 +123,53 @@
             <ix-button type="submit">Create Case</ix-button>
         </form>
 
-        <div *ngIf="getFacility() as facility">
-            <ix-tile size="big" class="mr-1">
-                <div class="mt-4" slot="header">{{ facility.heading }}</div>
-                <div class="mt-7 text-l">{{ facility.subheading }}</div>
-            </ix-tile>
-
-            @if (facility.location?.locality !== undefined && facility.location?.country !== undefined) {
-                <ix-tile class="mt-2" size="small">
-                    <p>{{ facility.location?.locality }}, {{ facility.location?.country }}</p>
-                </ix-tile>
-            } @else if (facility.location?.country !== undefined) {
-                <ix-tile class="mt-2" size="small">
-                    <p>{{ facility.location?.country }}</p>
-                </ix-tile>
-            } @else if (facility.location?.locality !== undefined) {
-                <ix-tile class="mt-2" size="small">
-                    <p>{{ facility.location?.locality }}</p>
-                </ix-tile>
-            }
-
-            <ix-tile class="mt-2" size="small">
-                <div class="flex">
-                    <ix-typography color="std">status:&nbsp;</ix-typography>
-                    <ix-typography  [ngClass]="StatusToColorRecord[facility.status]"
-                    >{{ facility.status }}
-                    </ix-typography>
-                </div>
-            </ix-tile>
-
-            <ix-button
+        @if (!facilities()) {
+            <ix-empty-state
                 class="mt-4"
-                variant="secondary"
-                [routerLink]="['/facilities', facility.id]"
-            >
-                View Facility
-            </ix-button>
-        </div>
+                header="No facilities found"
+                subHeader="You cannot create a case without facilities"
+                icon="document-fail"
+            ></ix-empty-state>
+        } @else {
+            @if (getFacility(); as facility) {
+                <div>
+                    <ix-tile size="big" class="mr-1">
+                        <div class="mt-4" slot="header">{{ facility.heading }}</div>
+                        <div class="mt-7 text-l">{{ facility.subheading }}</div>
+                    </ix-tile>
+
+                    @if (facility.location?.locality !== undefined && facility.location?.country !== undefined) {
+                        <ix-tile class="mt-2" size="small">
+                            <p>{{ facility.location?.locality }}, {{ facility.location?.country }}</p>
+                        </ix-tile>
+                    } @else if (facility.location?.country !== undefined) {
+                        <ix-tile class="mt-2" size="small">
+                            <p>{{ facility.location?.country }}</p>
+                        </ix-tile>
+                    } @else if (facility.location?.locality !== undefined) {
+                        <ix-tile class="mt-2" size="small">
+                            <p>{{ facility.location?.locality }}</p>
+                        </ix-tile>
+                    }
+
+                    <ix-tile class="mt-2" size="small">
+                        <div class="flex">
+                            <ix-typography color="std">status:&nbsp;</ix-typography>
+                            <ix-typography [ngClass]="StatusToColorRecord[facility.status]"
+                            >{{ facility.status }}
+                            </ix-typography>
+                        </div>
+                    </ix-tile>
+
+                    <ix-button
+                        class="mt-4"
+                        variant="secondary"
+                        [routerLink]="['/facilities', facility.id]"
+                    >
+                        View Facility
+                    </ix-button>
+                </div>
+            }
+        }
     </div>
 </ix-content>

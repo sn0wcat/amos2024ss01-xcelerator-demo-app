@@ -1,12 +1,12 @@
-@if (facility(); as facility) {
-
 <ix-content-header
-	class="pl-4 pt-4"
-	hasBackButton="true"
-	headerTitle="Details of Facility {{ facility.heading }}"
-	headerSubtitle="On this page you can see detailed information about the facility including charts about the pump and environment data"
-	(backButtonClick)="location.back()"
+    class="pl-4 pt-4"
+    hasBackButton="true"
+    [headerTitle]="facility() ? 'Details of Facility ' + facility()?.heading : 'Facility Details'"
+    headerSubtitle="On this page you can see detailed information about the facility including charts about the pump and environment data"
+    (backButtonClick)="location.back()"
 ></ix-content-header>
+
+@if (facility(); as facility) {
 
 <ix-content>
 	<div class="details-grid gap-x-6 gap-y-4 pb-32">
@@ -140,4 +140,11 @@
 	</div>
 </ix-content>
 
+} @else {
+    <ix-empty-state
+        class="mt-8"
+        header="No Facility with id {{ _assetId }} found"
+        subHeader="The facility you are looking for does not exist"
+        icon="document-fail"
+    ></ix-empty-state>
 }

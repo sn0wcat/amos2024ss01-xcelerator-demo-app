@@ -35,7 +35,7 @@ export class XdBrowsePage {
 
     protected readonly StatusToColorRecord = StatusToColorRecord;
 	private readonly _browseFacade = inject(XdBrowseFacade);
-	private readonly allFacilities = toSignal(this._browseFacade.getAllFacilities());
+	protected readonly allFacilities = toSignal(this._browseFacade.getAllFacilities());
     protected readonly facilities = computed(() => {
         const facilities = this.allFacilities();
         if(!facilities)
@@ -61,4 +61,6 @@ export class XdBrowsePage {
     toggleFilter() {
         this.localStorageService.set('filterIssues', (!this.filterIssues()).toString());
     }
+
+    protected readonly length = length;
 }
