@@ -11,6 +11,9 @@
 			"options": {
 				"jestConfig": "libs/cases/backend/case-management/jest.config.ts"
 			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint"
 		}
 	}
 }

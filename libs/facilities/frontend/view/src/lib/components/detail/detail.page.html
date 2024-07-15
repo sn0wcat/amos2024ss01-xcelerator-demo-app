@@ -7,136 +7,138 @@
 ></ix-content-header>
 
 @if (facility(); as facility) {
-    <ix-content>
-        <div class="details-grid gap-x-6 gap-y-4 pb-32">
 
-            @if (this.pumpChart(); as pumpChart) {
-                <div echarts [options]="pumpChart" [theme]="theme()"></div>
-            }
-            @if (this.envChart(); as envChart) {
-                <div echarts [options]="envChart" [theme]="theme()"></div>
-            }
-            @if (this.metricsChart(); as metricsChart) {
-                <div echarts [options]="metricsChart" [theme]="theme()"></div>
-            }
+<ix-content>
+	<div class="details-grid gap-x-6 gap-y-4 pb-32">
+		@if(this.pumpChart(); as pumpChart){
+		<div echarts [options]="pumpChart" [theme]="theme()" style="height: 25rem"></div>
+		} @if(this.envChart(); as envChart){
+		<div echarts [options]="envChart" [theme]="theme()" style="height: 25rem"></div>
+		} @if(this.metricsChart(); as metricsChart){
+		<div echarts [options]="metricsChart" [theme]="theme()" style="height: 25rem"></div>
+		}
 
-            <ix-card variant="insight" class="h-full w-full p-4">
-                <ix-card-content>
-                    <ix-card-title>
-                        <ix-icon class="icon" name="{{facility.icon}}"></ix-icon>
-                        <span class="notification text-2xl">Basic information</span>
-                    </ix-card-title>
-                    <ix-typography color="std">{{ facility.heading }}</ix-typography>
-                    <ix-typography color="std">{{ facility.subheading }}</ix-typography>
-                    <ix-typography color="std">
-                        @if (facility.location?.streetAddress !== undefined && facility.location?.locality !== undefined && facility.location?.country !== undefined) {
-                            <p>Location: {{ facility.location?.streetAddress }}
-                                , {{ facility.location?.postalCode }} {{ facility.location?.locality }}
-                                , {{ facility.location?.country }}</p>
-                        } @else if (facility.location?.streetAddress !== undefined && facility.location?.locality !== undefined) {
-                            <p>Location: {{ facility.location?.streetAddress }}
-                                , {{ facility.location?.postalCode }} {{ facility.location?.locality }}</p>
-                        } @else if (facility.location?.country !== undefined) {
-                            Location: {{ facility.location?.postalCode }} {{ facility.location?.country }}
-                        } @else if (facility.location?.locality !== undefined) {
-                            <p>Location: {{ facility.location?.postalCode }} {{ facility.location?.locality }}</p>
-                        } @else {
-                            <p>Location: Not specified</p>
-                        }
-                    </ix-typography>
-                    <div class="flex">
-                        <ix-typography color="std">status:&nbsp;</ix-typography>
-                        <ix-typography [ngClass]="StatusToColorRecord[facility.status]"
-                        >{{ facility.status }}
-                        </ix-typography>
-                        <ix-tooltip id="status-tooltip"
-                                    for=".{{StatusToColorRecord[facility.status]}}">{{ facility.indicatorMsg }}
-                        </ix-tooltip>
-                    </div>
-                </ix-card-content>
-            </ix-card>
+		<ix-card variant="insight" class="h-full w-full p-4">
+			<ix-card-content>
+				<ix-card-title>
+					<ix-icon class="icon" name="{{facility.icon}}"></ix-icon>
+					<span class="notification text-2xl">Basic information</span>
+				</ix-card-title>
+				<ix-typography color="std">{{ facility.heading }}</ix-typography>
+				<ix-typography color="std">{{ facility.subheading }}</ix-typography>
+				<ix-typography color="std">
+					@if(facility.location?.streetAddress !== undefined &&
+					facility.location?.locality !== undefined && facility.location?.country !==
+					undefined){
+					<p>
+						Location: {{ facility.location?.streetAddress }}, {{
+						facility.location?.postalCode }} {{ facility.location?.locality }}, {{
+						facility.location?.country }}
+					</p>
+					} @else if(facility.location?.streetAddress !== undefined &&
+					facility.location?.locality !== undefined){
+					<p>
+						Location: {{ facility.location?.streetAddress }}, {{
+						facility.location?.postalCode }} {{ facility.location?.locality }}
+					</p>
+					} @else if (facility.location?.country !== undefined) { Location: {{
+					facility.location?.postalCode }} {{ facility.location?.country }} } @else if
+					(facility.location?.locality !== undefined) {
+					<p>
+						Location: {{ facility.location?.postalCode}} {{ facility.location?.locality
+						}}
+					</p>
+					} @else {
+					<p>Location: Not specified</p>
+					}
+				</ix-typography>
+				<div class="flex">
+					<ix-typography color="std">status:&nbsp;</ix-typography>
+					<ix-typography [ngClass]="StatusToColorRecord[facility.status]"
+						>{{ facility.status }}
+					</ix-typography>
+					<ix-tooltip id="status-tooltip" for=".{{StatusToColorRecord[facility.status]}}"
+						>{{ facility.indicatorMsg }}</ix-tooltip
+					>
+				</div>
+			</ix-card-content>
+		</ix-card>
 
-            <ix-card variant="insight" class="h-full w-full p-4">
-                <ix-card-content>
-                    <ix-card-title>
-                        <ix-icon class="icon" name="tasks-open"></ix-icon>
-                        <span
-                            class="notification text-2xl">{{ facility.cases.length > 0 ? facility.cases.length : '' }}</span>
-                    </ix-card-title>
-                    <ix-typography color="std" format="h4"> Open Cases</ix-typography>
-                    <ix-typography color="std">
-                        {{ notificationText() }}
-                    </ix-typography>
-                    <div class="flex flex-row justify-between w-full">
-                        @if (facility.cases.length > 0) {
-                            <div>
-                                <div class="flex flex-col pt-2">
-                                    <!-- add exception for 4 cases so it shows the 4th case and not 'Go to all Cases' -->
-                                    @for (caseItem of facility.cases.slice(0, facility.cases.length === 4 ? 4 : 3);
-                                        track caseItem.id; let i = $index) {
-                                        <ix-link-button [routerLink]="['/cases', caseItem.id]">
-                                            Case with id {{ caseItem.id }}
-                                        </ix-link-button>
-                                    }
-                                </div>
-                                @if (facility.cases.length > 4) {
-                                    <ix-link-button [routerLink]="['/cases']">
-                                        Go to all Cases
-                                    </ix-link-button>
-                                }
-                            </div>
-                        }
+		<ix-card variant="insight" class="h-full w-full p-4">
+			<ix-card-content>
+				<ix-card-title>
+					<ix-icon class="icon" name="tasks-open"></ix-icon>
+					<span class="notification text-2xl"
+						>{{ facility.cases.length > 0 ? facility.cases.length : '' }}</span
+					>
+				</ix-card-title>
+				<ix-typography color="std" format="h4"> Open Cases </ix-typography>
+				<ix-typography color="std"> {{ notificationText() }} </ix-typography>
+				<div class="flex flex-row justify-between w-full">
+					@if (facility.cases.length > 0) {
+					<div>
+						<div class="flex flex-col pt-2">
+							<!-- add exception for 4 cases so it shows the 4th case and not 'Go to all Cases' -->
+							@for (caseItem of facility.cases.slice(0, facility.cases.length === 4 ?
+							4 : 3); track caseItem.id; let i=$index){
+							<ix-link-button [routerLink]="['/cases', caseItem.id]">
+								Case with id {{ caseItem.id }}
+							</ix-link-button>
+							}
+						</div>
+						@if (facility.cases.length > 4 ) {
+						<ix-link-button [routerLink]="['/cases']"> Go to all Cases </ix-link-button>
+						}
+					</div>
+					}
 
-                        <div class="mt-auto p-2">
-                            <ix-button [routerLink]="['/cases/create',{ facilityId: facility.id }]">
-                                New Case
-                            </ix-button>
-                        </div>
-                    </div>
+					<div class="mt-auto p-2">
+						<ix-button [routerLink]="['/cases/create',{ facilityId: facility.id }]">
+							New Case
+						</ix-button>
+					</div>
+				</div>
+			</ix-card-content>
+		</ix-card>
 
-                </ix-card-content>
-            </ix-card>
+		<ix-card variant="insight" class="h-full w-full p-4">
+			<ix-card-content>
+				<ix-card-title>
+					<ix-icon
+						class="icon"
+						[name]="locked() ? 'lock-filled' : 'unlock-filled'"
+					></ix-icon>
+				</ix-card-title>
+				<ix-typography color="std" format="h4">
+					{{ locked() ? 'Unlock the doors' : 'Lock the doors' }}
+				</ix-typography>
+				<ix-typography color="std">
+					{{ locked() ? 'Currently the doors are locked' : 'Currently the doors are
+					unlocked' }}
+				</ix-typography>
 
-            <ix-card variant="insight" class="h-full w-full p-4">
-                <ix-card-content>
-                    <ix-card-title>
-                        <ix-icon
-                            class="icon"
-                            [name]="locked() ? 'lock-filled' : 'unlock-filled'"
-                        ></ix-icon>
-                    </ix-card-title>
-                    <ix-typography color="std" format="h4">
-                        {{ locked() ? 'Unlock the doors' : 'Lock the doors' }}
-                    </ix-typography>
-                    <ix-typography color="std">
-                        {{
-                            locked() ? 'Currently the doors are locked' :
-                                'Currently the doors are unlocked'
-                        }}
-                    </ix-typography>
+				<div class="mt-auto p-2">
+					<ix-button (click)="changeLocked()">
+						{{ locked() ? 'Unlock the doors' : 'Lock the doors' }}
+					</ix-button>
+				</div>
+			</ix-card-content>
+		</ix-card>
 
-                    <div class="mt-auto p-2">
-                        <ix-button (click)="changeLocked()">
-                            {{ locked() ? 'Unlock the doors' : 'Lock the doors' }}
-                        </ix-button>
-                    </div>
-                </ix-card-content>
-            </ix-card>
-
-            <ix-card variant="insight" class="h-full w-full p-4">
-                <ix-card-content>
-                    <ix-card-title>
-                        <ix-icon class="icon" name="earth-filled"></ix-icon>
-                        <span class="notification text-2xl">80%</span>
-                    </ix-card-title>
-                    <ix-typography color="std" format="h4"> Eco Score (SiGreen)</ix-typography>
-                    <ix-typography color="std">
-                        According to SiGreen this facility has an eco score of 80%
-                    </ix-typography>
-                </ix-card-content>
-            </ix-card>
-        </div>
-    </ix-content>
+		<ix-card variant="insight" class="h-full w-full p-4">
+			<ix-card-content>
+				<ix-card-title>
+					<ix-icon class="icon" name="earth-filled"></ix-icon>
+					<span class="notification text-2xl">80%</span>
+				</ix-card-title>
+				<ix-typography color="std" format="h4"> Eco Score (SiGreen)</ix-typography>
+				<ix-typography color="std">
+					According to SiGreen this facility has an eco score of 80%
+				</ix-typography>
+			</ix-card-content>
+		</ix-card>
+	</div>
+</ix-content>
 
 } @else {
     <ix-empty-state

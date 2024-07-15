@@ -37,18 +37,18 @@ model TimeSeriesDataItem {
 }
 
 model Asset {
-    assetId     String         @id
-    name        String
-    description String?
-    location    AssetLocation?
-    typeId      String
-    variables   Json?
-    status      FacilityStatus @default(REGULAR)
-    indicatorMsg String @default("The pump is working as expected.")
+    assetId      String         @id
+    name         String
+    description  String?
+    location     AssetLocation?
+    typeId       String
+    variables    Json?
+    status       FacilityStatus @default(REGULAR)
+    indicatorMsg String         @default("The pump is working as expected.")
 
     cases           Case[]
     timeSeriesItems TimeSeriesItem[]
-    metrics     Metrics[]
+    metrics         Metrics[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -97,20 +97,20 @@ model Case {
 }
 
 model Metrics {
-    id                         Int     @id @default(autoincrement())
-    min                        Float?
-    max                        Float?
-    mean                       Float?
-    variance                   Float?
-    standardDeviation          Float?
-    coefficientOfVariation     Float?
-    name                       String
+    id                     Int    @id @default(autoincrement())
+    min                    Float?
+    max                    Float?
+    mean                   Float?
+    variance               Float?
+    standardDeviation      Float?
+    coefficientOfVariation Float?
+    name                   String
 
-    assetId                 String
-    Asset                   Asset        @relation(fields: [assetId], references: [assetId])
+    assetId String
+    Asset   Asset  @relation(fields: [assetId], references: [assetId])
 
-    createdAt               DateTime @default(now())
-    updatedAt               DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 enum FacilityStatus {

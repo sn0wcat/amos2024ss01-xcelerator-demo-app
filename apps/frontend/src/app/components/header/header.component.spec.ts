@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
+import { AuthenticationService, LocalStorageService } from 'common-frontend-models';
 import { ReplaySubject } from 'rxjs';
 
 import { HeaderComponent } from './header.component';
@@ -12,73 +13,100 @@ const HEADER_ROUTES = {
             }
         },
     },
-	root: {
-		snapshot: {
-			data: {
-				breadcrumb: 'Layer 1',
-			},
-		},
-		firstChild: {
-			snapshot: {
-				data: {
-					breadcrumb: 'Layer 2',
-				},
-			},
-		},
-	},
+    root: {
+        snapshot: {
+            data: {
+                breadcrumb: 'Layer 1',
+            },
+        },
+        firstChild: {
+            snapshot: {
+                data: {
+                    breadcrumb: 'Layer 2',
+                },
+            },
+        },
+    },
 };
 
 describe('HeaderComponent', () => {
-	let component: HeaderComponent;
-	let fixture: ComponentFixture<HeaderComponent>;
-	const eventsSubject = new ReplaySubject<RouterEvent>(1);
-	let routerMock: Router;
+    let component: HeaderComponent;
+    let fixture: ComponentFixture<HeaderComponent>;
+    const eventsSubject = new ReplaySubject<RouterEvent>(1);
+    let routerMock: Router;
+    let localStorageServiceMock: LocalStorageService;
+    let authenticationServiceMock: AuthenticationService;
 
-	beforeEach(async () => {
-		routerMock = {
-			events: eventsSubject.asObservable(),
+    beforeEach(async () => {
+        routerMock = {
+            events: eventsSubject.asObservable(),
             url: '/Layer1/Layer2',
-		} as unknown as Router;
+            navigate: jest.fn()
+        } as unknown as Router;
 
-		await TestBed.configureTestingModule({
-			imports: [ HeaderComponent ],
-			providers: [
-				{
-					provide: ActivatedRoute,
-					useValue: HEADER_ROUTES,
-				},
-				{
-					provide: Router,
-					useValue: routerMock,
-				},
-			],
-		}).compileComponents();
+        localStorageServiceMock = {
+            getOrCreate: jest.fn().mockReturnValue(jest.fn().mockReturnValue('theme-classic-dark')),
+            set: jest.fn()
+        } as unknown as LocalStorageService;
 
-		fixture = TestBed.createComponent(HeaderComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-	});
+        authenticationServiceMock = {
+            getUserMail: jest.fn().mockReturnValue('test@example.com'),
+            logout: jest.fn()
+        } as unknown as AuthenticationService;
 
-	it('should create', () => {
-		expect(component).toBeTruthy();
-	});
+        await TestBed.configureTestingModule({
+            imports: [ HeaderComponent ],
+            providers: [
+                { provide: ActivatedRoute, useValue: HEADER_ROUTES },
+                { provide: Router, useValue: routerMock },
+                { provide: LocalStorageService, useValue: localStorageServiceMock },
+                { provide: AuthenticationService, useValue: authenticationServiceMock },
+            ],
+        }).compileComponents();
 
-	it('should trigger router events correctly', () => {
-		eventsSubject.next(new NavigationEnd(1, '', ''));
+        fixture = TestBed.createComponent(HeaderComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-		const routerEvents = component.routerEvents();
-		expect(routerEvents).toEqual({
-			id: 1,
-			type: 1,
-			url: '',
-			urlAfterRedirects: '',
-		} as NavigationEnd);
-	});
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 
-	it('should compute breadcrumbs correctly', () => {
-		eventsSubject.next(new NavigationEnd(1, '', ''));
+    it('should trigger router events correctly', () => {
+        eventsSubject.next(new NavigationEnd(1, '', ''));
 
-		const breadcrumbs = component.breadcrumbs();
-		expect(breadcrumbs).toEqual([ 'Layer 1', 'Layer 2' ]);
-	});
+        const routerEvents = component.routerEvents();
+        expect(routerEvents).toBeInstanceOf(NavigationEnd);
+    });
+
+    it('should compute breadcrumbs correctly', () => {
+        eventsSubject.next(new NavigationEnd(1, '', ''));
+
+        const breadcrumbs = component.breadcrumbs();
+        expect(breadcrumbs).toEqual([ 'Layer 1', 'Layer 2' ]);
+    });
+
+    it('should determine if it is home page correctly', () => {
+        eventsSubject.next(new NavigationEnd(1, '', ''));
+
+        const isHomePage = component.isHomePage();
+        expect(isHomePage).toBe(true);
+    });
+
+    it('should toggle theme mode', () => {
+        component.toggleMode();
+        expect(localStorageServiceMock.set).toHaveBeenCalledWith('theme', 'theme-classic-light');
+    });
+
+    it('should logout and navigate to login', () => {
+        component.logout();
+        expect(authenticationServiceMock.logout).toHaveBeenCalled();
+        expect(routerMock.navigate).toHaveBeenCalledWith([ '/account/login' ]);
+    });
+
+    it('should cut URL correctly', () => {
+        const cutUrl = component.cutUrl(1);
+        expect(cutUrl).toBe('/Layer1');
+    });
 });

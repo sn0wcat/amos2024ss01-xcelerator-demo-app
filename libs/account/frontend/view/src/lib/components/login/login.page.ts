@@ -15,8 +15,8 @@ import { AuthenticationService } from 'common-frontend-models';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPage {
-    protected email = '';
-    protected password = '';
+    public email = '';
+    public password = '';
 
     protected formValid = signal(false);
     protected loginSuccess = signal(false);
