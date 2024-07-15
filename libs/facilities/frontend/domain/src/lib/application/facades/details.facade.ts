@@ -40,7 +40,6 @@ export class XdDetailsFacade {
 					status: timeSeriesItem.status,
 					metrics: timeSeriesItem.metrics,
 					indicatorMsg: timeSeriesItem.indicatorMsg,
-					pumps: faker.number.int({ min: 0, max: 99 }),
 					location: timeSeriesItem.location,
 				};
 			}),

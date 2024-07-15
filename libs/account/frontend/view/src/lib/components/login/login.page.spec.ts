@@ -39,16 +39,17 @@ describe('LoginPage', () => {
 
     describe('onSubmit', () => {
         it('should not validate form if email or password is invalid', () => {
-            component.email = 'invalid-email';
-            component.password = '';
+            // bypass protected attribute using bracket notation
+            component['email'] = 'invalid-email';
+            component['password'] = '';
             component.onSubmit();
 
             expect(routerMock.navigate).not.toHaveBeenCalled();
         });
 
         it('should validate form and login successfully', () => {
-            component.email = 'test@example.com';
-            component.password = 'password';
+            component['email']= 'test@example.com';
+            component['password'] = 'password';
             component.onSubmit();
 
             expect(routerMock.navigate).toHaveBeenCalledWith([ '/' ]);

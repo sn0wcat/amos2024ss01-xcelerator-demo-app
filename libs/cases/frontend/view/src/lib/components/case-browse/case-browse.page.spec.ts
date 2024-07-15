@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { XdCasesFacade } from '@frontend/cases/frontend/domain';
+import { CasesFacade } from '@frontend/cases/frontend/domain';
 import { ECasePriority, ECaseStatus, ECaseType, ICaseResponse } from 'cases-shared-models';
 import { LocalStorageService } from 'common-frontend-models';
 import { of } from 'rxjs';
@@ -12,12 +12,12 @@ import { CaseBrowsePage } from './case-browse.page';
 describe('CaseBrowsComponent', () => {
 	let component: CaseBrowsePage;
 	let fixture: ComponentFixture<CaseBrowsePage>;
-	let mockCasesFacade: XdCasesFacade;
+	let mockCasesFacade: CasesFacade;
 
 	beforeEach(async () => {
 		mockCasesFacade = {
 			getAllCases: jest.fn().mockReturnValue(of([])),
-		} as unknown as XdCasesFacade;
+		} as unknown as CasesFacade;
 
 		await TestBed.configureTestingModule({
 			imports: [ CaseBrowsePage, HttpClientTestingModule ],
@@ -33,7 +33,7 @@ describe('CaseBrowsComponent', () => {
 						set: jest.fn(),
 					},
 				},
-				{ provide: XdCasesFacade, useValue: mockCasesFacade },
+				{ provide: CasesFacade, useValue: mockCasesFacade },
 			],
 		}).compileComponents();
 

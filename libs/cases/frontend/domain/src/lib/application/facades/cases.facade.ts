@@ -1,15 +1,15 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ICaseParams, ICaseResponse, ICreateCaseBody } from 'cases-shared-models';
 import { Observable } from 'rxjs';
 
-import { XdCasesRequestService } from '../../infrastructure/cases-request.service';
+import { CasesRequestService } from '../../infrastructure/cases-request.service';
 
 /**
  * Browse facades service.
  */
 @Injectable({ providedIn: 'root' })
-export class XdCasesFacade {
-	constructor(private _scanService: XdCasesRequestService){}
+export class CasesFacade {
+	constructor(private _scanService: CasesRequestService){}
 
 	/**
 	 * Get all cases via infrastructure.

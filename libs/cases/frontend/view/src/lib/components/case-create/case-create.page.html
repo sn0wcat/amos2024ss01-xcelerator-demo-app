@@ -67,9 +67,9 @@
                         (valueChange)="onTypeChange($event)"
                         (inputChange)="onTypeInputChange($event)"
                     >
-                        <ix-select-item label="PLANNED" [value]="caseType.PLANNED"></ix-select-item>
-                        <ix-select-item label="INCIDENT" [value]="caseType.INCIDENT"></ix-select-item>
-                        <ix-select-item label="ANNOTATION" [value]="caseType.ANNOTATION"></ix-select-item>
+                        <ix-select-item label="PLANNED" [value]="ECaseType.PLANNED"></ix-select-item>
+                        <ix-select-item label="INCIDENT" [value]="ECaseType.INCIDENT"></ix-select-item>
+                        <ix-select-item label="ANNOTATION" [value]="ECaseType.ANNOTATION"></ix-select-item>
                     </ix-select>
 
                     <ix-input-group class="absolute pointer-events-none" id="input-typeSelection">
@@ -89,10 +89,10 @@
                         (valueChange)="onPriorityChange($event)"
                         (inputChange)="onPriorityInputChange($event)"
                     >
-                        <ix-select-item label="LOW" [value]="casePriority.LOW"></ix-select-item>
-                        <ix-select-item label="MEDIUM" [value]="casePriority.MEDIUM"></ix-select-item>
-                        <ix-select-item label="HIGH" [value]="casePriority.HIGH"></ix-select-item>
-                        <ix-select-item label="EMERGENCY" [value]="casePriority.EMERGENCY"></ix-select-item>
+                        <ix-select-item label="LOW" [value]="ECasePriority.LOW"></ix-select-item>
+                        <ix-select-item label="MEDIUM" [value]="ECasePriority.MEDIUM"></ix-select-item>
+                        <ix-select-item label="HIGH" [value]="ECasePriority.HIGH"></ix-select-item>
+                        <ix-select-item label="EMERGENCY" [value]="ECasePriority.EMERGENCY"></ix-select-item>
                     </ix-select>
                     <ix-input-group class="absolute pointer-events-none" id="input-prioritySelection">
                         <input

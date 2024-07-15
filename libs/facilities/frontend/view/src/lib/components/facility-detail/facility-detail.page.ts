@@ -40,16 +40,16 @@ import { PUMP_METRICS_FULL_NAME_MAP } from './models/pump-metrics-full-name.map'
 export class FacilityDetailPage implements OnInit {
 
     protected readonly StatusToColorRecord = StatusToColorRecord;
-    protected readonly _assetId = this.route.snapshot.params['id'];
+    protected readonly assetId = this._route.snapshot.params['id'];
 
-    protected readonly facility = toSignal(this._detailsFacade.getFacility(this._assetId));
+    protected readonly facility = toSignal(this._detailsFacade.getFacility(this.assetId));
 
-    protected theme = signal(convertThemeName(themeSwitcher.getCurrentTheme()));
+    protected readonly theme = signal(convertThemeName(themeSwitcher.getCurrentTheme()));
     protected readonly locked = signal(true);
 
-    protected readonly pumpData = toSignal(this._detailsFacade.getPumpData(this._assetId));
-    protected readonly envData = toSignal(this._detailsFacade.getEnvironmentData(this._assetId));
-    protected readonly metricsData = toSignal(this._detailsFacade.getPumpMetrics(this._assetId));
+    private readonly pumpData = toSignal(this._detailsFacade.getPumpData(this.assetId));
+    private readonly envData = toSignal(this._detailsFacade.getEnvironmentData(this.assetId));
+    private readonly metricsData = toSignal(this._detailsFacade.getPumpMetrics(this.assetId));
 
 	protected readonly pumpChart: Signal<EChartsOption | undefined> = computed(() => {
 		const pumpData = this.pumpData();
@@ -125,8 +125,8 @@ export class FacilityDetailPage implements OnInit {
 	});
 
 	constructor(
-		protected route: ActivatedRoute,
-		protected location: Location,
+		private readonly _route: ActivatedRoute,
+		protected readonly location: Location,
 		private readonly _modalService: ModalService,
         private readonly _detailsFacade: XdDetailsFacade,
 	) {}

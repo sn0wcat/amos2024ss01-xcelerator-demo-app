@@ -26,11 +26,11 @@ export class FacilityBrowsePage {
 
     protected readonly StatusToColorRecord = StatusToColorRecord;
 
-    protected showCardList = computed(() =>
+    protected readonly showCardList = computed(() =>
         this.localStorageService.getOrCreate('showCardList', 'true')() === 'true'
     );
 
-    protected filterIssues = computed(() =>
+    protected readonly filterIssues = computed(() =>
         this.localStorageService.getOrCreate('filterIssues', 'true')() === 'true'
     );
 

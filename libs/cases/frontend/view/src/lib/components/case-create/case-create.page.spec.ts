@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { XdCasesFacade } from '@frontend/cases/frontend/domain';
+import { CasesFacade } from '@frontend/cases/frontend/domain';
 import { XdBrowseFacade } from '@frontend/facilities/frontend/domain';
 import { ToastService } from '@siemens/ix-angular';
 import { of } from 'rxjs';
@@ -13,7 +13,7 @@ describe('CreateCaseComponent', () => {
     let component: CaseCreatePage;
     let fixture: ComponentFixture<CaseCreatePage>;
     let toastService: ToastService;
-    let casesFacade: XdCasesFacade;
+    let casesFacade: CasesFacade;
 
     beforeEach(async () => {
         const toastServiceMock = {
@@ -33,7 +33,7 @@ describe('CreateCaseComponent', () => {
             providers: [
                 { provide: ActivatedRoute, useValue: { snapshot: { params: { facilityId: '1' } } } },
                 { provide: ToastService, useValue: toastServiceMock },
-                { provide: XdCasesFacade, useValue: casesFacadeMock },
+                { provide: CasesFacade, useValue: casesFacadeMock },
                 { provide: XdBrowseFacade, useValue: browseFacadeMock }
             ]
         }).compileComponents();
@@ -41,7 +41,7 @@ describe('CreateCaseComponent', () => {
         fixture = TestBed.createComponent(CaseCreatePage);
         component = fixture.componentInstance;
         toastService = TestBed.inject(ToastService);
-        casesFacade = TestBed.inject(XdCasesFacade);
+        casesFacade = TestBed.inject(CasesFacade);
 
         fixture.detectChanges();
     });

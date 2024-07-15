@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
-import { XdCasesFacade } from '@frontend/cases/frontend/domain';
+import { CasesFacade } from '@frontend/cases/frontend/domain';
 import { FilterState, IxCategoryFilterCustomEvent, IxModule } from '@siemens/ix-angular';
 import { ECasePriority, ECaseStatus, ECaseType, ICaseResponse } from 'cases-shared-models';
 import { LocalStorageService } from 'common-frontend-models';
@@ -27,12 +27,11 @@ export class CaseBrowsePage {
 
     protected readonly repeatCategories = true;
 
-    private readonly statusOptions= $enum(ECaseStatus).getValues();
-
+    private readonly _statusOptions= $enum(ECaseStatus).getValues();
     protected readonly categories = {
         Status: {
             label: 'status',
-            options: this.statusOptions
+            options: this._statusOptions
         },
         Priority: {
             label: 'priority',
@@ -44,20 +43,21 @@ export class CaseBrowsePage {
         }
     };
 
-    private readonly _filter: Signal<{id: string, value: string, operator: string}[]> = computed(() =>
+    private readonly filter: Signal<{id: string, value: string, operator: string}[]> = computed(() =>
         this.stringToFilter(
-            this.localStorage.getOrCreate('caseFilter', 'Status,Equal,OPEN')()
+            this._localStorageService.getOrCreate('caseFilter', 'Status,Equal,OPEN')()
         )
     );
 
-	protected readonly _cases = toSignal(this._casesFacade.getAllCases());
+	protected readonly cases = toSignal(this._casesFacade.getAllCases());
+
 	protected readonly processedCases = computed(() => {
-        const initialCases = this._cases();
+        const initialCases = this.cases();
         if (initialCases === undefined) {
             return;
         }
 
-        const filteredCases = this._filter().reduce((cases, filter) => {
+        const filteredCases = this.filter().reduce((cases, filter) => {
             return cases.filter(c => {
                 const filterId = filter.id.toLowerCase()
                 if(filterId !== 'status' && filterId !== 'type' && filterId !== 'priority')
@@ -73,24 +73,24 @@ export class CaseBrowsePage {
         }, initialCases);
 
         filteredCases.sort((a, b) => {
-            const statusAIndex = this.statusOptions.indexOf(a.status);
-            const statusBIndex = this.statusOptions.indexOf(b.status);
+            const statusAIndex = this._statusOptions.indexOf(a.status);
+            const statusBIndex = this._statusOptions.indexOf(b.status);
             return statusAIndex - statusBIndex;
         });
 
 		return filteredCases;
 	});
 
-    protected filterState = {
+    protected readonly filterState = {
         tokens: [],
-        categories: this._filter(),
+        categories: this.filter(),
     };
 
     constructor(
         protected location: Location,
-        protected localStorage: LocalStorageService,
-        private _casesFacade: XdCasesFacade,
-        private router: Router
+        private _localStorageService: LocalStorageService,
+        private _casesFacade: CasesFacade,
+        private _router: Router
     ) {}
 
 	getStatusClasses(_case: ICaseResponse) {
@@ -106,7 +106,7 @@ export class CaseBrowsePage {
 	}
 
     filterList(event: IxCategoryFilterCustomEvent<FilterState>) {
-        this.localStorage.set('caseFilter', this.filterToString(event.detail.categories));
+        this._localStorageService.set('caseFilter', this.filterToString(event.detail.categories));
     }
 
     shortenDescription(description: string){
@@ -130,6 +130,6 @@ export class CaseBrowsePage {
     }
 
     navigateToCreateCase() {
-        this.router.navigate([ '/cases/create' ]);
+        this._router.navigate([ '/cases/create' ]);
     }
 }

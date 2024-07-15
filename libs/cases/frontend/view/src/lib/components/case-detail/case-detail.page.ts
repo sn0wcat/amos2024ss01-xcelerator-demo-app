@@ -8,7 +8,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { XdCasesFacade } from '@frontend/cases/frontend/domain';
+import { CasesFacade } from '@frontend/cases/frontend/domain';
 import { IxModule, ModalService, ToastService } from '@siemens/ix-angular';
 import { ECasePriority, ECaseStatus, ECaseType, ICaseResponse } from 'cases-shared-models';
 import { AuthenticationService } from 'common-frontend-models';
@@ -25,31 +25,31 @@ import DeleteModalComponent from './delete-modal/delete-modal.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseDetailPage {
-    protected readonly _caseId = this.route.snapshot.params['id'];
+    protected readonly _caseId = this._route.snapshot.params['id'];
 
-	isEditing = false;
-	datePattern = /^\d{4}-\d{2}-\d{2}T00:00:00\.000Z$/;
+	protected isEditing = false;
+	private readonly _datePattern = /^\d{4}-\d{2}-\d{2}T00:00:00\.000Z$/;
 
-    protected readonly _cases = toSignal(this._casesFacade.getAllCases());
-    protected readonly casedetail = computed(() => {
-        const _case = this._cases();
-        if (_case === undefined) {
+    private readonly cases = toSignal(this._casesFacade.getAllCases());
+    protected readonly caseItem = computed(() => {
+        const caseItem = this.cases();
+        if (caseItem === undefined) {
             return;
         }
-        return _case.find((_case) => String(_case.id) === this._caseId);
+        return caseItem.find((caseItem) => String(caseItem.id) === this._caseId);
     });
 
 	constructor(
         protected readonly location: Location,
-        protected readonly route: ActivatedRoute,
+        private readonly _route: ActivatedRoute,
 		private readonly _modalService: ModalService,
 		private readonly toastService: ToastService,
-        protected _authenticationService: AuthenticationService,
-        private readonly _casesFacade: XdCasesFacade,
+        private readonly _authenticationService: AuthenticationService,
+        private readonly _casesFacade: CasesFacade,
 	) {}
 
 	deleteCase() {
-		const caseId = this.mapCaseId(this.casedetail());
+		const caseId = this.mapCaseId(this.caseItem());
 		if (caseId !== undefined) {
 			// The subscribe is necessary, otherwise the request is not sent
 			this._casesFacade.deleteCase(caseId).subscribe();
@@ -94,7 +94,7 @@ export class CaseDetailPage {
     }
 
 	onSubmit(): void {
-		const casedetail = this.casedetail();
+		const casedetail = this.caseItem();
         if (casedetail !== undefined) {
             casedetail.modifiedBy = <string>this.getUserMail();
         }
@@ -102,8 +102,8 @@ export class CaseDetailPage {
 		if (casedetail !== undefined) {
 			const validationString = this.validateForm(casedetail);
 			if (validationString === 'valid') {
-				const caseId = this.mapCaseId(this.casedetail());
-				const caseData = this.casedetail();
+				const caseId = this.mapCaseId(this.caseItem());
+				const caseData = this.caseItem();
 
 				if (caseId !== undefined && caseData !== undefined) {
 					// The subscribe is necessary, otherwise the request is not sent
@@ -132,8 +132,8 @@ export class CaseDetailPage {
 
 			if (
 				!(
-					this.casedetail()?.modifiedBy.includes('@') &&
-					this.casedetail()?.modifiedBy.includes('.')
+					this.caseItem()?.modifiedBy.includes('@') &&
+					this.caseItem()?.modifiedBy.includes('.')
 				)
 			) {
 				return 'Invalid email';
@@ -145,15 +145,15 @@ export class CaseDetailPage {
 
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
-			if (!this.datePattern.test(casedetail.dueDate)) {
+			if (!this._datePattern.test(casedetail.dueDate)) {
 				return 'Invalid date format';
 			}
 
-			const dueDate = this.casedetail()?.dueDate;
+			const dueDate = this.caseItem()?.dueDate;
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
-			if (dueDate && this.datePattern.test(this.casedetail()?.dueDate)) {
-				const match = this.casedetail()?.dueDate;
+			if (dueDate && this._datePattern.test(this.caseItem()?.dueDate)) {
+				const match = this.caseItem()?.dueDate;
 				if (match) {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-expect-error

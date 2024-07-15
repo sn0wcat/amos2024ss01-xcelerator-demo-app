@@ -1,12 +1,12 @@
 <ix-content-header
     class="pl-4 pt-4"
     hasBackButton="true"
-    [headerTitle]="casedetail() ? 'Details of Case ' + casedetail()?.title : 'Case Details'"
+    [headerTitle]="caseItem() ? 'Details of Case ' + caseItem()?.title : 'Case Details'"
     headerSubtitle="On this page you can see detailed information about the case and also edit the case."
     (backButtonClick)="location.back()"
 ></ix-content-header>
 
-@if (casedetail(); as _case) {
+@if (caseItem(); as _case) {
 
     <ix-button class="absolute top-20 right-32 z-50" (click)="toggleEdit()" xmlns="http://www.w3.org/1999/html">
         {{ isEditing ? 'Submit changes' : 'Update Case' }}

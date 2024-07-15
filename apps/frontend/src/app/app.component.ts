@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { APP_CONFIG } from 'common-frontend-models';
 import { NgxEchartsDirective } from 'ngx-echarts';
 
 @Component({
@@ -11,6 +10,4 @@ import { NgxEchartsDirective } from 'ngx-echarts';
 	styleUrl: './app.component.scss',
 })
 export class AppComponent {
-	title = 'frontend';
-	readonly apiUrl = inject(APP_CONFIG).apiUrl;
 }

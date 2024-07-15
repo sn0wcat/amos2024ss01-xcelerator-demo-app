@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
 	providedIn: 'root',
 })
-export class XdCasesRequestService {
+export class CasesRequestService {
 
     constructor(private readonly _httpClient: HttpClient) {}
 

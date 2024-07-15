@@ -27,20 +27,20 @@ import { LegalInformationComponent } from './legal-information/legal-information
 })
 export class HeaderComponent {
 
-    protected userMail = this.authenticationService.getUserMail();
+    protected readonly userMail = this._authenticationService.getUserMail();
 
-    protected lightMode = computed(() => {
+    protected readonly lightMode = computed(() => {
         const theme = this._localStorageService.getOrCreate('theme', 'theme-classic-dark')();
         themeSwitcher.setTheme(theme);
         return theme === 'theme-classic-light';
     });
 
-    readonly routerEvents = toSignal(
+    private readonly routerEvents = toSignal(
         this._router.events.pipe(filter((e) => e instanceof NavigationEnd)),
         { initialValue: null },
     );
 
-    readonly breadcrumbs = computed(() => {
+    protected readonly breadcrumbs = computed(() => {
         this.routerEvents();
 
         const breadcrumbs = [];
@@ -60,13 +60,13 @@ export class HeaderComponent {
         return breadcrumbs;
     });
 
-    readonly isHomePage = computed(() => {
+    protected readonly isHomePage = computed(() => {
         this.routerEvents();
         return this._activatedRoute.snapshot.firstChild?.routeConfig?.path === '';
     });
 
     constructor(
-        protected authenticationService: AuthenticationService,
+        private _authenticationService: AuthenticationService,
         private _localStorageService: LocalStorageService,
         private _router: Router,
         private _activatedRoute: ActivatedRoute,
@@ -93,7 +93,7 @@ export class HeaderComponent {
     }
 
     logout(){
-        this.authenticationService.logout();
+        this._authenticationService.logout();
         this._router.navigate([ '/account/login' ]);
     }
 }

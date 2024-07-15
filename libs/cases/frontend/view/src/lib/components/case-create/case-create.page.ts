@@ -6,7 +6,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { faker } from '@faker-js/faker';
-import { XdCasesFacade } from '@frontend/cases/frontend/domain';
+import { CasesFacade } from '@frontend/cases/frontend/domain';
 import { XdBrowseFacade } from '@frontend/facilities/frontend/domain';
 import { StatusToColorRecord } from '@frontend/facilities/frontend/models';
 import { IxModule, IxSelectCustomEvent, ToastService } from '@siemens/ix-angular';
@@ -35,12 +35,10 @@ export class CaseCreatePage implements OnInit {
 
     protected readonly StatusToColorRecord = StatusToColorRecord;
 
-    casePriority = ECasePriority;
-    caseType = ECaseType;
-    wasValidated = false;
-	selectedFacilityId: string;
+    protected wasValidated = false;
+	protected selectedFacilityId: string;
 
-    createCaseForm = {
+    protected readonly createCaseForm = {
         selectFacility: '',
         title: '',
         dueDate: '',
@@ -50,25 +48,28 @@ export class CaseCreatePage implements OnInit {
         text: '',
     };
 
+    protected readonly ECasePriority = ECasePriority;
+    protected readonly ECaseType = ECaseType;
+
     protected readonly facilities = toSignal(this._browseFacade.getAllFacilities());
 
-    facilityPlaceholder = signal('Select Facility');
-    typePlaceholder = signal('Select Type');
-    priorityPlaceholder = signal('Select Priority');
+    protected readonly facilityPlaceholder = signal('Select Facility');
+    protected readonly typePlaceholder = signal('Select Type');
+    protected readonly  priorityPlaceholder = signal('Select Priority');
 
     constructor(
         protected readonly location: Location,
-        protected readonly route: ActivatedRoute,
+        private readonly _route: ActivatedRoute,
         private readonly toastService: ToastService,
         private readonly _browseFacade: XdBrowseFacade,
-        private readonly _casesFacade: XdCasesFacade,
+        private readonly _casesFacade: CasesFacade,
     ) {}
 
     ngOnInit(){
         this.resizeObserver('input-facilitySelection', 'facilitySelection');
         this.resizeObserver('input-typeSelection', 'typeSelection');
         this.resizeObserver('input-prioritySelection', 'prioritySelection');
-		this.selectedFacilityId = this.route.snapshot.params['facilityId'];
+		this.selectedFacilityId = this._route.snapshot.params['facilityId'];
 		if(this.selectedFacilityId) {
 			this.createCaseForm.selectFacility = this.selectedFacilityId;
 		}
@@ -99,22 +100,6 @@ export class CaseCreatePage implements OnInit {
             type: 'success',
             message: 'Successfully created Case'
         });
-    }
-
-    public set facilityValue(value: string) {
-        this.createCaseForm.selectFacility = value;
-    }
-
-    public get facilityValue() {
-        return this.createCaseForm.selectFacility;
-    }
-
-    public set emailValue(value: string) {
-        this.createCaseForm.email = value;
-    }
-
-    public get emailValue() {
-        return this.createCaseForm.email;
     }
 
     public getFacility() {

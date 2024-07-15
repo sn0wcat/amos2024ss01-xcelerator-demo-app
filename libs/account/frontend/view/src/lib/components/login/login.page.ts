@@ -15,20 +15,20 @@ import { AuthenticationService } from 'common-frontend-models';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPage {
-    public email = '';
-    public password = '';
+    protected email = '';
+    protected password = '';
 
     protected wasValidated = false;
     protected showPassword = false;
 
-    private readonly emailRegExp = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    private readonly _emailRegExp = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-    protected formValid = signal(false);
-    protected loginSuccess = signal(false);
+    protected readonly formValid = signal(false);
+    protected readonly loginSuccess = signal(false);
 
     constructor(
-        private _router: Router,
-        private _authenticationService: AuthenticationService,
+        private readonly _router: Router,
+        private readonly _authenticationService: AuthenticationService,
     ) {
         // this site is always in dark mode
         themeSwitcher.setTheme('theme-classic-dark');
@@ -38,7 +38,7 @@ export class LoginPage {
     onSubmit() {
         this.wasValidated = true;
 
-        const formValid = this.emailRegExp.test(this.email) && this.password !== '';
+        const formValid = this._emailRegExp.test(this.email) && this.password !== '';
         this.formValid.set(formValid);
         if(!formValid){
             return;
