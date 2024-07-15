@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
-import { XdBrowseFacade } from '@frontend/facilities/frontend/domain';
+import { FacilityBrowseFacade } from '@frontend/facilities/frontend/domain';
 import { StatusToColorRecord } from '@frontend/facilities/frontend/models';
 import { IxModule } from '@siemens/ix-angular';
 import { LocalStorageService } from 'common-frontend-models';
@@ -40,6 +40,9 @@ export class FacilityBrowsePage {
         if(!facilities)
             return undefined;
 
+        // sort them alphabetically because otherwise their order is random all the time
+        facilities = facilities.sort((a, b) => a.heading.localeCompare(b.heading));
+
        if(this.filterIssues()) {
            facilities = facilities.filter(facility => facility.status != EPumpStatus.REGULAR);
        }
@@ -51,7 +54,7 @@ export class FacilityBrowsePage {
         protected readonly router: Router,
         protected readonly location: Location,
         private readonly localStorageService: LocalStorageService,
-        private readonly _browseFacade: XdBrowseFacade,
+        private readonly _browseFacade: FacilityBrowseFacade,
     ) {}
 
     toggleView() {

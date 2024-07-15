@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { XdBrowseFacade } from '@frontend/facilities/frontend/domain';
+import { FacilityBrowseFacade } from '@frontend/facilities/frontend/domain';
 import { of } from 'rxjs';
 
 import { FacilityDetailPage } from '../detail/facility-detail.page';
@@ -20,7 +20,7 @@ describe('BrowseComponent', () => {
 			],
 			providers: [
 				{
-					provide: XdBrowseFacade,
+					provide: FacilityBrowseFacade,
 					useValue: {
 						getAllFacilities: jest
 							.fn()

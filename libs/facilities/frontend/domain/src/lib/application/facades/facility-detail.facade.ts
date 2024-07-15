@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import { faker } from '@faker-js/faker';
 import * as dayjs from 'dayjs';
 import { map } from 'rxjs';
 
 import { FacilitiesRequestService } from '../../infrastructure/facilities-request.service';
 import { MetricsRequestService } from '../../infrastructure/metrics-request.service';
 import { TimeSeriesRequestService } from '../../infrastructure/timeseries-request.service';
+import { randomIconFromString } from '../helpers/facade-helper';
 
 /**
  * Facade for the details page of a facility
  */
 @Injectable({ providedIn: 'root' })
-export class XdDetailsFacade {
+export class FacilityDetailFacade {
 
     constructor(private readonly _facilitiesService: FacilitiesRequestService,
                 private readonly _timeseriesService: TimeSeriesRequestService,
@@ -21,19 +21,13 @@ export class XdDetailsFacade {
 	/**
 	 * Get facility
 	 * @param assetId The asset id.
-	 * @TODO: This method should NOT map the response data and add fake data. In a later ticket, we will provide a meaningful implementation.
 	 */
 	public getFacility(assetId: string) {
 		return this._facilitiesService.getFacility({ assetId: assetId }).pipe(
 			map((timeSeriesItem) => {
 				return {
 					id: timeSeriesItem.assetId,
-					icon: faker.helpers.arrayElement([
-						'battery-empty',
-						'water-fish',
-						'water-plant',
-						'truck',
-					]),
+					icon: randomIconFromString(timeSeriesItem.description),
 					cases: timeSeriesItem.cases,
 					heading: timeSeriesItem.name,
 					subheading: timeSeriesItem.description,
@@ -84,4 +78,5 @@ export class XdDetailsFacade {
 			},
 		);
 	}
+
 }

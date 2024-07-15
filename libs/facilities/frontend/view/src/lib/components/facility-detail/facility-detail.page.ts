@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { XdDetailsFacade } from '@frontend/facilities/frontend/domain';
+import { FacilityDetailFacade } from '@frontend/facilities/frontend/domain';
 import { StatusToColorRecord } from '@frontend/facilities/frontend/models';
 import { themeSwitcher } from '@siemens/ix';
 import { IxModule, ModalService } from '@siemens/ix-angular';
@@ -128,7 +128,7 @@ export class FacilityDetailPage implements OnInit {
 		private readonly _route: ActivatedRoute,
 		protected readonly location: Location,
 		private readonly _modalService: ModalService,
-        private readonly _detailsFacade: XdDetailsFacade,
+        private readonly _detailsFacade: FacilityDetailFacade,
 	) {}
 
 	ngOnInit() {

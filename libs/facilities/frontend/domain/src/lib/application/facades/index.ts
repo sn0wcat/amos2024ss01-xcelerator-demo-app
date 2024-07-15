@@ -1,2 +1,2 @@
-export * from './browse.facade';
-export * from './details.facade';
+export * from './facility-browse.facade';
+export * from './facility-detail.facade';

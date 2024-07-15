@@ -7,7 +7,7 @@ import { FormsModule, NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { faker } from '@faker-js/faker';
 import { CasesFacade } from '@frontend/cases/frontend/domain';
-import { XdBrowseFacade } from '@frontend/facilities/frontend/domain';
+import { FacilityBrowseFacade } from '@frontend/facilities/frontend/domain';
 import { StatusToColorRecord } from '@frontend/facilities/frontend/models';
 import { IxModule, IxSelectCustomEvent, ToastService } from '@siemens/ix-angular';
 import { ECasePriority, ECaseStatus, ECaseType } from 'cases-shared-models';
@@ -61,7 +61,7 @@ export class CaseCreatePage implements OnInit {
         protected readonly location: Location,
         private readonly _route: ActivatedRoute,
         private readonly toastService: ToastService,
-        private readonly _browseFacade: XdBrowseFacade,
+        private readonly _browseFacade: FacilityBrowseFacade,
         private readonly _casesFacade: CasesFacade,
     ) {}
 

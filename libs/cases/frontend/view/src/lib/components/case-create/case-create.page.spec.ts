@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CasesFacade } from '@frontend/cases/frontend/domain';
-import { XdBrowseFacade } from '@frontend/facilities/frontend/domain';
+import { FacilityBrowseFacade } from '@frontend/facilities/frontend/domain';
 import { ToastService } from '@siemens/ix-angular';
 import { of } from 'rxjs';
 
@@ -34,7 +34,7 @@ describe('CreateCaseComponent', () => {
                 { provide: ActivatedRoute, useValue: { snapshot: { params: { facilityId: '1' } } } },
                 { provide: ToastService, useValue: toastServiceMock },
                 { provide: CasesFacade, useValue: casesFacadeMock },
-                { provide: XdBrowseFacade, useValue: browseFacadeMock }
+                { provide: FacilityBrowseFacade, useValue: browseFacadeMock }
             ]
         }).compileComponents();
 

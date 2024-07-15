@@ -4,10 +4,10 @@ import { of } from 'rxjs';
 import { FacilitiesRequestService } from '../../infrastructure/facilities-request.service';
 import { MetricsRequestService } from '../../infrastructure/metrics-request.service';
 import { TimeSeriesRequestService } from '../../infrastructure/timeseries-request.service';
-import { XdDetailsFacade } from './details.facade';
+import { FacilityDetailFacade } from './facility-detail.facade';
 
-describe('XdDetailsFacadeService', () => {
-	let service: XdDetailsFacade;
+describe('FacilityDetailFacade', () => {
+	let service: FacilityDetailFacade;
 	let facilitiesRequestService: FacilitiesRequestService;
 
 	beforeEach(() => {
@@ -18,7 +18,7 @@ describe('XdDetailsFacadeService', () => {
 
 		TestBed.configureTestingModule({
 			providers: [
-				XdDetailsFacade,
+				FacilityDetailFacade,
 				{
 					provide: FacilitiesRequestService,
 					useValue: facilitiesRequestServiceMock,
@@ -39,7 +39,7 @@ describe('XdDetailsFacadeService', () => {
 			],
 		});
 
-		service = TestBed.inject(XdDetailsFacade);
+		service = TestBed.inject(FacilityDetailFacade);
 		facilitiesRequestService = TestBed.inject(FacilitiesRequestService);
 	});
 

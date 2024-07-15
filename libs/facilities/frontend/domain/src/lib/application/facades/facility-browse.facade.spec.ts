@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, of } from 'rxjs';
 
 import { FacilitiesRequestService } from '../../infrastructure/facilities-request.service';
-import { XdBrowseFacade } from './browse.facade';
+import { FacilityBrowseFacade } from './facility-browse.facade';
 
-describe('XdBrowseFacadeService', () => {
-    let service: XdBrowseFacade;
+describe('FacilityBrowseFacade', () => {
+    let service: FacilityBrowseFacade;
     let facilitiesRequestService: FacilitiesRequestService;
 
     beforeEach(() => {
@@ -16,12 +16,12 @@ describe('XdBrowseFacadeService', () => {
 
         TestBed.configureTestingModule({
             providers: [
-                XdBrowseFacade,
+                FacilityBrowseFacade,
                 { provide: FacilitiesRequestService, useValue: facilitiesRequestServiceMock },
             ],
         });
 
-        service = TestBed.inject(XdBrowseFacade);
+        service = TestBed.inject(FacilityBrowseFacade);
         facilitiesRequestService = TestBed.inject(FacilitiesRequestService);
     });
 
