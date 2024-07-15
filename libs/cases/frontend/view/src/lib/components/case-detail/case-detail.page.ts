@@ -17,7 +17,7 @@ import { AuthenticationService } from 'common-frontend-models';
 import DeleteModalComponent from './delete-modal/delete-modal.component';
 
 @Component({
-	selector: 'lib-detail-case',
+	selector: 'lib-case-detail',
 	standalone: true,
 	imports: [ CommonModule, FormsModule, IxModule, RouterLink ],
 	templateUrl: './case-detail.page.html',

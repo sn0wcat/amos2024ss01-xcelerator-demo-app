@@ -30,7 +30,7 @@ import { METRIC_CATEGORY_COLOR_INFORMATION } from './models/metrics-category-inf
 import { PUMP_METRICS_FULL_NAME_MAP } from './models/pump-metrics-full-name.map';
 
 @Component({
-	selector: 'lib-detail',
+	selector: 'lib-facility-detail',
 	standalone: true,
 	imports: [CommonModule, IxModule, NgxEchartsModule, LockModalComponent, RouterLink],
 	templateUrl: './facility-detail.page.html',

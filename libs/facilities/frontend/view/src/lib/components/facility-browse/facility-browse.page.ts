@@ -15,7 +15,7 @@ import { LocalStorageService } from 'common-frontend-models';
 import { EPumpStatus } from 'facilities-shared-models';
 
 @Component({
-	selector: 'lib-browse',
+	selector: 'lib-facility-browse',
 	standalone: true,
 	imports: [ CommonModule, IxModule, RouterLink ],
 	templateUrl: './facility-browse.page.html',

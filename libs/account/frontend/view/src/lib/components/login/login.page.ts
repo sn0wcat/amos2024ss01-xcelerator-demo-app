@@ -6,7 +6,7 @@ import { IxModule, themeSwitcher } from '@siemens/ix-angular';
 import { AuthenticationService } from 'common-frontend-models';
 
 @Component({
-    selector: 'lib-login',
+    selector: 'lib-acount-login',
     standalone: true,
     imports: [ CommonModule, FormsModule, IxModule ],
     templateUrl: './login.page.html',

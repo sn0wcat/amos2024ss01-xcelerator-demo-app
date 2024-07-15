@@ -16,7 +16,7 @@ import { CaseFormData } from '../interfaces/case-form-data.interface';
 import { DateDropdownAccessor } from './accessor/date-dropdown-accessor';
 
 @Component({
-	selector: 'lib-create-case',
+	selector: 'lib-case-create',
 	standalone: true,
 	imports: [ CommonModule, IxModule, FormsModule, RouterLink, DateDropdownAccessor ],
 	providers: [

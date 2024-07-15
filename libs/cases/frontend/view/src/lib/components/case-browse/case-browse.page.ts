@@ -15,7 +15,7 @@ import { LocalStorageService } from 'common-frontend-models';
 import { $enum } from 'ts-enum-util';
 
 @Component({
-	selector: 'lib-brows-cases',
+	selector: 'lib-case-browse',
 	standalone: true,
 	imports: [ CommonModule, IxModule, RouterLink ],
 	templateUrl: './case-browse.page.html',
