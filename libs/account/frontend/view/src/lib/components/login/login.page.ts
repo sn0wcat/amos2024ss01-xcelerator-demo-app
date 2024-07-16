@@ -55,14 +55,7 @@ export class LoginPage implements OnInit {
     }
 
     togglePassword() {
-        const passwordElement = document.getElementById('passwordElement');
-        if(!passwordElement) {
-            return;
-        }
-
         this.showPassword = !this.showPassword;
-        const typeVal =  this.showPassword ? 'text' : 'password';
-        passwordElement.setAttribute('type',  typeVal);
     }
 
 }
