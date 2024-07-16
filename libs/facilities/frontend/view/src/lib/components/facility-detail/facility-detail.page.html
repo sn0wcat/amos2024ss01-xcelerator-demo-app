@@ -21,9 +21,9 @@
 		<ix-card variant="insight" class="h-full w-full p-4">
 			<ix-card-content>
 				<ix-card-title>
-					<span class="notification text-2xl">{{facility.icon}}</span>
+                    <ix-icon [name]="facility.icon"></ix-icon>
+					<span class="notification text-2xl">{{facility.heading}}</span>
 				</ix-card-title>
-				<ix-typography color="std">{{ facility.heading }}</ix-typography>
 				<ix-typography color="std">{{ facility.subheading }}</ix-typography>
 				<ix-typography color="std">
 					@if (facility.location?.locality) {
