@@ -49,8 +49,6 @@ export class CaseDetailPage {
     );
     protected readonly facility = toSignal(this._facilityObs);
 
-    protected readonly userMail = this._authenticationService.getUserEmail();
-
 	constructor(
         protected readonly location: Location,
         private readonly _route: ActivatedRoute,
@@ -96,13 +94,13 @@ export class CaseDetailPage {
             return;
         }
 
-        caseItem.modifiedBy = this._authenticationService.getUserEmail();
-
         const validationString = this.validateForm(caseItem);
         if(validationString !== 'valid'){
             this.showErrorToast(validationString);
             return;
         }
+
+        caseItem.modifiedBy = this._authenticationService.getUserEmail();
 
         // The subscribe is necessary, otherwise the request is not sent
         this._casesFacade.updateCase({ id: this.caseId }, caseItem).subscribe({});

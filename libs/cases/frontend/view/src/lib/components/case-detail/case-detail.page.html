@@ -67,7 +67,7 @@
                     </div>
                     <div class="form-group input-container">
                         <label for="modifiedBy" class="font-bold">Last modified by</label>
-                        <input readonly type="text" id="modifiedBy" value="{{ userMail }}" name="modifiedBy" class="input-field">
+                        <input readonly type="text" id="modifiedBy" [(ngModel)]="caseItem.modifiedBy" name="modifiedBy" class="input-field">
                     </div>
                 </div>
 
