@@ -27,7 +27,7 @@ import { LegalInformationComponent } from './legal-information/legal-information
 })
 export class HeaderComponent {
 
-    protected readonly userMail = this._authenticationService.getUserMail();
+    protected readonly userMail = this._authenticationService.getUserEmail();
 
     protected readonly lightMode = computed(() => {
         const theme = this._localStorageService.getOrCreate('theme', 'theme-classic-dark')();

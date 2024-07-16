@@ -12,8 +12,8 @@ export interface ICreateCaseBody {
 	type: ECaseType;
 	/* Status of the work order */
 	status: ECaseStatus;
-	// assignedTo: User,
-	// assignedToId: Int,
+	/* Person this Case is assigned to */
+    assignedTo: string,
 	/* Description of the work order */
 	description: string;
 	/* Source of the work order */
@@ -40,6 +40,8 @@ export interface IUpdateCaseBody {
 	type?: ECaseType;
 	/* Status of the work order */
 	status?: ECaseStatus;
+    /* Person this Case is assigned to */
+    assignedTo: string,
 	/* Description of the work order */
 	description?: string;
 	/* Source of the work order */

@@ -93,15 +93,15 @@ export class CaseBrowsePage {
         private _router: Router
     ) {}
 
-	getStatusClasses(_case: ICaseResponse) {
+	getStatusClasses(caseItem: ICaseResponse) {
 		return {
-			'priority-emergency': _case.priority === 'EMERGENCY',
-			'status-inprogress': _case.status === 'INPROGRESS',
-			'status-overdue': _case.status === 'OVERDUE',
-			'status-onhold': _case.status === 'ONHOLD',
-			'status-done': _case.status === 'DONE',
-			'status-cancelled': _case.status === 'CANCELLED',
-			'status-archived': _case.status === 'ARCHIVED',
+			'priority-emergency': caseItem.priority === 'EMERGENCY',
+			'status-inprogress': caseItem.status === 'INPROGRESS',
+			'status-overdue': caseItem.status === 'OVERDUE',
+			'status-onhold': caseItem.status === 'ONHOLD',
+			'status-done': caseItem.status === 'DONE',
+			'status-cancelled': caseItem.status === 'CANCELLED',
+			'status-archived': caseItem.status === 'ARCHIVED',
 		};
 	}
 

@@ -11,6 +11,7 @@ import { FacilityBrowseFacade } from '@frontend/facilities/frontend/domain';
 import { StatusToColorRecord } from '@frontend/facilities/frontend/models';
 import { IxModule, IxSelectCustomEvent, ToastService } from '@siemens/ix-angular';
 import { ECasePriority, ECaseStatus, ECaseType } from 'cases-shared-models';
+import { AuthenticationService } from 'common-frontend-models';
 
 import { CaseFormData } from '../interfaces/case-form-data.interface';
 import { DateDropdownAccessor } from './accessor/date-dropdown-accessor';
@@ -63,6 +64,7 @@ export class CaseCreatePage implements OnInit {
         private readonly toastService: ToastService,
         private readonly _browseFacade: FacilityBrowseFacade,
         private readonly _casesFacade: CasesFacade,
+        private readonly _authenticationService: AuthenticationService,
     ) {}
 
     ngOnInit(){
@@ -176,10 +178,11 @@ export class CaseCreatePage implements OnInit {
             title: formData.title,
             type: formData.selectType,
             status: ECaseStatus.OPEN,
+            assignedTo: formData.email,
             description: formData.text,
             source: 'Internal System ' + faker.number.int({min: 1, max: 10}),
             priority: formData.selectPriority,
-            createdBy: formData.email,
+            createdBy: this._authenticationService.getUserEmail(),
             eTag: faker.string.alphanumeric(10),
         };
     }

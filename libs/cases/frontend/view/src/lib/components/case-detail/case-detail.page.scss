@@ -1,0 +1,12 @@
+.input-grouped {
+    @apply flex justify-between gap-x-6;
+}
+
+.input-container {
+    @apply mb-4 flex flex-col w-full;
+}
+
+.input-field {
+   @apply w-full p-2 mb-1 rounded;
+}
+

@@ -1,17 +1,19 @@
 import { CommonModule, Location } from '@angular/common';
 import {
-	ChangeDetectionStrategy,
-	Component,
-	computed,
-	ViewEncapsulation,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CasesFacade } from '@frontend/cases/frontend/domain';
+import { FacilityDetailFacade } from '@frontend/facilities/frontend/domain';
 import { IxModule, ModalService, ToastService } from '@siemens/ix-angular';
 import { ECasePriority, ECaseStatus, ECaseType, ICaseResponse } from 'cases-shared-models';
 import { AuthenticationService } from 'common-frontend-models';
+import { map, switchMap } from 'rxjs';
 
 import DeleteModalComponent from './delete-modal/delete-modal.component';
 
@@ -25,44 +27,43 @@ import DeleteModalComponent from './delete-modal/delete-modal.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseDetailPage {
-    protected readonly _caseId = this._route.snapshot.params['id'];
+    protected readonly caseId = this._route.snapshot.params['id'];
 
 	protected isEditing = false;
 	private readonly _datePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+    private readonly _emailPattern = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
     private readonly cases = toSignal(this._casesFacade.getAllCases());
     protected readonly caseItem = computed(() => {
-        const caseItem = this.cases();
-        if (caseItem === undefined) {
-            return;
+        const cases = this.cases();
+        if (!cases) {
+            return undefined;
         }
-        return caseItem.find((caseItem) => String(caseItem.id) === this._caseId);
+        return cases.find((caseItem) => String(caseItem.id) === this.caseId);
     });
+
+    private readonly _facilityObs= this._casesFacade.getAllCases().pipe(
+        map((cases) => cases.find((caseItem) => String(caseItem.id) === this.caseId)),
+        map((caseItem) => caseItem?.assetId ?? ''),
+        switchMap((assetId) => this._facilityDetailFacade.getFacility(assetId)),
+    );
+    protected readonly facility = toSignal(this._facilityObs);
+
+    protected readonly userMail = this._authenticationService.getUserEmail();
 
 	constructor(
         protected readonly location: Location,
         private readonly _route: ActivatedRoute,
 		private readonly _modalService: ModalService,
 		private readonly toastService: ToastService,
-        private readonly _authenticationService: AuthenticationService,
+        protected readonly _authenticationService: AuthenticationService,
         private readonly _casesFacade: CasesFacade,
+        private readonly _facilityDetailFacade: FacilityDetailFacade
 	) {}
 
-	deleteCase() {
-		const caseId = this.mapCaseId(this.caseItem());
-		if (caseId !== undefined) {
-			// The subscribe is necessary, otherwise the request is not sent
-			this._casesFacade.deleteCase(caseId).subscribe();
-		}
-	}
-
-	mapCaseId(_case: ICaseResponse | undefined) {
-		if (_case === undefined) {
-			return undefined;
-		}
-		return {
-			id: _case.id,
-		};
+    deleteCase() {
+        // The subscribe is necessary, otherwise the request is not sent
+        this._casesFacade.deleteCase({ id: this.caseId }).subscribe();
 	}
 
 	async deleting() {
@@ -89,89 +90,67 @@ export class CaseDetailPage {
 		}
 	}
 
-    getUserMail() {
-        return this._authenticationService.getUserMail();
-    }
-
 	onSubmit(): void {
-		const casedetail = this.caseItem();
-        if (casedetail !== undefined) {
-            casedetail.modifiedBy = <string>this.getUserMail();
+		const caseItem = this.caseItem();
+        if(!caseItem) {
+            return;
         }
 
-		if (casedetail !== undefined) {
-			const validationString = this.validateForm(casedetail);
-			if (validationString === 'valid') {
-				const caseId = this.mapCaseId(this.caseItem());
-				const caseData = this.caseItem();
+        caseItem.modifiedBy = this._authenticationService.getUserEmail();
 
-				if (caseId !== undefined && caseData !== undefined) {
-					// The subscribe is necessary, otherwise the request is not sent
-					this._casesFacade.updateCase(caseId, caseData).subscribe({});
-				}
-				this.isEditing = false;
-			} else {
-				this.showErrorToast(validationString);
-			}
-		}
+        const validationString = this.validateForm(caseItem);
+        if(validationString !== 'valid'){
+            this.showErrorToast(validationString);
+            return;
+        }
+
+        // The subscribe is necessary, otherwise the request is not sent
+        this._casesFacade.updateCase({ id: this.caseId }, caseItem).subscribe({});
+        this.isEditing = false;
 	}
 
-	validateForm(casedetail: ICaseResponse) {
-		if (casedetail !== undefined) {
-			if (casedetail.title === '') {
-				return 'Empty title';
-			}
+	validateForm(caseItem: ICaseResponse) {
+        if (caseItem.title === '') {
+            return 'Empty title';
+        }
 
-			if (!Object.values(ECaseStatus).includes(casedetail.status)) {
-				return 'Status is not in List: OPEN, INPROGRESS, OVERDUE, ONHOLD, DONE, CANCELLED, ARCHIVED';
-			}
+        if (!this._emailPattern.test(caseItem.assignedTo)) {
+            return 'Invalid email for assigned to';
+        }
 
-			if (!Object.values(ECasePriority).includes(casedetail.priority)) {
-				return 'Priority is not in List: EMERGENCY, HIGH, MEDIUM, LOW';
-			}
+        const dueDate = caseItem.dueDate.toString();
+        if (!this._datePattern.test(dueDate)) {
+            return 'Invalid date format';
+        }
 
-			if (
-				!(
-					this.caseItem()?.modifiedBy.includes('@') &&
-					this.caseItem()?.modifiedBy.includes('.')
-				)
-			) {
-				return 'Invalid email';
-			}
+        const year = parseInt(dueDate.substring(0, 4));
+        const month = parseInt(dueDate.substring(5, 7));
+        const day = parseInt(dueDate.substring(8, 10));
 
-			if (!Object.values(ECaseType).includes(casedetail.type)) {
-				return 'Priority is not in List: PLANNED, INNCIDENT, ANNOTATION';
-			}
+        // Check if month and day are within valid ranges
+        if (month < 1 || month > 12 || day < 1 || day > 31) {
+            return 'Invalid month or day in due date';
+        }
 
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			if (!this._datePattern.test(casedetail.dueDate)) {
-				return 'Invalid date format';
-			}
+        // Check if the date is a valid calendar date
+        const date = new Date(year, month - 1, day);
+        if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
+            return 'Invalid date';
+        }
 
-			const dueDate = this.caseItem()?.dueDate;
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			if (dueDate && this._datePattern.test(this.caseItem()?.dueDate)) {
-				const match = this.caseItem()?.dueDate;
-				if (match) {
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-expect-error
-					const month: int = parseInt(match[5]) * 10 + parseInt(match[6]);
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-expect-error
-					const day = parseInt(match[8]) * 10 + parseInt(match[9]);
-					if (!(month >= 1 && month <= 12 && day >= 1 && day <= 31)) {
-						return 'Invalid month or day in due date';
-					}
-				}
-			} else {
-				return 'Invalid date format';
-			}
+        if (!Object.values(ECaseStatus).includes(caseItem.status)) {
+            return 'Status is not in List: ' + Object.values(ECaseStatus).join(', ');
+        }
 
-			return 'valid';
-		}
-		return 'An error occurred :(';
+        if (!Object.values(ECasePriority).includes(caseItem.priority)) {
+            return 'Priority is not in List: ' + Object.values(ECasePriority).join(', ');
+        }
+
+        if (!Object.values(ECaseType).includes(caseItem.type)) {
+            return 'Priority is not in List: ' + Object.values(ECaseType).join(', ');
+        }
+
+        return 'valid';
 	}
 
 	async showErrorToast(info: string) {

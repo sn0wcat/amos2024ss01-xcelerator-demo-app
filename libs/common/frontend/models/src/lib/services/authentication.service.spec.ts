@@ -93,13 +93,13 @@ describe('AuthenticationService', () => {
     describe('getUserMail', () => {
         it('should return false if no token in localStorage', () => {
             jest.spyOn(localStorage, 'getItem').mockReturnValue(null);
-            expect(service.getUserMail()).toBe(false);
+            expect(service.getUserEmail()).toBe(false);
         });
 
         it('should return false if token cannot be decrypted', () => {
             jest.spyOn(localStorage, 'getItem').mockReturnValue('invalid_token');
             jest.spyOn(service as any, 'decryptToken').mockReturnValue(null);
-            expect(service.getUserMail()).toBe(false);
+            expect(service.getUserEmail()).toBe(false);
         });
 
         it('should return user email if token is valid', () => {
@@ -107,7 +107,7 @@ describe('AuthenticationService', () => {
             const userData = { userMail: 'test@example.com', password: 'password', time: new Date().getTime() };
             jest.spyOn(localStorage, 'getItem').mockReturnValue(token);
             jest.spyOn(service as any, 'decryptToken').mockReturnValue(userData);
-            expect(service.getUserMail()).toBe('test@example.com');
+            expect(service.getUserEmail()).toBe('test@example.com');
         });
     });
 });

@@ -67,15 +67,15 @@ export class AuthenticationService {
 		return true;
 	}
 
-	getUserMail() {
+	getUserEmail() {
 		const token = localStorage.getItem(this.tokenKey);
 		if (!token) {
-			return false;
+			return '';
 		}
 
 		const userData = this.decryptToken(token);
 		if (!userData) {
-			return false;
+			return '';
 		}
 
 		return userData.userMail;

@@ -1,6 +1,5 @@
 import { ECasePriority, ECaseStatus, ECaseType } from '../enums';
 
-// TODO: Add User model
 export interface ICaseResponse {
 	id: number;
 	handle: string;
@@ -8,8 +7,7 @@ export interface ICaseResponse {
 	title: string;
 	type: ECaseType;
 	status: ECaseStatus;
-	// assignedTo: User,
-	// assignedToId: Int,
+	assignedTo: string,
 	description: string;
 	source: string;
 	priority: ECasePriority;

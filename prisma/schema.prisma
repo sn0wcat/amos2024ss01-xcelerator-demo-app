@@ -71,7 +71,6 @@ model AssetLocation {
     updatedAt DateTime @updatedAt
 }
 
-// TODO: Add User model + relation
 // TODO: Save dueDate as DateTime
 // see https://developer.siemens.com/insights-hub/docs/apis/advanced-casemanagement/api-casemanagement-api.html
 model Case {
@@ -81,8 +80,7 @@ model Case {
     title       String
     type        CaseType     @default(PLANNED)
     status      CaseStatus   @default(OPEN)
-    // assignedTo   User   @relation(fields: [assignedToId], references: [id])
-    // assignedToId Int
+    assignedTo  String
     description String
     source      String
     priority    CasePriority
