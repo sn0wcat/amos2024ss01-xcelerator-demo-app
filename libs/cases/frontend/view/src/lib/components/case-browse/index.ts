@@ -1,1 +1,1 @@
-export * from './case-browse.component';
+export * from './case-browse.page';

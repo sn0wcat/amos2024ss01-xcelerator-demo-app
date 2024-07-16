@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ICaseParams, ICaseResponse, ICreateCaseBody } from 'cases-shared-models';
 import { Observable } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root',
 })
-export class XdCasesRequestService {
-	private readonly _httpClient = inject(HttpClient);
+export class CasesRequestService {
+
+    constructor(private readonly _httpClient: HttpClient) {}
 
 	/**
 	 * Get all cases via backend

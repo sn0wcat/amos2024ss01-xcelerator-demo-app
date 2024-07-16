@@ -5,17 +5,17 @@ import { faker } from '@faker-js/faker';
 import { ICaseParams, ICaseResponse } from 'cases-shared-models';
 import { firstValueFrom, of } from 'rxjs';
 
-import { XdCasesRequestService } from './cases-request.service';
+import { CasesRequestService } from './cases-request.service';
 
-describe('XdCasesRequestService', () => {
-	let service: XdCasesRequestService;
+describe('CasesRequestService', () => {
+	let service: CasesRequestService;
 	let httpClient: HttpClient;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [ HttpClientTestingModule ],
 			providers: [
-				XdCasesRequestService,
+				CasesRequestService,
 				{
 					provide: HttpClient,
 					useValue: {
@@ -28,7 +28,7 @@ describe('XdCasesRequestService', () => {
 			],
 		});
 
-		service = TestBed.inject(XdCasesRequestService);
+		service = TestBed.inject(CasesRequestService);
 		httpClient = TestBed.inject(HttpClient);
 	});
 

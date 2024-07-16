@@ -120,6 +120,7 @@ describe('CaseController', () => {
 			title: faker.lorem.sentence(),
 			type: faker.helpers.enumValue(ECaseType),
 			status: faker.helpers.enumValue(ECaseStatus),
+            assignedTo: faker.internet.email(),
 			description: faker.lorem.sentence(),
 			source: faker.string.alpha(),
 			priority: faker.helpers.enumValue(ECasePriority),

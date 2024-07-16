@@ -4,6 +4,6 @@
 
 @import '@siemens/ix/dist/siemens-ix/siemens-ix.css';
 
-.test-custom-class {
-	@apply bg-red-500 rounded text-center;
+.top-right-button {
+	@apply absolute top-20 right-4;
 }

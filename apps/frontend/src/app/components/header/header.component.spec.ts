@@ -50,7 +50,7 @@ describe('HeaderComponent', () => {
         } as unknown as LocalStorageService;
 
         authenticationServiceMock = {
-            getUserMail: jest.fn().mockReturnValue('test@example.com'),
+            getUserEmail: jest.fn().mockReturnValue('test@example.com'),
             logout: jest.fn()
         } as unknown as AuthenticationService;
 
@@ -76,21 +76,21 @@ describe('HeaderComponent', () => {
     it('should trigger router events correctly', () => {
         eventsSubject.next(new NavigationEnd(1, '', ''));
 
-        const routerEvents = component.routerEvents();
+        const routerEvents = component['routerEvents']();
         expect(routerEvents).toBeInstanceOf(NavigationEnd);
     });
 
     it('should compute breadcrumbs correctly', () => {
         eventsSubject.next(new NavigationEnd(1, '', ''));
 
-        const breadcrumbs = component.breadcrumbs();
+        const breadcrumbs = component['breadcrumbs']();
         expect(breadcrumbs).toEqual([ 'Layer 1', 'Layer 2' ]);
     });
 
     it('should determine if it is home page correctly', () => {
         eventsSubject.next(new NavigationEnd(1, '', ''));
 
-        const isHomePage = component.isHomePage();
+        const isHomePage = component['isHomePage']();
         expect(isHomePage).toBe(true);
     });
 

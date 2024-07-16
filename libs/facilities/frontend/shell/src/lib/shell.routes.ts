@@ -20,7 +20,7 @@ export const FACILITIES_SHELL_ROUTES: Route[] = [
 				// Route to list page
 				path: '',
                 canActivate: [ AuthenticationGuard ],
-				loadComponent: () => import('facilities-frontend-view').then((m) => m.XdBrowsePage),
+				loadComponent: () => import('facilities-frontend-view').then((m) => m.FacilityBrowsePage),
 			},
 			{
 				// Route to detail page
@@ -29,7 +29,7 @@ export const FACILITIES_SHELL_ROUTES: Route[] = [
 				data: {
 					breadcrumb: 'Details',
 				},
-				loadComponent: () => import('facilities-frontend-view').then((m) => m.XdDetailPage),
+				loadComponent: () => import('facilities-frontend-view').then((m) => m.FacilityDetailPage),
 			},
 		],
 	},

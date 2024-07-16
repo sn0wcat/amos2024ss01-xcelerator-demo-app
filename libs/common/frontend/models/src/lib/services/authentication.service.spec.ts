@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import * as CryptoJS from 'crypto-js';
 
 import { APP_CONFIG } from '../tokens';
 import { AuthenticationService } from './authentication.service';
@@ -92,23 +91,23 @@ describe('AuthenticationService', () => {
     });
 
     describe('getUserMail', () => {
-        it('should return false if no token in localStorage', () => {
+        it('should return empty string \'\' if no token in localStorage', () => {
             jest.spyOn(localStorage, 'getItem').mockReturnValue(null);
-            expect(service.getUserMail()).toBe(false);
+            expect(service.getUserEmail()).toBe('');
         });
 
         it('should return false if token cannot be decrypted', () => {
             jest.spyOn(localStorage, 'getItem').mockReturnValue('invalid_token');
             jest.spyOn(service as any, 'decryptToken').mockReturnValue(null);
-            expect(service.getUserMail()).toBe(false);
+            expect(service.getUserEmail()).toBe('');
         });
 
-        it('should return user email if token is valid', () => {
+        it('should return empty string \'\' if token is valid', () => {
             const token = 'valid_encrypted_token';
             const userData = { userMail: 'test@example.com', password: 'password', time: new Date().getTime() };
             jest.spyOn(localStorage, 'getItem').mockReturnValue(token);
             jest.spyOn(service as any, 'decryptToken').mockReturnValue(userData);
-            expect(service.getUserMail()).toBe('test@example.com');
+            expect(service.getUserEmail()).toBe('test@example.com');
         });
     });
 });

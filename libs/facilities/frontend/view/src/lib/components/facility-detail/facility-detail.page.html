@@ -1,0 +1,135 @@
+<ix-content-header
+	class="pl-4 pt-4"
+	hasBackButton="true"
+	[headerTitle]="facility() ? 'Details of Facility ' + facility()?.heading : 'Facility Details'"
+	headerSubtitle="On this page you can see detailed information about the facility including charts about the pump and environment data"
+	(backButtonClick)="location.back()"
+></ix-content-header>
+
+@if (facility(); as facility) {
+
+<ix-content>
+	<div class="details-grid gap-x-6 gap-y-4 pb-32">
+		@if(this.pumpChart(); as pumpChart){
+		<div echarts [options]="pumpChart" [theme]="theme()" style="height: 25rem"></div>
+		} @if(this.envChart(); as envChart){
+		<div echarts [options]="envChart" [theme]="theme()" style="height: 25rem"></div>
+		} @if(this.metricsChart(); as metricsChart){
+		<div echarts [options]="metricsChart" [theme]="theme()" style="height: 25rem"></div>
+		}
+
+		<ix-card variant="insight" class="h-full w-full p-4">
+			<ix-card-content>
+				<ix-card-title>
+                    <ix-icon [name]="facility.icon"></ix-icon>
+					<span class="notification text-2xl">{{facility.heading}}</span>
+				</ix-card-title>
+				<ix-typography color="std">{{ facility.subheading }}</ix-typography>
+				<ix-typography color="std">
+					@if (facility.location?.locality) {
+					<p>
+						Location: {{ facility.location?.postalCode }} {{ facility.location?.locality
+						}} , {{ facility.location?.country }}
+					</p>
+					<p>Address: {{ facility.location?.streetAddress }}</p>
+					<p>Region: {{ facility.location?.region }}</p>
+					} @else { Location: not specified }
+				</ix-typography>
+				<div class="flex">
+					<ix-typography color="std">status:&nbsp;</ix-typography>
+					<ix-typography [ngClass]="StatusToColorRecord[facility.status]"
+						>{{ facility.status }}
+					</ix-typography>
+					<ix-tooltip id="status-tooltip" for=".{{StatusToColorRecord[facility.status]}}"
+						>{{ facility.indicatorMsg }}</ix-tooltip
+					>
+				</div>
+			</ix-card-content>
+		</ix-card>
+
+		<ix-card variant="insight" class="h-full w-full p-4">
+			<ix-card-content>
+				<ix-card-title>
+					<ix-icon class="icon" name="tasks-open"></ix-icon>
+					<span class="notification text-2xl"
+						>{{ facility.cases.length > 0 ? facility.cases.length : '' }}</span
+					>
+				</ix-card-title>
+				<ix-typography color="std" format="h4"> Open Cases </ix-typography>
+				<ix-typography color="std">
+					{{ getCasesText(facility.cases.length) }}
+				</ix-typography>
+				<div class="flex flex-row justify-between w-full">
+					@if (facility.cases.length > 0) {
+					<div>
+						<div class="flex flex-col pt-2">
+							<!-- add exception for 4 cases so it shows the 4th case and not 'Go to all Cases' -->
+							@for (caseItem of facility.cases.slice(0, facility.cases.length === 4 ?
+							4 : 3); track caseItem.id; let i=$index){
+							<ix-link-button [routerLink]="['/cases', caseItem.id]">
+								Case with id {{ caseItem.id }}
+							</ix-link-button>
+							}
+						</div>
+						@if (facility.cases.length > 4 ) {
+						<ix-link-button [routerLink]="['/cases']"> Go to all Cases </ix-link-button>
+						}
+					</div>
+					}
+
+					<div class="mt-auto p-2">
+						<ix-button [routerLink]="['/cases/create',{ facilityId: facility.id }]">
+							New Case
+						</ix-button>
+					</div>
+				</div>
+			</ix-card-content>
+		</ix-card>
+
+		<ix-card variant="insight" class="h-full w-full p-4">
+			<ix-card-content>
+				<ix-card-title>
+					<ix-icon
+						class="icon"
+						[name]="locked() ? 'lock-filled' : 'unlock-filled'"
+					></ix-icon>
+				</ix-card-title>
+				<ix-typography color="std" format="h4">
+					{{ locked() ? 'Unlock the doors' : 'Lock the doors' }}
+				</ix-typography>
+				<ix-typography color="std">
+					{{ locked() ? 'Currently the doors are locked' : 'Currently the doors are
+					unlocked' }}
+				</ix-typography>
+
+				<div class="mt-auto p-2">
+					<ix-button (click)="changeLocked()">
+						{{ locked() ? 'Unlock the doors' : 'Lock the doors' }}
+					</ix-button>
+				</div>
+			</ix-card-content>
+		</ix-card>
+
+		<ix-card variant="insight" class="h-full w-full p-4">
+			<ix-card-content>
+				<ix-card-title>
+					<ix-icon class="icon" name="earth-filled"></ix-icon>
+					<span class="notification text-2xl">{{ facility.ecoScore }}%</span>
+				</ix-card-title>
+				<ix-typography color="std" format="h4"> Eco Score (SiGreen)</ix-typography>
+				<ix-typography color="std">
+					According to SiGreen this facility has an eco score of {{ facility.ecoScore }}%
+				</ix-typography>
+			</ix-card-content>
+		</ix-card>
+	</div>
+</ix-content>
+
+} @else {
+<ix-empty-state
+	class="mt-8"
+	header="No Facility with id {{ assetId }} found"
+	subHeader="The facility you are looking for does not exist"
+	icon="document-fail"
+></ix-empty-state>
+}

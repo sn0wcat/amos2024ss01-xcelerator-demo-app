@@ -1,2 +1,2 @@
-export * from './browse';
-export * from './detail';
+export * from './facility-browse';
+export * from './facility-detail';

@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'common-frontend-models';
-import { of } from 'rxjs';
 
 import { LoginPage } from './login.page';
 
@@ -13,7 +12,8 @@ describe('LoginPage', () => {
 
     beforeEach(async () => {
         authServiceMock = {
-            login: jest.fn().mockReturnValue(of(true)),
+            login: jest.fn().mockReturnValue(true),
+            isLoggedIn: jest.fn().mockReturnValue(false),
         } as unknown as jest.Mocked<AuthenticationService>;
 
         routerMock = {
@@ -39,16 +39,17 @@ describe('LoginPage', () => {
 
     describe('onSubmit', () => {
         it('should not validate form if email or password is invalid', () => {
-            component.email = 'invalid-email';
-            component.password = '';
+            // bypass protected attribute using bracket notation
+            component['email'] = 'invalid-email';
+            component['password'] = '';
             component.onSubmit();
 
             expect(routerMock.navigate).not.toHaveBeenCalled();
         });
 
         it('should validate form and login successfully', () => {
-            component.email = 'test@example.com';
-            component.password = 'password';
+            component['email']= 'test@example.com';
+            component['password'] = 'password';
             component.onSubmit();
 
             expect(routerMock.navigate).toHaveBeenCalledWith([ '/' ]);

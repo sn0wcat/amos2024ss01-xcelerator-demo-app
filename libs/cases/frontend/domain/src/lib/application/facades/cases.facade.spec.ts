@@ -2,12 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { ICaseParams } from 'cases-shared-models';
 import { firstValueFrom, of } from 'rxjs';
 
-import { XdCasesRequestService } from '../../infrastructure/cases-request.service';
-import { XdCasesFacade } from './cases.facade';
+import { CasesRequestService } from '../../infrastructure/cases-request.service';
+import { CasesFacade } from './cases.facade';
 
-describe('XdCasesFacade', () => {
-	let facade: XdCasesFacade;
-	let casesRequestService: XdCasesRequestService;
+describe('CasesFacade', () => {
+	let facade: CasesFacade;
+	let casesRequestService: CasesRequestService;
 
 	beforeEach(() => {
 		const timeseriesRequestServiceMock = {
@@ -20,13 +20,13 @@ describe('XdCasesFacade', () => {
 
 		TestBed.configureTestingModule({
 			providers: [
-				XdCasesFacade,
-				{ provide: XdCasesRequestService, useValue: timeseriesRequestServiceMock },
+				CasesFacade,
+				{ provide: CasesRequestService, useValue: timeseriesRequestServiceMock },
 			],
 		});
 
-		facade = TestBed.inject(XdCasesFacade);
-		casesRequestService = TestBed.inject(XdCasesRequestService);
+		facade = TestBed.inject(CasesFacade);
+		casesRequestService = TestBed.inject(CasesRequestService);
 	});
 
 	it('should be created', () => {

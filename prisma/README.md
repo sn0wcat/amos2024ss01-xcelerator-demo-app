@@ -64,3 +64,9 @@ pnpm prisma studio
 ```
 
 Or you can also use alternative tools like [DataGrip](https://www.jetbrains.com/datagrip/) ...
+
+If you want to reset the database, you can use the following command:
+
+```sh
+pnpm prisma migrate reset
+```

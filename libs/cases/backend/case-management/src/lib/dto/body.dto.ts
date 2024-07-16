@@ -56,9 +56,9 @@ export class createCaseBodyDto implements ICreateCaseBody {
 	})
 	status: ECaseStatus;
 
-	// assignedTo: User;
-
-	// assignedToId: Int;
+    @IsString()
+    @IsNotEmpty()
+	assignedTo: string;
 
 	@IsString()
 	@IsNotEmpty()
@@ -165,15 +165,11 @@ export class updateCaseBodyDto implements IUpdateCaseBody {
 
 	/**
 	 * user to which the work order is assigned to
-	 * @example User
+	 * @example "max.mustermann@fau.de"
 	 */
-	// assignedTo: User;
-
-	/**
-	 * ID of the user to which the work order is assigned to
-	 * @example 123456
-	 */
-	// assignedToId: Int;
+    @IsString()
+    @IsOptional()
+	assignedTo: string;
 
 	/**
 	 * description of the work order
