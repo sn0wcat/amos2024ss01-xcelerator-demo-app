@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 
 import { FacilityBrowsePage } from './facility-browse.page';
 
-describe('BrowseComponent', () => {
+describe('FacilityBrowsePage', () => {
 	let component: FacilityBrowsePage;
 	let fixture: ComponentFixture<FacilityBrowsePage>;
 

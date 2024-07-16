@@ -5,7 +5,7 @@ import { AuthenticationService } from 'common-frontend-models';
 
 import { CaseDetailPage } from './case-detail.page';
 
-describe('DetailCaseComponent', () => {
+describe('CaseDetailPage', () => {
 	let component: CaseDetailPage;
 	let fixture: ComponentFixture<CaseDetailPage>;
 

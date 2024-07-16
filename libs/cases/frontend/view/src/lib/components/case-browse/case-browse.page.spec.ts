@@ -9,7 +9,7 @@ import { of } from 'rxjs';
 
 import { CaseBrowsePage } from './case-browse.page';
 
-describe('CaseBrowsComponent', () => {
+describe('CaseBrowsePage', () => {
 	let component: CaseBrowsePage;
 	let fixture: ComponentFixture<CaseBrowsePage>;
 	let mockCasesFacade: CasesFacade;

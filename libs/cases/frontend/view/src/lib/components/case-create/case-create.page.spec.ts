@@ -10,7 +10,7 @@ import { of } from 'rxjs';
 
 import { CaseCreatePage } from './case-create.page';
 
-describe('CreateCaseComponent', () => {
+describe('CaseCreatePage', () => {
     let component: CaseCreatePage;
     let fixture: ComponentFixture<CaseCreatePage>;
     let toastService: ToastService;

@@ -5,7 +5,7 @@ import { provideEcharts } from 'ngx-echarts';
 
 import { FacilityDetailPage } from './facility-detail.page';
 
-describe('DetailComponent', () => {
+describe('FacilityDetailPage', () => {
 	let component: FacilityDetailPage;
 	let fixture: ComponentFixture<FacilityDetailPage>;
 
