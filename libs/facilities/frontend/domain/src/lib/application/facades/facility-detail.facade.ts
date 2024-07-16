@@ -92,7 +92,7 @@ export class FacilityDetailFacade {
 
     private randomEcoScoreFromString(str: string) {
         // exception for the very legitimate waste disposal :D
-        if(str === 'totally legal waste disposal'){
+        if(str === 'Totally legal waste disposal'){
             return 26;
         }
 
