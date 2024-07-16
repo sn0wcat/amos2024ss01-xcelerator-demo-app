@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CasesFacade } from '@frontend/cases/frontend/domain';
 import { FacilityBrowseFacade } from '@frontend/facilities/frontend/domain';
 import { ToastService } from '@siemens/ix-angular';
+import { AuthenticationService } from 'common-frontend-models';
 import { of } from 'rxjs';
 
 import { CaseCreatePage } from './case-create.page';
@@ -28,13 +29,18 @@ describe('CreateCaseComponent', () => {
             getAllFacilities: jest.fn().mockReturnValue(of([]))
         };
 
+        const authenticationServiceMock = {
+            getAllFacilities: jest.fn().mockReturnValue(of([]))
+        };
+
         await TestBed.configureTestingModule({
             imports: [ HttpClientTestingModule, FormsModule, CaseCreatePage ],
             providers: [
                 { provide: ActivatedRoute, useValue: { snapshot: { params: { facilityId: '1' } } } },
                 { provide: ToastService, useValue: toastServiceMock },
                 { provide: CasesFacade, useValue: casesFacadeMock },
-                { provide: FacilityBrowseFacade, useValue: browseFacadeMock }
+                { provide: FacilityBrowseFacade, useValue: browseFacadeMock },
+                { provide: AuthenticationService, useValue: authenticationServiceMock},
             ]
         }).compileComponents();
 
@@ -52,7 +58,7 @@ describe('CreateCaseComponent', () => {
 
     describe('Initial state', () => {
         it('should initialize with facilityId from route params', () => {
-            expect(component.createCaseForm.selectFacility).toBe('1');
+            expect(component['createCaseForm'].selectFacility).toBe('1');
         });
 
         it('should not submit form if form is invalid', () => {
@@ -66,7 +72,7 @@ describe('CreateCaseComponent', () => {
 
             component.onSubmit(form);
 
-            expect(component.wasValidated).toBe(true);
+            expect(component['wasValidated']).toBe(true);
             expect(casesFacade.createCase).not.toHaveBeenCalled();
             expect(toastService.show).not.toHaveBeenCalled();
         });
@@ -76,8 +82,8 @@ describe('CreateCaseComponent', () => {
         it('should update facility placeholder on facility input change', () => {
             const event = { detail: 'New Facility' } as CustomEvent<string>;
             component.onFacilityInputChange(event);
-            expect(component.facilityPlaceholder()).toBe('New Facility');
-            expect(component.createCaseForm.selectFacility).toBe('');
+            expect(component['facilityPlaceholder']()).toBe('New Facility');
+            expect(component['createCaseForm'].selectFacility).toBe('');
         });
     });
 
@@ -85,8 +91,8 @@ describe('CreateCaseComponent', () => {
         it('should update type placeholder on type input change', () => {
             const event = { detail: 'New Type' } as CustomEvent<string>;
             component.onTypeInputChange(event);
-            expect(component.typePlaceholder()).toBe('New Type');
-            expect(component.createCaseForm.selectType).toBe('');
+            expect(component['typePlaceholder']()).toBe('New Type');
+            expect(component['createCaseForm'].selectType).toBe('');
         });
     });
 
@@ -94,8 +100,8 @@ describe('CreateCaseComponent', () => {
         it('should update priority placeholder on priority input change', () => {
             const event = { detail: 'New Priority' } as CustomEvent<string>;
             component.onPriorityInputChange(event);
-            expect(component.priorityPlaceholder()).toBe('New Priority');
-            expect(component.createCaseForm.selectPriority).toBe('');
+            expect(component['priorityPlaceholder']()).toBe('New Priority');
+            expect(component['createCaseForm'].selectPriority).toBe('');
         });
     });
 });

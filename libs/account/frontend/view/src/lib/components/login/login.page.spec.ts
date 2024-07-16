@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'common-frontend-models';
-import { of } from 'rxjs';
 
 import { LoginPage } from './login.page';
 
@@ -13,7 +12,8 @@ describe('LoginPage', () => {
 
     beforeEach(async () => {
         authServiceMock = {
-            login: jest.fn().mockReturnValue(of(true)),
+            login: jest.fn().mockReturnValue(true),
+            isLoggedIn: jest.fn().mockReturnValue(false),
         } as unknown as jest.Mocked<AuthenticationService>;
 
         routerMock = {

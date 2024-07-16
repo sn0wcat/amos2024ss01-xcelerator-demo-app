@@ -1,10 +1,9 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FacilityBrowseFacade } from '@frontend/facilities/frontend/domain';
 import { of } from 'rxjs';
 
-import { FacilityDetailPage } from '../detail/facility-detail.page';
 import { FacilityBrowsePage } from './facility-browse.page';
 
 describe('BrowseComponent', () => {
@@ -16,7 +15,6 @@ describe('BrowseComponent', () => {
 			imports: [
 				FacilityBrowsePage,
 				HttpClientTestingModule,
-				RouterModule.forRoot([ { path: 'facilities/1', component: FacilityDetailPage } ]),
 			],
 			providers: [
 				{

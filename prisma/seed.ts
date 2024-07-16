@@ -23,7 +23,7 @@ const facilityConst = [
 
 faker.seed(123);
 
-const facilities = facilityConst.map((facility, index) => {
+const facilities = facilityConst.map((facility) => {
     return {
         name: facility.name,
         assetId: faker.string.uuid(),
@@ -57,7 +57,7 @@ const CasesConst = [
 ];
 
 // still requires the assetId to be added
-let cases = CasesConst.map((caseItem, index) => {
+let cases = CasesConst.map((caseItem) => {
     return {
         handle: 'AA-' + faker.number.int({ min: 1000, max: 9999 }),
         dueDate: faker.date.soon({ days: 30}),
@@ -88,8 +88,8 @@ async function seedSingleFacility({
     index: number;
     indicatorMsg: string;
 }) {
-    const pumpData = index % 2 === 0 ? pump2pumpData : pump10pumpData;
-    const envData = index % 2 === 0 ? pump2envData : pump10envData;
+    const pumpData = index % 3 === 0 ? pump2pumpData : pump10pumpData;
+    const envData = index % 3 === 0 ? pump2envData : pump10envData;
 
     const asset = await prisma.asset.create({
         data: {
