@@ -21,7 +21,7 @@ export class FacilityBrowseFacade {
 				return timeSeriesItem.map((timeSeriesItem) => {
 					return {
 						id: timeSeriesItem.assetId,
-						icon: randomIconFromString(timeSeriesItem.description),
+						icon: randomIconFromString(timeSeriesItem.name),
 						cases: timeSeriesItem.cases,
 						heading: timeSeriesItem.name,
 						subheading: timeSeriesItem.description,

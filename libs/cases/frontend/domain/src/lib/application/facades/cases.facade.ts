@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { CasesRequestService } from '../../infrastructure/cases-request.service';
 
 /**
- * Browse facades service.
+ * Case facades service.
  */
 @Injectable({ providedIn: 'root' })
 export class CasesFacade {

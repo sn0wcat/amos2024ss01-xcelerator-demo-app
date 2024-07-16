@@ -5,7 +5,7 @@ import { map } from 'rxjs';
 import { FacilitiesRequestService } from '../../infrastructure/facilities-request.service';
 import { MetricsRequestService } from '../../infrastructure/metrics-request.service';
 import { TimeSeriesRequestService } from '../../infrastructure/timeseries-request.service';
-import { randomIconFromString } from '../helpers/facade-helper';
+import { randomIconFromString, randomNumberFromString } from '../helpers/facade-helper';
 
 /**
  * Facade for the details page of a facility
@@ -27,7 +27,7 @@ export class FacilityDetailFacade {
 			map((timeSeriesItem) => {
 				return {
 					id: timeSeriesItem.assetId,
-					icon: randomIconFromString(timeSeriesItem.description),
+					icon: randomIconFromString(timeSeriesItem.name),
 					cases: timeSeriesItem.cases,
 					heading: timeSeriesItem.name,
 					subheading: timeSeriesItem.description,
@@ -35,6 +35,7 @@ export class FacilityDetailFacade {
 					metrics: timeSeriesItem.metrics,
 					indicatorMsg: timeSeriesItem.indicatorMsg,
 					location: timeSeriesItem.location,
+                    ecoScore: this.randomEcoScoreFromString(timeSeriesItem.name),
 				};
 			}),
 		);
@@ -79,4 +80,23 @@ export class FacilityDetailFacade {
 		);
 	}
 
+    /**
+     * We want to show different eco scores depending on the facility
+     * We need it to be the same after reloading the page
+     *
+     * As Info: the IP planned to do this properly with SiGreen at the start
+     * but he did not really talk about this ever again, so I guess this is fine
+     * @param str
+     * @private
+     */
+
+    private randomEcoScoreFromString(str: string) {
+        // exception for the very legitimate waste disposal :D
+        if(str === 'totally legal waste disposal'){
+            return 26;
+        }
+
+        const number = randomNumberFromString(str);
+        return 70 + (number % 30);
+    }
 }
