@@ -1,9 +1,9 @@
 <ix-content-header
-    class="pl-4 pt-4"
-    hasBackButton="true"
-    [headerTitle]="facility() ? 'Details of Facility ' + facility()?.heading : 'Facility Details'"
-    headerSubtitle="On this page you can see detailed information about the facility including charts about the pump and environment data"
-    (backButtonClick)="location.back()"
+	class="pl-4 pt-4"
+	hasBackButton="true"
+	[headerTitle]="facility() ? 'Details of Facility ' + facility()?.heading : 'Facility Details'"
+	headerSubtitle="On this page you can see detailed information about the facility including charts about the pump and environment data"
+	(backButtonClick)="location.back()"
 ></ix-content-header>
 
 @if (facility(); as facility) {
@@ -26,17 +26,14 @@
 				<ix-typography color="std">{{ facility.heading }}</ix-typography>
 				<ix-typography color="std">{{ facility.subheading }}</ix-typography>
 				<ix-typography color="std">
-                    @if (facility.location?.locality) {
-                        <p>
-                            Location: {{ facility.location?.postalCode }} {{ facility.location?.locality }}
-                            , {{ facility.location?.country }}
-                        </p>
-                        <p>Address: {{ facility.location?.streetAddress }}</p>
-                        <p>Region: {{ facility.location?.region }}</p>
-                    } @else {
-                        Location: not specified
-                    }
-
+					@if (facility.location?.locality) {
+					<p>
+						Location: {{ facility.location?.postalCode }} {{ facility.location?.locality
+						}} , {{ facility.location?.country }}
+					</p>
+					<p>Address: {{ facility.location?.streetAddress }}</p>
+					<p>Region: {{ facility.location?.region }}</p>
+					} @else { Location: not specified }
 				</ix-typography>
 				<div class="flex">
 					<ix-typography color="std">status:&nbsp;</ix-typography>
@@ -59,7 +56,9 @@
 					>
 				</ix-card-title>
 				<ix-typography color="std" format="h4"> Open Cases </ix-typography>
-				<ix-typography color="std"> {{ getCasesText(facility.cases.length) }} </ix-typography>
+				<ix-typography color="std">
+					{{ getCasesText(facility.cases.length) }}
+				</ix-typography>
 				<div class="flex flex-row justify-between w-full">
 					@if (facility.cases.length > 0) {
 					<div>
@@ -127,10 +126,10 @@
 </ix-content>
 
 } @else {
-    <ix-empty-state
-        class="mt-8"
-        header="No Facility with id {{ assetId }} found"
-        subHeader="The facility you are looking for does not exist"
-        icon="document-fail"
-    ></ix-empty-state>
+<ix-empty-state
+	class="mt-8"
+	header="No Facility with id {{ assetId }} found"
+	subHeader="The facility you are looking for does not exist"
+	icon="document-fail"
+></ix-empty-state>
 }
