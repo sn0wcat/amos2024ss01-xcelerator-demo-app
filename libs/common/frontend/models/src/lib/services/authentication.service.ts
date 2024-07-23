@@ -1,7 +1,6 @@
-import { inject, Injectable } from '@angular/core';
+/* eslint-disable no-console */
+import { Injectable } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
-
-import { APP_CONFIG } from '../tokens';
 
 @Injectable({
 	providedIn: 'root',
@@ -10,10 +9,12 @@ export class AuthenticationService {
 	private readonly tokenKey = 'authToken';
 	private readonly tokenExpirationTime = 1000 * 60 * 60;
 
-	private readonly secretKey = inject(APP_CONFIG).secretKey;
+	private readonly secretKey = 'this is a secret';
 
 	// this is a demo app, don't actually store these in the code
 	private readonly userDataBase = [
+		'U2FsdGVkX1+ZPMinZYfIpAQ5vEP/QapT/ZzZi+R92boI6lca3NjakHKCcMwUsy92YrQBVnx8jcFNqOKcJs9Oewn9JqfQeJERP4hmTEh1E1A=',
+		'U2FsdGVkX19Ofb7tprlajPOCULKzhUV6LYyuoT+TVbNdMU9a1pdKLEErNx3iPe71',
 		'U2FsdGVkX1/9RSRUE4j4qGAQ48gPSr8iLF242snE0hwJmOsluUk/hPzDuXgcgkSGNa8YCrm2GW8lxAxwCCDq1w==',
 		'U2FsdGVkX1+ifYJJA7x2MVnkOiqx8DywlVyKYOzPM6HPftzUdoGrg8X2c9i2f2ofZKF8I7sKZGFhuJQtVqBeGA==',
 		'U2FsdGVkX18yC09eQaBPI4LllwUbBAJTYWZoDmBROU4tOaHfB6n9+FCWMOUYGhbVJCV370aVvszr6YaFywC5AQ==',
@@ -32,8 +33,8 @@ export class AuthenticationService {
 
 	login(email: string, password: string) {
 		if (this.checkCredentials(email, password)) {
-            const token = this.generateToken(email, password);
-            localStorage.setItem(this.tokenKey, token);
+			const token = this.generateToken(email, password);
+			localStorage.setItem(this.tokenKey, token);
 			return true;
 		}
 
@@ -84,6 +85,7 @@ export class AuthenticationService {
 	private checkCredentials(email: string, password: string) {
 		return this.userDataBase.some((encryptedUser) => {
 			const user = this.decryptToken(encryptedUser);
+			console.log(user);
 			if (!user) {
 				return false;
 			}
@@ -96,11 +98,19 @@ export class AuthenticationService {
 		// ':' is not allowed in the email, so we can use it as a separator
 		const time = new Date().getTime();
 		const tokenData = `${email}:${password}:${time}`;
+
+		console.log(tokenData);
 		return CryptoJS.AES.encrypt(tokenData, this.secretKey).toString();
 	}
 
 	private decryptToken(token: string) {
 		try {
+			const data = CryptoJS.AES.encrypt(
+				'amos.demo@siemens.com:demo:2024-07-23T09:26:59.880Z',
+				this.secretKey,
+			).toString();
+			console.log(data);
+
 			const bytes = CryptoJS.AES.decrypt(token, this.secretKey);
 			const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
 

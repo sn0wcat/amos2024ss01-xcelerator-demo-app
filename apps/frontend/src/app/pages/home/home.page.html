@@ -1,48 +1,71 @@
-<ix-content-header
-    class="pl-8 pt-4"
-    headerTitle="Home Page"
-></ix-content-header>
+<ix-content-header class="pl-8 pt-4" headerTitle=""></ix-content-header>
 
 <ix-content class="p-8 ml-5 items-center">
-	<div class="flex items-center gap-x-36">
-		<div>
-			<h1 class="text-6xl font-bold">
-				Welcome to the
-				<br />
-				Xcelerator Demo App
-			</h1>
-			<div class="mt-10">
-				<p class="text-xl">With this app, you can:</p>
-				<ul class="mt-2 text-l">
-					<li class="mt-1">
-						- Monitor your water tanks and associated devices like pumps
-					</li>
-					<li class="mt-1">
-						- View the status of tanks and devices in an interactive user interface
-					</li>
-					<li class="mt-1">- Create cases for servicing your water tanks</li>
-				</ul>
-			</div>
-		</div>
-		<div>
-			<div class="flex items-center mt-5">
-				<ix-icon-button
-					icon="building1"
-					class="mt-4"
-					[routerLink]="['/facilities']"
-				></ix-icon-button>
-				<p class="ml-4 mt-4 text-l">
-					Here you can see all your facilities and their status
-				</p>
-			</div>
-			<div class="flex items-center mt-5">
-				<ix-icon-button
-					icon="tasks-open"
-					class="mt-4"
-					[routerLink]="['/cases']"
-				></ix-icon-button>
-				<p class="ml-4 mt-4 text-l">Here you can view all the cases and create new one</p>
-			</div>
-		</div>
-	</div>
+    <div class="flex items-center gap-x-36">
+        <div>
+            <h1 class="text-5xl font-bold">
+                Welcome to the
+                <br />
+                Siemens Xcelerator Demo App
+            </h1>
+            <div class="mt-10">
+                <p class="text-xl">With this app, you can:</p>
+                <ul class="mt-2 text-l">
+                    <li class="mt-1">
+                        - Monitor your water tanks and associated devices like pumps
+                    </li>
+                    <li class="mt-1">
+                        - View the status of tanks and devices in an interactive user interface
+                    </li>
+                    <li class="mt-1">- Create cases for servicing your water tanks</li>
+                </ul>
+                <br />
+                <p class="text-l">This application was done by students of <a href="https://fau.de" target="_new">FAU
+                        Erlangen<ix-icon name="arrow-diagonal-top-right" size="10"></ix-icon></a>,
+                    <a href="https://www.tu.berlin/" target="_new">TU Berlin<ix-icon name="arrow-diagonal-top-right"
+                            size="10"></ix-icon></a> and <a href="https://www.fu-berlin.de/" target="_new">FU
+                        Berlin<ix-icon name="arrow-diagonal-top-right" size="10"></ix-icon></a>
+                    as a part of<br /> the <a href="https://oss.cs.fau.de/teaching/the-amos-project/" target="_new">AMOS
+                        Project
+                        (Agile
+                        Methods in the Open Source)<ix-icon name="arrow-diagonal-top-right" size="10"></ix-icon></a>
+                    <br /><br />
+                    The source code for the application can be found on <a
+                        href="https://github.com/amosproj/amos2024ss01-xcelerator-demo-app" target="_new">GitHub<ix-icon
+                            name="arrow-diagonal-top-right" size="10"></ix-icon></a> and
+                    <br />
+                    the architecture description is available in the <a
+                        href="https://github.com/amosproj/amos2024ss01-xcelerator-demo-app/wiki" target="_new">GitHub
+                        wiki.<ix-icon name="arrow-diagonal-top-right" size="10"></ix-icon></a>.
+
+                    <br />
+                    Here you can find more informations about <a href="https://xcelerator.siemens.com"
+                        target="_new">Siemens Xcelerator<ix-icon name="arrow-diagonal-top-right"
+                            size="10"></ix-icon></a>.
+                    <br /><br />
+                    The documentation about Siemens APIs is available on the <a href="https://developer.siemens.com"
+                        target="_new">Siemens Xcelerator
+                        Developer Portal<ix-icon name="arrow-diagonal-top-right" size="10"></ix-icon></a>.
+                    <br /><br />
+                    The application frontend was built using <a href="https://ix.siemens.io" target="_new">Siemens
+                        Industrial Experience<ix-icon name="arrow-diagonal-top-right" size="10"></ix-icon></a> -
+                    an
+                    open-source <br />design system for designers and developers.
+                </p>
+
+            </div>
+        </div>
+        <div>
+            <div class="flex items-center mt-5">
+                <ix-icon-button icon="building1" class="mt-4" [routerLink]="['/facilities']"></ix-icon-button>
+                <p class="ml-4 mt-4 text-l">
+                    See all your facilities and their status
+                </p>
+            </div>
+            <div class="flex items-center mt-5">
+                <ix-icon-button icon="tasks-open" class="mt-4" [routerLink]="['/cases']"></ix-icon-button>
+                <p class="ml-4 mt-4 text-l">View all cases and incidents in the facilities and create new ones</p>
+            </div>
+        </div>
+    </div>
 </ix-content>
