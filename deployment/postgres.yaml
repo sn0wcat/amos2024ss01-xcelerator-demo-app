@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: postgres-deployment
+    namespace: amos # Namespaced to amos
+spec:
+    replicas: 1 # Number of database replicas
+    selector:
+        matchLabels:
+            app: postgres
+    template:
+        metadata:
+            labels:
+                app: postgres
+            namespace: amos # Namespaced to amos
+        spec:
+            containers:
+                - name: postgres
+                  image: postgres:latest # You can specify a specific version
+                  ports:
+                      - containerPort: 5432
+                  volumeMounts:
+                      - name: postgres-data
+                        mountPath: /var/lib/postgresql/data
+                  env: # List of environment variables
+                      - name: POSTGRES_USER
+                        value: postgres
+                      - name: POSTGRES_PASSWORD
+                        valueFrom:
+                            secretKeyRef:
+                                name: postgres-auth
+                                key: POSTGRES_PASSWORD
+                      - name: POSTGRES_DB
+                        value: postgres
+                      - name: PGDATA
+                        value: /var/lib/postgresql/data/pgdata
+            volumes:
+                - name: postgres-data
+                  persistentVolumeClaim:
+                      claimName: postgres-pvc
